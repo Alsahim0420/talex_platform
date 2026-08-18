@@ -23,12 +23,14 @@ final class AuthSignUpRequested extends AuthEvent {
     required this.email,
     required this.password,
     this.displayName,
+    this.companyName,
   });
   final String email;
   final String password;
   final String? displayName;
+  final String? companyName;
   @override
-  List<Object?> get props => [email, password, displayName];
+  List<Object?> get props => [email, password, displayName, companyName];
 }
 
 final class AuthSignOutRequested extends AuthEvent {

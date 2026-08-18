@@ -11,6 +11,7 @@ abstract interface class AuthRemoteDataSource {
     required String email,
     required String password,
     String? displayName,
+    String? companyName,
   });
   Future<void> signOut();
   Future<void> sendPasswordResetEmail(String email);
@@ -37,12 +38,14 @@ final class InMemoryAuthRemoteDataSource implements AuthRemoteDataSource {
     required String email,
     required String password,
     String? displayName,
+    String? companyName,
   }) async {
     _validate(email, password);
     return _currentUser = AuthUserModel(
       id: email,
       email: email,
       displayName: displayName,
+      companyName: companyName,
     );
   }
 

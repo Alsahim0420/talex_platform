@@ -12,6 +12,8 @@ dependencies:
   equatable: ^2.1.0
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_bloc: ^9.1.1
   get_it: ^9.2.1
 
@@ -24,3 +26,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
+  assets:
+    - assets/
+    - assets/talex_logo_horizontal_trimmed.png
+    - assets/talex_logo_horizontal_fondo_oscuro_trimmed.png

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:talex_platform/core/constants/app_colors.dart';
 import 'package:talex_platform/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:talex_platform/features/auth/presentation/pages/auth_page.dart';
+import 'package:talex_platform/features/auth/presentation/pages/register_page.dart';
+import 'package:talex_platform/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:talex_platform/l10n/app_localizations.dart';
 
 class TalexApp extends StatelessWidget {
   const TalexApp({super.key});
@@ -10,13 +14,24 @@ class TalexApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
     title: 'TaleX',
     debugShowCheckedModeBanner: false,
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    localeListResolutionCallback: (locales, supportedLocales) {
+      for (final locale in locales ?? const <Locale>[]) {
+        for (final supported in supportedLocales) {
+          if (locale.languageCode == supported.languageCode) return supported;
+        }
+      }
+      return const Locale('es');
+    },
     theme: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1C59D9)),
+      colorScheme: ColorScheme.fromSeed(seedColor: AppColors.accent),
       useMaterial3: true,
     ),
+    routes: {RegisterPage.routeName: (_) => const RegisterPage()},
     home: BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) => switch (state.status) {
-        AuthStatus.authenticated => const _DashboardPage(),
+        AuthStatus.authenticated => const DashboardPage(),
         AuthStatus.initial => const Scaffold(
           body: Center(child: CircularProgressIndicator()),
         ),
@@ -24,32 +39,4 @@ class TalexApp extends StatelessWidget {
       },
     ),
   );
-}
-
-class _DashboardPage extends StatelessWidget {
-  const _DashboardPage();
-  @override
-  Widget build(BuildContext context) {
-    final user = context.select((AuthBloc bloc) => bloc.state.user);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('TaleX'),
-        actions: [
-          TextButton.icon(
-            onPressed: () =>
-                context.read<AuthBloc>().add(const AuthSignOutRequested()),
-            icon: const Icon(Icons.logout),
-            label: const Text('Cerrar sesión'),
-          ),
-          const SizedBox(width: 16),
-        ],
-      ),
-      body: Center(
-        child: Text(
-          'Bienvenido, ${user?.displayName ?? user?.email ?? ''}',
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-      ),
-    );
-  }
 }

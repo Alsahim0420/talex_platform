@@ -36,11 +36,13 @@ final class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
     String? displayName,
+    String? companyName,
   }) => _guard(
     () async => (await _source.signUp(
       email: email,
       password: password,
       displayName: displayName,
+      companyName: companyName,
     )).toEntity(),
   );
   @override

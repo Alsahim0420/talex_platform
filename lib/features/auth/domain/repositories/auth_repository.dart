@@ -12,6 +12,7 @@ abstract interface class AuthRepository {
     required String email,
     required String password,
     String? displayName,
+    String? companyName,
   });
   Future<Either<Failure, Unit>> signOut();
   Future<Either<Failure, Unit>> sendPasswordResetEmail(String email);
