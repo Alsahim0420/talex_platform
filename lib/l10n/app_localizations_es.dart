@@ -235,6 +235,91 @@ class AppLocalizationsEs extends AppLocalizations {
   String get connectionInterrupted => 'Requiere seguimiento del reclutador';
 
   @override
+  String get invitationsTitle => 'Invitaciones';
+
+  @override
+  String get invitationsSubtitle =>
+      'Habilita personas y realiza seguimiento a sus evaluaciones.';
+
+  @override
+  String get enablePerson => 'Habilitar persona';
+
+  @override
+  String get enablePersonSubtitle =>
+      'Asigna una evaluación y envía una invitación de acceso.';
+
+  @override
+  String get personName => 'Nombre de la persona';
+
+  @override
+  String get personNameHint => 'Nombre y apellido';
+
+  @override
+  String get selectAssessment => 'Evaluación asignada';
+
+  @override
+  String get invitationExpiry => 'Vigencia de la invitación';
+
+  @override
+  String daysValue(int count) {
+    return '$count días';
+  }
+
+  @override
+  String get optionalMessage => 'Mensaje opcional';
+
+  @override
+  String get optionalMessageHint => 'Agrega instrucciones para la persona...';
+
+  @override
+  String get sendInvitation => 'Enviar invitación';
+
+  @override
+  String get invitationSent =>
+      'La persona fue habilitada y la invitación fue creada.';
+
+  @override
+  String get invitationResent =>
+      'La invitación fue reenviada y su vigencia fue renovada.';
+
+  @override
+  String get invitationCancelled => 'La invitación fue cancelada.';
+
+  @override
+  String get noInvitations => 'Aún no hay personas habilitadas';
+
+  @override
+  String get noInvitationsDescription =>
+      'Habilita la primera persona para asignarle una evaluación.';
+
+  @override
+  String expiresOn(String date) {
+    return 'Vence: $date';
+  }
+
+  @override
+  String get resend => 'Reenviar';
+
+  @override
+  String get cancelInvitation => 'Cancelar invitación';
+
+  @override
+  String get confirmCancellation =>
+      '¿Deseas cancelar esta invitación? La persona perderá el acceso a la evaluación.';
+
+  @override
+  String get keepInvitation => 'Conservar';
+
+  @override
+  String get statusExpired => 'Vencida';
+
+  @override
+  String get statusCancelled => 'Cancelada';
+
+  @override
+  String get statusInterrupted => 'Interrumpida';
+
+  @override
   String get settingsTitle => 'Configuración';
 
   @override

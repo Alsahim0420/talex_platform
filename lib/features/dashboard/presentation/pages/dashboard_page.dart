@@ -5,6 +5,8 @@ import 'package:talex_platform/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:talex_platform/features/dashboard/presentation/widgets/dashboard_widgets.dart';
 import 'package:talex_platform/l10n/l10n.dart';
 import 'package:talex_platform/features/settings/presentation/pages/settings_view.dart';
+import 'package:talex_platform/features/invitations/presentation/pages/invitations_view.dart';
+import 'package:talex_platform/features/invitations/presentation/widgets/create_invitation_dialog.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -17,12 +19,17 @@ class _DashboardPageState extends State<DashboardPage> {
   int _selectedIndex = 0;
 
   void _selectSection(int index) {
-    if (index != 0 && index != 6) return;
+    if (index != 0 && index != 1 && index != 6) return;
     setState(() => _selectedIndex = index);
     if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
       Navigator.of(context).pop();
     }
   }
+
+  void _openCreateInvitation() => showDialog<void>(
+    context: context,
+    builder: (_) => const CreateInvitationDialog(),
+  );
 
   List<DashboardNavItem> _navigation(BuildContext context) => [
     DashboardNavItem(context.l10n.dashboard, Icons.dashboard_outlined),
@@ -73,9 +80,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ),
                   Expanded(
-                    child: _selectedIndex == 6
-                        ? const SettingsView()
-                        : const _DashboardContent(),
+                    child: switch (_selectedIndex) {
+                      1 => InvitationsView(onCreate: _openCreateInvitation),
+                      6 => const SettingsView(),
+                      _ => _DashboardContent(
+                        onEnablePerson: _openCreateInvitation,
+                      ),
+                    },
                   ),
                 ],
               ),
@@ -88,7 +99,8 @@ class _DashboardPageState extends State<DashboardPage> {
 }
 
 class _DashboardContent extends StatelessWidget {
-  const _DashboardContent();
+  const _DashboardContent({required this.onEnablePerson});
+  final VoidCallback onEnablePerson;
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
@@ -212,7 +224,7 @@ class _DashboardContent extends StatelessWidget {
                   spacing: 12,
                   children: [
                     OutlinedButton(
-                      onPressed: () {},
+                      onPressed: onEnablePerson,
                       child: Text(context.l10n.generateReport),
                     ),
                     FilledButton.icon(

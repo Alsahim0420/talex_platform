@@ -536,6 +536,156 @@ abstract class AppLocalizations {
   /// **'Requiere seguimiento del reclutador'**
   String get connectionInterrupted;
 
+  /// No description provided for @invitationsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitaciones'**
+  String get invitationsTitle;
+
+  /// No description provided for @invitationsSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Habilita personas y realiza seguimiento a sus evaluaciones.'**
+  String get invitationsSubtitle;
+
+  /// No description provided for @enablePerson.
+  ///
+  /// In es, this message translates to:
+  /// **'Habilitar persona'**
+  String get enablePerson;
+
+  /// No description provided for @enablePersonSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Asigna una evaluación y envía una invitación de acceso.'**
+  String get enablePersonSubtitle;
+
+  /// No description provided for @personName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre de la persona'**
+  String get personName;
+
+  /// No description provided for @personNameHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre y apellido'**
+  String get personNameHint;
+
+  /// No description provided for @selectAssessment.
+  ///
+  /// In es, this message translates to:
+  /// **'Evaluación asignada'**
+  String get selectAssessment;
+
+  /// No description provided for @invitationExpiry.
+  ///
+  /// In es, this message translates to:
+  /// **'Vigencia de la invitación'**
+  String get invitationExpiry;
+
+  /// No description provided for @daysValue.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} días'**
+  String daysValue(int count);
+
+  /// No description provided for @optionalMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Mensaje opcional'**
+  String get optionalMessage;
+
+  /// No description provided for @optionalMessageHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega instrucciones para la persona...'**
+  String get optionalMessageHint;
+
+  /// No description provided for @sendInvitation.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar invitación'**
+  String get sendInvitation;
+
+  /// No description provided for @invitationSent.
+  ///
+  /// In es, this message translates to:
+  /// **'La persona fue habilitada y la invitación fue creada.'**
+  String get invitationSent;
+
+  /// No description provided for @invitationResent.
+  ///
+  /// In es, this message translates to:
+  /// **'La invitación fue reenviada y su vigencia fue renovada.'**
+  String get invitationResent;
+
+  /// No description provided for @invitationCancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'La invitación fue cancelada.'**
+  String get invitationCancelled;
+
+  /// No description provided for @noInvitations.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay personas habilitadas'**
+  String get noInvitations;
+
+  /// No description provided for @noInvitationsDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Habilita la primera persona para asignarle una evaluación.'**
+  String get noInvitationsDescription;
+
+  /// No description provided for @expiresOn.
+  ///
+  /// In es, this message translates to:
+  /// **'Vence: {date}'**
+  String expiresOn(String date);
+
+  /// No description provided for @resend.
+  ///
+  /// In es, this message translates to:
+  /// **'Reenviar'**
+  String get resend;
+
+  /// No description provided for @cancelInvitation.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar invitación'**
+  String get cancelInvitation;
+
+  /// No description provided for @confirmCancellation.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Deseas cancelar esta invitación? La persona perderá el acceso a la evaluación.'**
+  String get confirmCancellation;
+
+  /// No description provided for @keepInvitation.
+  ///
+  /// In es, this message translates to:
+  /// **'Conservar'**
+  String get keepInvitation;
+
+  /// No description provided for @statusExpired.
+  ///
+  /// In es, this message translates to:
+  /// **'Vencida'**
+  String get statusExpired;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelada'**
+  String get statusCancelled;
+
+  /// No description provided for @statusInterrupted.
+  ///
+  /// In es, this message translates to:
+  /// **'Interrumpida'**
+  String get statusInterrupted;
+
   /// No description provided for @settingsTitle.
   ///
   /// In es, this message translates to:

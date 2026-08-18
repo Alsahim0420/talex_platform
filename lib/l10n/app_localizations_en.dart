@@ -233,6 +233,91 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connectionInterrupted => 'Recruiter follow-up required';
 
   @override
+  String get invitationsTitle => 'Invitations';
+
+  @override
+  String get invitationsSubtitle =>
+      'Enable people and track their assigned assessments.';
+
+  @override
+  String get enablePerson => 'Enable person';
+
+  @override
+  String get enablePersonSubtitle =>
+      'Assign an assessment and send an access invitation.';
+
+  @override
+  String get personName => 'Person\'s name';
+
+  @override
+  String get personNameHint => 'First and last name';
+
+  @override
+  String get selectAssessment => 'Assigned assessment';
+
+  @override
+  String get invitationExpiry => 'Invitation validity';
+
+  @override
+  String daysValue(int count) {
+    return '$count days';
+  }
+
+  @override
+  String get optionalMessage => 'Optional message';
+
+  @override
+  String get optionalMessageHint => 'Add instructions for the person...';
+
+  @override
+  String get sendInvitation => 'Send invitation';
+
+  @override
+  String get invitationSent =>
+      'The person was enabled and the invitation was created.';
+
+  @override
+  String get invitationResent =>
+      'The invitation was resent and its validity was renewed.';
+
+  @override
+  String get invitationCancelled => 'The invitation was cancelled.';
+
+  @override
+  String get noInvitations => 'No people have been enabled yet';
+
+  @override
+  String get noInvitationsDescription =>
+      'Enable the first person and assign an assessment.';
+
+  @override
+  String expiresOn(String date) {
+    return 'Expires: $date';
+  }
+
+  @override
+  String get resend => 'Resend';
+
+  @override
+  String get cancelInvitation => 'Cancel invitation';
+
+  @override
+  String get confirmCancellation =>
+      'Cancel this invitation? The person will lose access to the assessment.';
+
+  @override
+  String get keepInvitation => 'Keep invitation';
+
+  @override
+  String get statusExpired => 'Expired';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get statusInterrupted => 'Interrupted';
+
+  @override
   String get settingsTitle => 'Settings';
 
   @override
