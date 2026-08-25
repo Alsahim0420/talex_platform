@@ -5,7 +5,7 @@ class AuthTestimonialPanel extends StatelessWidget {
   const AuthTestimonialPanel({
     super.key,
     this.quote =
-        '“TaleX transformed our logic routing, reducing structural latency by 40% in the first quarter.”',
+        '“TaleX transformed our selection process and helped our team make better decisions.”',
     this.name = 'Sarah Jenkins',
     this.role = 'VP of Engineering, Nexus Dynamics',
   });

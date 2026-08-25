@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
 
-class AuthField extends StatelessWidget {
+class AuthField extends StatefulWidget {
   const AuthField({
     super.key,
     required this.controller,
@@ -39,36 +39,82 @@ class AuthField extends StatelessWidget {
   final InputDecoration? decoration;
 
   @override
+  State<AuthField> createState() => _AuthFieldState();
+}
+
+class _AuthFieldState extends State<AuthField> {
+  late bool _obscureText;
+
+  @override
+  void initState() {
+    super.initState();
+    _obscureText = widget.obscureText;
+  }
+
+  @override
+  void didUpdateWidget(covariant AuthField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.obscureText != widget.obscureText) {
+      _obscureText = widget.obscureText;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) => SizedBox(
-    height: height,
+    height: widget.height,
     child: TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      validator: validator,
-      onFieldSubmitted: onSubmitted,
-      style: textStyle ?? const TextStyle(color: AppColors.ink, fontSize: 15),
+      controller: widget.controller,
+      keyboardType: widget.keyboardType,
+      obscureText: _obscureText,
+      autocorrect: !widget.obscureText,
+      enableSuggestions: !widget.obscureText,
+      validator: widget.validator,
+      onFieldSubmitted: widget.onSubmitted,
+      style:
+          widget.textStyle ??
+          const TextStyle(color: AppColors.ink, fontSize: 15),
       decoration:
-          decoration ??
+          widget.decoration ??
           InputDecoration(
-            labelText: label,
-            hintText: hint,
+            labelText: widget.label,
+            hintText: widget.hint,
             hintStyle:
-                hintStyle ??
+                widget.hintStyle ??
                 const TextStyle(color: AppColors.muted, fontSize: 15),
-            prefixIcon: icon == null
+            prefixIcon: widget.icon == null
                 ? null
-                : Icon(icon, color: iconColor, size: 21),
-            filled: fillColor != null,
-            fillColor: fillColor,
+                : Icon(widget.icon, color: widget.iconColor, size: 21),
+            suffixIcon: widget.obscureText
+                ? IconButton(
+                    onPressed: () => setState(() {
+                      _obscureText = !_obscureText;
+                    }),
+                    icon: Icon(
+                      _obscureText
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                      color: widget.iconColor,
+                      size: 20,
+                    ),
+                    tooltip: _passwordTooltip(context),
+                  )
+                : null,
+            filled: widget.fillColor != null,
+            fillColor: widget.fillColor,
             contentPadding: const EdgeInsets.symmetric(vertical: 11),
-            border: _border(borderColor),
-            enabledBorder: _border(borderColor),
-            focusedBorder: _border(focusedBorderColor, 1.2),
+            border: _border(widget.borderColor),
+            enabledBorder: _border(widget.borderColor),
+            focusedBorder: _border(widget.focusedBorderColor, 1.2),
             errorStyle: const TextStyle(height: 0, fontSize: 0),
           ),
     ),
   );
+
+  String _passwordTooltip(BuildContext context) {
+    final isSpanish = Localizations.localeOf(context).languageCode == 'es';
+    if (_obscureText) return isSpanish ? 'Mostrar contraseña' : 'Show password';
+    return isSpanish ? 'Ocultar contraseña' : 'Hide password';
+  }
 
   OutlineInputBorder _border(Color color, [double width = 1]) =>
       OutlineInputBorder(

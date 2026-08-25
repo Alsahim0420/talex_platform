@@ -25,6 +25,12 @@ final class SignInParams extends Equatable {
   List<Object> get props => [email, password];
 }
 
+final class SignInWithGoogle {
+  const SignInWithGoogle(this._repository);
+  final AuthRepository _repository;
+  Future<Either<Failure, AuthUser>> call() => _repository.signInWithGoogle();
+}
+
 final class SignUp {
   const SignUp(this._repository);
   final AuthRepository _repository;

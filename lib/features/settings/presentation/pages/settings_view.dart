@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/di/injection.dart';
+import 'package:talex_platform/core/services/notification_service.dart';
 import 'package:talex_platform/features/settings/presentation/widgets/settings_widgets.dart';
 import 'package:talex_platform/l10n/l10n.dart';
 
@@ -86,10 +88,9 @@ class _SettingsViewState extends State<SettingsView> {
                       ],
                     ),
                     FilledButton.icon(
-                      onPressed: () =>
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(context.l10n.changesSaved)),
-                          ),
+                      onPressed: () => getIt<NotificationService>().success(
+                        context.l10n.changesSaved,
+                      ),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.primaryButton,
                       ),

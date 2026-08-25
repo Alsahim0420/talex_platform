@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/di/injection.dart';
 import 'package:talex_platform/core/responsive/responsive_layout.dart';
+import 'package:talex_platform/core/services/notification_service.dart';
 import 'package:talex_platform/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:talex_platform/features/auth/presentation/pages/register_page.dart';
 import 'package:talex_platform/features/auth/presentation/widgets/auth_widgets.dart';
@@ -37,15 +39,22 @@ class _AuthPageState extends State<AuthPage> {
     backgroundColor: AppColors.background,
     body: BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
+        if (state.status == AuthStatus.googleFailure) {
+          getIt<NotificationService>().error(
+            state.failure?.message ?? context.l10n.googleSignInError,
+          );
+          return;
+        }
         final message =
             state.failure?.message ??
             (state.status == AuthStatus.passwordResetSent
                 ? context.l10n.resetEmailSent
                 : null);
         if (message != null) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(message)));
+          final notifications = getIt<NotificationService>();
+          state.status == AuthStatus.passwordResetSent
+              ? notifications.success(message)
+              : notifications.error(message);
         }
       },
       child: SafeArea(
@@ -71,7 +80,6 @@ class _AuthPageState extends State<AuthPage> {
                       AuthBrandHeader(
                         logoWidth: size.logoWidth,
                         logoHeight: size.logoHeight,
-                        subtitle: context.l10n.tagline,
                       ),
                       SizedBox(height: size.isCompact ? 26 : 34),
                       Center(
@@ -91,6 +99,8 @@ class _AuthPageState extends State<AuthPage> {
                                 ),
                               ),
                               isLoading: state.status == AuthStatus.loading,
+                              isSocialLoading:
+                                  state.status == AuthStatus.googleLoading,
                               title: context.l10n.secureSignIn,
                               emailLabel: context.l10n.workEmail,
                               emailHint: context.l10n.emailHint,
@@ -98,10 +108,16 @@ class _AuthPageState extends State<AuthPage> {
                               forgotText: context.l10n.forgotPassword,
                               submitText: context.l10n.signIn,
                               dividerText: context.l10n.continueWith,
-                              socialText: context.l10n.signInLinkedIn,
+                              socialText: context.l10n.signInGoogle,
                               width: double.infinity,
                               padding: EdgeInsets.all(size.cardPadding),
-                              onSocialPressed: () {},
+                              onSocialPressed:
+                                  state.status == AuthStatus.loading ||
+                                      state.status == AuthStatus.googleLoading
+                                  ? null
+                                  : () => context.read<AuthBloc>().add(
+                                      const AuthGoogleSignInRequested(),
+                                    ),
                               emailValidator: (value) =>
                                   value == null || !value.contains('@')
                                   ? context.l10n.validEmailError

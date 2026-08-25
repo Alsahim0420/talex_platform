@@ -16,7 +16,11 @@ final class AuthRepositoryImpl implements AuthRepository {
     } on ServerException catch (error) {
       return Left(ServerFailure(error.message));
     } catch (_) {
-      return const Left(UnexpectedFailure('Ocurrió un error inesperado.'));
+      return const Left(
+        UnexpectedFailure(
+          'No se pudo completar la operación. Inténtalo nuevamente.',
+        ),
+      );
     }
   }
 
@@ -31,6 +35,9 @@ final class AuthRepositoryImpl implements AuthRepository {
     () async =>
         (await _source.signIn(email: email, password: password)).toEntity(),
   );
+  @override
+  Future<Either<Failure, AuthUser>> signInWithGoogle() =>
+      _guard(() async => (await _source.signInWithGoogle()).toEntity());
   @override
   Future<Either<Failure, AuthUser>> signUp({
     required String email,

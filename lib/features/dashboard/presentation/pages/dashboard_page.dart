@@ -6,6 +6,7 @@ import 'package:talex_platform/features/dashboard/presentation/widgets/dashboard
 import 'package:talex_platform/l10n/l10n.dart';
 import 'package:talex_platform/features/settings/presentation/pages/settings_view.dart';
 import 'package:talex_platform/features/invitations/presentation/pages/invitations_view.dart';
+import 'package:talex_platform/features/invitations/presentation/bloc/invitation_bloc.dart';
 import 'package:talex_platform/features/invitations/presentation/widgets/create_invitation_dialog.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -26,10 +27,16 @@ class _DashboardPageState extends State<DashboardPage> {
     }
   }
 
-  void _openCreateInvitation() => showDialog<void>(
-    context: context,
-    builder: (_) => const CreateInvitationDialog(),
-  );
+  void _openCreateInvitation() {
+    final invitationBloc = context.read<InvitationBloc>();
+    showDialog<void>(
+      context: context,
+      builder: (_) => BlocProvider.value(
+        value: invitationBloc,
+        child: const CreateInvitationDialog(),
+      ),
+    );
+  }
 
   List<DashboardNavItem> _navigation(BuildContext context) => [
     DashboardNavItem(context.l10n.dashboard, Icons.dashboard_outlined),

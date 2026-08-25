@@ -11,7 +11,6 @@ abstract final class AppColors {
   static const softBorder = Color(0xFFDEDEDE);
   static const divider = Color(0xFFE2E2E2);
   static const legalText = Color(0xFF4A4A4E);
-  static const linkedIn = Color(0xFF087CB7);
   static const dashboardBackground = Color(0xFFFBF9FA);
   static const sidebarBackground = Color(0xFFF7F5F6);
   static const dashboardAccent = Color(0xFF5B57F4);

@@ -15,7 +15,11 @@ final class InvitationRepositoryImpl implements InvitationRepository {
     } on ServerException catch (error) {
       return Left(ServerFailure(error.message));
     } catch (_) {
-      return const Left(UnexpectedFailure('Ocurrió un error inesperado.'));
+      return const Left(
+        UnexpectedFailure(
+          'No se pudo completar la operación. Inténtalo nuevamente.',
+        ),
+      );
     }
   }
 

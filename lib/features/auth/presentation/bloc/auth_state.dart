@@ -3,6 +3,8 @@ part of 'auth_bloc.dart';
 enum AuthStatus {
   initial,
   loading,
+  googleLoading,
+  googleFailure,
   authenticated,
   unauthenticated,
   passwordResetSent,

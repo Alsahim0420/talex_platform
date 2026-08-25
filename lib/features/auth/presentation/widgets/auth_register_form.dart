@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
 import 'package:talex_platform/features/auth/presentation/widgets/auth_field.dart';
+import 'package:talex_platform/features/auth/presentation/widgets/auth_social_button.dart';
 
 class AuthRegisterForm extends StatelessWidget {
   const AuthRegisterForm({
@@ -12,17 +13,21 @@ class AuthRegisterForm extends StatelessWidget {
     required this.passwordController,
     required this.onSubmit,
     required this.onLogin,
+    this.onGoogleSignUp,
     this.isLoading = false,
+    this.isGoogleLoading = false,
     this.title = 'Create your account',
-    this.subtitle = 'Deploy enterprise logic flows with confidence.',
+    this.subtitle = 'Create your account to get started with TaleX.',
     this.nameLabel = 'Full Name',
     this.nameHint = 'Jane Doe',
-    this.emailLabel = 'Work Email',
+    this.emailLabel = 'Email address',
     this.emailHint = 'jane@company.com',
     this.companyLabel = 'Company Name',
     this.companyHint = 'Acme Corp',
     this.passwordLabel = 'Password',
     this.submitText = 'Sign up',
+    this.dividerText = 'Or continue with',
+    this.googleSignUpText = 'Sign up with Google',
     this.accountPrompt = 'Already have an account?',
     this.loginText = 'Log in',
     this.requiredError = 'This field is required',
@@ -35,7 +40,8 @@ class AuthRegisterForm extends StatelessWidget {
       companyController,
       passwordController;
   final VoidCallback onSubmit, onLogin;
-  final bool isLoading;
+  final VoidCallback? onGoogleSignUp;
+  final bool isLoading, isGoogleLoading;
   final String title,
       subtitle,
       nameLabel,
@@ -46,6 +52,8 @@ class AuthRegisterForm extends StatelessWidget {
       companyHint,
       passwordLabel,
       submitText,
+      dividerText,
+      googleSignUpText,
       accountPrompt,
       loginText,
       requiredError,
@@ -103,7 +111,7 @@ class AuthRegisterForm extends StatelessWidget {
         SizedBox(
           height: 44,
           child: FilledButton(
-            onPressed: isLoading ? null : onSubmit,
+            onPressed: isLoading || isGoogleLoading ? null : onSubmit,
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.primaryButton,
               disabledBackgroundColor: AppColors.primaryButton,
@@ -123,6 +131,32 @@ class AuthRegisterForm extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
+        Row(
+          children: [
+            const Expanded(child: Divider(color: AppColors.divider)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                dividerText,
+                style: const TextStyle(
+                  color: AppColors.subtitle,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const Expanded(child: Divider(color: AppColors.divider)),
+          ],
+        ),
+        const SizedBox(height: 20),
+        AuthSocialButton(
+          label: googleSignUpText,
+          onPressed: isLoading || isGoogleLoading ? null : onGoogleSignUp,
+          icon: const GoogleMark(),
+          isLoading: isGoogleLoading,
+          height: 44,
+        ),
+        const SizedBox(height: 18),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

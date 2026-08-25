@@ -12,16 +12,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get appName => 'TaleX';
 
   @override
-  String get tagline => 'Lógica empresarial';
-
-  @override
   String get secureSignIn => 'Inicio de sesión seguro';
 
   @override
-  String get workEmail => 'Correo corporativo';
+  String get workEmail => 'Correo electrónico';
 
   @override
-  String get emailHint => 'ejecutivo@empresa.com';
+  String get emailAddress => 'Correo electrónico';
+
+  @override
+  String get emailAddressHint => 'candidato@correo.com';
+
+  @override
+  String get validEmailAddressError => 'Ingresa un correo electrónico válido';
+
+  @override
+  String get emailHint => 'correo@ejemplo.com';
 
   @override
   String get password => 'Contraseña';
@@ -36,7 +42,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get continueWith => 'O continúa con';
 
   @override
-  String get signInLinkedIn => 'Iniciar sesión con LinkedIn';
+  String get signInGoogle => 'Iniciar sesión con Google';
+
+  @override
+  String get signUpGoogle => 'Crear cuenta con Google';
+
+  @override
+  String get googleSignInError =>
+      'No se pudo iniciar sesión con Google. Inténtalo nuevamente.';
 
   @override
   String get newToTalex => '¿Nuevo en TaleX?';
@@ -51,7 +64,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get termsOfService => 'Términos del servicio';
 
   @override
-  String get validEmailError => 'Ingresa un correo corporativo válido';
+  String get validEmailError => 'Ingresa un correo electrónico válido';
 
   @override
   String get passwordLengthError =>
@@ -65,8 +78,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get createAccount => 'Crea tu cuenta';
 
   @override
-  String get registerSubtitle =>
-      'Implementa flujos de lógica empresarial con confianza.';
+  String get registerSubtitle => 'Crea tu cuenta para comenzar en TaleX.';
 
   @override
   String get fullName => 'Nombre completo';
@@ -94,7 +106,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get testimonial =>
-      '“TaleX transformó nuestro enrutamiento lógico y redujo la latencia estructural un 40 % durante el primer trimestre.”';
+      '“TaleX transformó nuestro proceso de selección y ayudó a nuestro equipo a tomar mejores decisiones.”';
 
   @override
   String get testimonialName => 'Sarah Jenkins';

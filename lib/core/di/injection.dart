@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:talex_platform/core/services/notification_service.dart';
 import 'package:talex_platform/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:talex_platform/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:talex_platform/features/auth/domain/repositories/auth_repository.dart';
@@ -14,11 +17,15 @@ final getIt = GetIt.instance;
 
 void configureDependencies() {
   getIt
+    ..registerLazySingleton(NotificationService.new)
+    ..registerLazySingleton(() => FirebaseAuth.instance)
+    ..registerLazySingleton(() => GoogleSignIn.instance)
     ..registerLazySingleton<AuthRemoteDataSource>(
-      InMemoryAuthRemoteDataSource.new,
+      () => FirebaseAuthRemoteDataSource(getIt(), getIt()),
     )
     ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(getIt()))
     ..registerLazySingleton(() => SignIn(getIt()))
+    ..registerLazySingleton(() => SignInWithGoogle(getIt()))
     ..registerLazySingleton(() => SignUp(getIt()))
     ..registerLazySingleton(() => SignOut(getIt()))
     ..registerLazySingleton(() => GetCurrentUser(getIt()))
@@ -26,12 +33,19 @@ void configureDependencies() {
     ..registerFactory(
       () => AuthBloc(
         signIn: getIt(),
+        signInWithGoogle: getIt(),
         signUp: getIt(),
         signOut: getIt(),
         getCurrentUser: getIt(),
         sendPasswordResetEmail: getIt(),
       ),
-    )
+    );
+  configureInvitationDependencies();
+}
+
+void configureInvitationDependencies() {
+  if (getIt.isRegistered<InvitationBloc>()) return;
+  getIt
     ..registerLazySingleton<InvitationDataSource>(
       InMemoryInvitationDataSource.new,
     )

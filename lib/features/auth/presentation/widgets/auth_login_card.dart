@@ -13,16 +13,17 @@ class AuthLoginCard extends StatelessWidget {
     required this.onSubmit,
     required this.onForgot,
     this.isLoading = false,
+    this.isSocialLoading = false,
     this.onSocialPressed,
     this.title = 'Secure Sign In',
-    this.emailLabel = 'Work Email',
-    this.emailHint = 'executive@company.com',
+    this.emailLabel = 'Email address',
+    this.emailHint = 'email@example.com',
     this.passwordLabel = 'Password',
     this.passwordHint = '••••••••',
     this.forgotText = 'Forgot password?',
     this.submitText = 'Sign In',
     this.dividerText = 'Or continue with',
-    this.socialText = 'Sign in with LinkedIn',
+    this.socialText = 'Sign in with Google',
     this.width = 448,
     this.padding = const EdgeInsets.fromLTRB(32, 34, 32, 32),
     this.backgroundColor = AppColors.white,
@@ -30,7 +31,7 @@ class AuthLoginCard extends StatelessWidget {
     this.submitColor = AppColors.primaryButton,
     this.emailValidator,
     this.passwordValidator,
-    this.socialIcon = const LinkedInMark(),
+    this.socialIcon = const GoogleMark(),
   });
   final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
@@ -39,6 +40,7 @@ class AuthLoginCard extends StatelessWidget {
   final VoidCallback onForgot;
   final VoidCallback? onSocialPressed;
   final bool isLoading;
+  final bool isSocialLoading;
   final String title,
       emailLabel,
       emailHint,
@@ -169,8 +171,9 @@ class AuthLoginCard extends StatelessWidget {
           const SizedBox(height: 24),
           AuthSocialButton(
             label: socialText,
-            onPressed: onSocialPressed,
+            onPressed: isSocialLoading ? null : onSocialPressed,
             icon: socialIcon,
+            isLoading: isSocialLoading,
           ),
         ],
       ),

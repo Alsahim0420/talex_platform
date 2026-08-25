@@ -12,11 +12,13 @@ part 'auth_bloc.g.dart';
 final class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
     required SignIn signIn,
+    required SignInWithGoogle signInWithGoogle,
     required SignUp signUp,
     required SignOut signOut,
     required GetCurrentUser getCurrentUser,
     required SendPasswordResetEmail sendPasswordResetEmail,
   }) : _signIn = signIn,
+       _signInWithGoogle = signInWithGoogle,
        _signUp = signUp,
        _signOut = signOut,
        _getCurrentUser = getCurrentUser,
@@ -24,12 +26,14 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
        super(const AuthState()) {
     on<AuthSessionRequested>(_onSessionRequested);
     on<AuthSignInRequested>(_onSignInRequested);
+    on<AuthGoogleSignInRequested>(_onGoogleSignInRequested);
     on<AuthSignUpRequested>(_onSignUpRequested);
     on<AuthSignOutRequested>(_onSignOutRequested);
     on<AuthPasswordResetRequested>(_onPasswordResetRequested);
   }
 
   final SignIn _signIn;
+  final SignInWithGoogle _signInWithGoogle;
   final SignUp _signUp;
   final SignOut _signOut;
   final GetCurrentUser _getCurrentUser;
@@ -100,6 +104,28 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
       result.fold(
         (failure) => state.copyWith(
           status: AuthStatus.failure,
+          failure: failure,
+          user: null,
+        ),
+        (user) => state.copyWith(
+          status: AuthStatus.authenticated,
+          user: user,
+          failure: null,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onGoogleSignInRequested(
+    AuthGoogleSignInRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(state.copyWith(status: AuthStatus.googleLoading, failure: null));
+    final result = await _signInWithGoogle();
+    emit(
+      result.fold(
+        (failure) => state.copyWith(
+          status: AuthStatus.googleFailure,
           failure: failure,
           user: null,
         ),

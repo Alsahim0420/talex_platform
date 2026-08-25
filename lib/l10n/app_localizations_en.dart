@@ -12,16 +12,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appName => 'TaleX';
 
   @override
-  String get tagline => 'Enterprise Logic';
-
-  @override
   String get secureSignIn => 'Secure Sign In';
 
   @override
-  String get workEmail => 'Work Email';
+  String get workEmail => 'Email address';
 
   @override
-  String get emailHint => 'executive@company.com';
+  String get emailAddress => 'Email address';
+
+  @override
+  String get emailAddressHint => 'candidate@email.com';
+
+  @override
+  String get validEmailAddressError => 'Enter a valid email address';
+
+  @override
+  String get emailHint => 'email@example.com';
 
   @override
   String get password => 'Password';
@@ -36,7 +42,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueWith => 'Or continue with';
 
   @override
-  String get signInLinkedIn => 'Sign in with LinkedIn';
+  String get signInGoogle => 'Sign in with Google';
+
+  @override
+  String get signUpGoogle => 'Sign up with Google';
+
+  @override
+  String get googleSignInError =>
+      'Unable to sign in with Google. Please try again.';
 
   @override
   String get newToTalex => 'New to TaleX?';
@@ -51,7 +64,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get termsOfService => 'Terms of Service';
 
   @override
-  String get validEmailError => 'Enter a valid work email';
+  String get validEmailError => 'Enter a valid email address';
 
   @override
   String get passwordLengthError => 'Password must have at least 6 characters';
@@ -64,7 +77,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get registerSubtitle =>
-      'Deploy enterprise logic flows with confidence.';
+      'Create your account to get started with TaleX.';
 
   @override
   String get fullName => 'Full Name';
@@ -92,7 +105,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get testimonial =>
-      '“TaleX transformed our logic routing, reducing structural latency by 40% in the first quarter.”';
+      '“TaleX transformed our selection process and helped our team make better decisions.”';
 
   @override
   String get testimonialName => 'Sarah Jenkins';

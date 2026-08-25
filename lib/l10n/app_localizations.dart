@@ -104,12 +104,6 @@ abstract class AppLocalizations {
   /// **'TaleX'**
   String get appName;
 
-  /// No description provided for @tagline.
-  ///
-  /// In es, this message translates to:
-  /// **'Lógica empresarial'**
-  String get tagline;
-
   /// No description provided for @secureSignIn.
   ///
   /// In es, this message translates to:
@@ -119,13 +113,31 @@ abstract class AppLocalizations {
   /// No description provided for @workEmail.
   ///
   /// In es, this message translates to:
-  /// **'Correo corporativo'**
+  /// **'Correo electrónico'**
   String get workEmail;
+
+  /// No description provided for @emailAddress.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo electrónico'**
+  String get emailAddress;
+
+  /// No description provided for @emailAddressHint.
+  ///
+  /// In es, this message translates to:
+  /// **'candidato@correo.com'**
+  String get emailAddressHint;
+
+  /// No description provided for @validEmailAddressError.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa un correo electrónico válido'**
+  String get validEmailAddressError;
 
   /// No description provided for @emailHint.
   ///
   /// In es, this message translates to:
-  /// **'ejecutivo@empresa.com'**
+  /// **'correo@ejemplo.com'**
   String get emailHint;
 
   /// No description provided for @password.
@@ -152,11 +164,23 @@ abstract class AppLocalizations {
   /// **'O continúa con'**
   String get continueWith;
 
-  /// No description provided for @signInLinkedIn.
+  /// No description provided for @signInGoogle.
   ///
   /// In es, this message translates to:
-  /// **'Iniciar sesión con LinkedIn'**
-  String get signInLinkedIn;
+  /// **'Iniciar sesión con Google'**
+  String get signInGoogle;
+
+  /// No description provided for @signUpGoogle.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta con Google'**
+  String get signUpGoogle;
+
+  /// No description provided for @googleSignInError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo iniciar sesión con Google. Inténtalo nuevamente.'**
+  String get googleSignInError;
 
   /// No description provided for @newToTalex.
   ///
@@ -185,7 +209,7 @@ abstract class AppLocalizations {
   /// No description provided for @validEmailError.
   ///
   /// In es, this message translates to:
-  /// **'Ingresa un correo corporativo válido'**
+  /// **'Ingresa un correo electrónico válido'**
   String get validEmailError;
 
   /// No description provided for @passwordLengthError.
@@ -209,7 +233,7 @@ abstract class AppLocalizations {
   /// No description provided for @registerSubtitle.
   ///
   /// In es, this message translates to:
-  /// **'Implementa flujos de lógica empresarial con confianza.'**
+  /// **'Crea tu cuenta para comenzar en TaleX.'**
   String get registerSubtitle;
 
   /// No description provided for @fullName.
@@ -263,7 +287,7 @@ abstract class AppLocalizations {
   /// No description provided for @testimonial.
   ///
   /// In es, this message translates to:
-  /// **'“TaleX transformó nuestro enrutamiento lógico y redujo la latencia estructural un 40 % durante el primer trimestre.”'**
+  /// **'“TaleX transformó nuestro proceso de selección y ayudó a nuestro equipo a tomar mejores decisiones.”'**
   String get testimonial;
 
   /// No description provided for @testimonialName.

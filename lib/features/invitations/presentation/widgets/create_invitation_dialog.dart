@@ -103,16 +103,16 @@ class _CreateInvitationDialogState extends State<CreateInvitationDialog> {
                       : null,
                 ),
                 const SizedBox(height: 18),
-                _label(context.l10n.workEmail),
+                _label(context.l10n.emailAddress),
                 TextFormField(
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    hintText: context.l10n.emailHint,
+                    hintText: context.l10n.emailAddressHint,
                     border: const OutlineInputBorder(),
                   ),
                   validator: (value) => value == null || !value.contains('@')
-                      ? context.l10n.validEmailError
+                      ? context.l10n.validEmailAddressError
                       : null,
                 ),
                 const SizedBox(height: 18),

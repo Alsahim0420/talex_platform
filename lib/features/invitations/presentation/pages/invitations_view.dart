@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/di/injection.dart';
+import 'package:talex_platform/core/services/notification_service.dart';
 import 'package:talex_platform/features/invitations/domain/entities/invitation.dart';
 import 'package:talex_platform/features/invitations/presentation/bloc/invitation_bloc.dart';
 import 'package:talex_platform/l10n/l10n.dart';
@@ -27,9 +29,10 @@ class InvitationsView extends StatelessWidget {
                 null => null,
               };
           if (message != null) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(message)));
+            final notifications = getIt<NotificationService>();
+            state.failure == null
+                ? notifications.success(message)
+                : notifications.error(message);
           }
         },
         builder: (context, state) => LayoutBuilder(

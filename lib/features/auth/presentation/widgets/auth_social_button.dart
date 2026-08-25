@@ -7,6 +7,7 @@ class AuthSocialButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     required this.icon,
+    this.isLoading = false,
     this.height = 42,
     this.foregroundColor = AppColors.ink,
     this.borderColor = AppColors.divider,
@@ -15,6 +16,7 @@ class AuthSocialButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final Widget icon;
+  final bool isLoading;
   final double height;
   final Color foregroundColor;
   final Color borderColor;
@@ -24,7 +26,12 @@ class AuthSocialButton extends StatelessWidget {
     height: height,
     child: OutlinedButton.icon(
       onPressed: onPressed,
-      icon: icon,
+      icon: isLoading
+          ? const SizedBox.square(
+              dimension: 18,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : icon,
       label: Text(label),
       style: OutlinedButton.styleFrom(
         backgroundColor: backgroundColor,
@@ -37,32 +44,18 @@ class AuthSocialButton extends StatelessWidget {
   );
 }
 
-class LinkedInMark extends StatelessWidget {
-  const LinkedInMark({
-    super.key,
-    this.size = 20,
-    this.color = AppColors.linkedIn,
-  });
+class GoogleMark extends StatelessWidget {
+  const GoogleMark({super.key, this.size = 20});
   final double size;
-  final Color color;
   @override
-  Widget build(BuildContext context) => Container(
-    width: size,
-    height: size,
-    alignment: Alignment.center,
-    decoration: BoxDecoration(
-      color: color,
-      borderRadius: BorderRadius.circular(2),
-    ),
-    child: Text(
-      'in',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: size * .75,
-        height: 1,
-        fontWeight: FontWeight.w800,
-        letterSpacing: -1,
-      ),
+  Widget build(BuildContext context) => Text(
+    'G',
+    style: TextStyle(
+      color: const Color(0xFF4285F4),
+      fontSize: size,
+      height: 1,
+      fontWeight: FontWeight.w700,
+      fontFamily: 'Arial',
     ),
   );
 }

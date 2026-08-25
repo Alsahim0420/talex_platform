@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/di/injection.dart';
+import 'package:talex_platform/core/services/notification_service.dart';
 import 'package:talex_platform/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:talex_platform/features/auth/presentation/widgets/auth_widgets.dart';
 import 'package:talex_platform/l10n/l10n.dart';
@@ -49,9 +51,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Navigator.of(context).popUntil((route) => route.isFirst);
         }
         if (state.failure case final failure?) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(failure.message)));
+          getIt<NotificationService>().error(failure.message);
         }
       },
       child: SafeArea(
@@ -67,7 +67,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 passwordController: _password,
                 onSubmit: _submit,
                 onLogin: () => Navigator.of(context).pop(),
+                onGoogleSignUp: () => context.read<AuthBloc>().add(
+                  const AuthGoogleSignInRequested(),
+                ),
                 isLoading: state.status == AuthStatus.loading,
+                isGoogleLoading: state.status == AuthStatus.googleLoading,
                 title: context.l10n.createAccount,
                 subtitle: context.l10n.registerSubtitle,
                 nameLabel: context.l10n.fullName,
@@ -78,6 +82,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 companyHint: context.l10n.companyHint,
                 passwordLabel: context.l10n.password,
                 submitText: context.l10n.signUp,
+                dividerText: context.l10n.continueWith,
+                googleSignUpText: context.l10n.signUpGoogle,
                 accountPrompt: context.l10n.alreadyHaveAccount,
                 loginText: context.l10n.logIn,
                 requiredError: context.l10n.requiredField,

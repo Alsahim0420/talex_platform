@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "127764857215",
+    "project_id": "talex-platform",
+    "storage_bucket": "talex-platform.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127764857215:android:c861007dafcac0547c5a4a",
+        "android_client_info": {
+          "package_name": "com.example.talex_platform"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "127764857215-8omttj1iaechhdjdj3l957qgov1fm87l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqIFm6umkb2rr2Bjh0Rt3tZ3bnyWEAIhg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "127764857215-8omttj1iaechhdjdj3l957qgov1fm87l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
