@@ -9,7 +9,7 @@ import 'package:talex_platform/firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  configureDependencies();
+  await configureDependencies();
   runApp(
     BlocProvider(
       create: (_) => getIt<AuthBloc>()..add(const AuthSessionRequested()),

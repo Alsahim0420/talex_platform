@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -23,10 +24,15 @@ abstract interface class AuthRemoteDataSource {
 }
 
 final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
-  FirebaseAuthRemoteDataSource(this._firebaseAuth, this._googleSignIn);
+  FirebaseAuthRemoteDataSource(
+    this._firebaseAuth,
+    this._googleSignIn,
+    this._firestore,
+  );
 
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
+  final FirebaseFirestore _firestore;
   Future<void>? _googleInitialization;
 
   Future<T> _handleFirebaseErrors<T>(Future<T> Function() action) async {
@@ -34,8 +40,22 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       return await action();
     } on FirebaseAuthException catch (error) {
       throw ServerException(_firebaseErrorMessage(error.code));
+    } on FirebaseException catch (error) {
+      throw ServerException(_firestoreErrorMessage(error.code));
     }
   }
+
+  String _firestoreErrorMessage(String code) => switch (code) {
+    'permission-denied' =>
+      'No tienes permiso para guardar la información del usuario en Firestore.',
+    'unavailable' =>
+      'Firestore no está disponible temporalmente. Inténtalo nuevamente.',
+    'deadline-exceeded' =>
+      'Firestore tardó demasiado en responder. Inténtalo nuevamente.',
+    'not-found' =>
+      'No se encontró la base de datos de Firestore. Verifica su configuración.',
+    _ => 'No se pudo guardar la información del usuario. Inténtalo nuevamente.',
+  };
 
   String _firebaseErrorMessage(String code) => switch (code) {
     'user-not-found' =>
@@ -50,6 +70,12 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
     'weak-password' => 'La contraseña es muy débil. Usa al menos 6 caracteres.',
     'operation-not-allowed' =>
       'Este método de acceso no está habilitado en Firebase.',
+    'configuration-not-found' =>
+      'Firebase Authentication no está configurado correctamente para este método de registro.',
+    'app-not-authorized' =>
+      'Esta aplicación no está autorizada para usar Firebase Authentication.',
+    'internal-error' =>
+      'Firebase Authentication tuvo un error interno. Inténtalo nuevamente.',
     'too-many-requests' =>
       'Se realizaron demasiados intentos. Espera un momento e inténtalo nuevamente.',
     'network-request-failed' =>
@@ -72,6 +98,83 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
     );
   }
 
+  Future<void> _saveUserDocument(
+    UserCredential credential, {
+    String? displayName,
+    String? companyName,
+  }) async {
+    final user = credential.user;
+    if (user == null) {
+      throw const ServerException('No se pudo obtener el usuario autenticado.');
+    }
+    final providers = user.providerData
+        .map((provider) => provider.providerId)
+        .toSet()
+        .toList();
+    final createdAt = user.metadata.creationTime;
+    final data = <String, Object?>{
+      'uid': user.uid,
+      'email': user.email,
+      'displayName': displayName ?? user.displayName,
+      'photoUrl': user.photoURL,
+      'phoneNumber': user.phoneNumber,
+      'emailVerified': user.emailVerified,
+      'isAnonymous': user.isAnonymous,
+      'isActive': true,
+      'role': 'user',
+      'providers': providers,
+      'primaryProvider':
+          credential.credential?.providerId ??
+          (providers.isEmpty ? null : providers.first),
+      'createdAt': createdAt == null
+          ? FieldValue.serverTimestamp()
+          : Timestamp.fromDate(createdAt),
+      'updatedAt': FieldValue.serverTimestamp(),
+      'lastLoginAt': FieldValue.serverTimestamp(),
+    };
+    if (companyName != null) {
+      data['companyName'] = companyName.trim().isEmpty
+          ? null
+          : companyName.trim();
+    }
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .set(data, SetOptions(merge: true));
+  }
+
+  Future<void> _saveUserDocumentWithRetry(
+    UserCredential credential, {
+    String? displayName,
+    String? companyName,
+  }) async {
+    Object? lastError;
+    for (var attempt = 0; attempt < 3; attempt++) {
+      try {
+        await _saveUserDocument(
+          credential,
+          displayName: displayName,
+          companyName: companyName,
+        );
+        return;
+      } catch (error) {
+        lastError = error;
+        if (attempt < 2) {
+          await Future<void>.delayed(
+            Duration(milliseconds: 250 * (attempt + 1)),
+          );
+        }
+      }
+    }
+    if (lastError is FirebaseException) {
+      throw ServerException(_firestoreErrorMessage(lastError.code));
+    }
+    if (lastError is ServerException) throw lastError;
+    throw const ServerException(
+      'La cuenta se creó en Authentication, pero no se pudo guardar el perfil en Firestore. Inicia sesión para reintentarlo.',
+    );
+  }
+
   @override
   Future<AuthUserModel?> getCurrentUser() async {
     final user = _firebaseAuth.currentUser;
@@ -82,14 +185,14 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
   Future<AuthUserModel> signIn({
     required String email,
     required String password,
-  }) => _handleFirebaseErrors(
-    () async => _mapUser(
-      (await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      )).user,
-    ),
-  );
+  }) => _handleFirebaseErrors(() async {
+    final credential = await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    await _saveUserDocumentWithRetry(credential);
+    return _mapUser(credential.user);
+  });
 
   @override
   Future<AuthUserModel> signInWithGoogle() async {
@@ -101,6 +204,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
         final credential = await monitorGooglePopup(
           () => _firebaseAuth.signInWithPopup(provider),
         );
+        await _saveUserDocumentWithRetry(credential);
         return _mapUser(credential.user);
       }
 
@@ -110,9 +214,11 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
-      return _mapUser(
-        (await _firebaseAuth.signInWithCredential(credential)).user,
+      final userCredential = await _firebaseAuth.signInWithCredential(
+        credential,
       );
+      await _saveUserDocumentWithRetry(userCredential);
+      return _mapUser(userCredential.user);
     } on FirebaseAuthException catch (error) {
       if (error.code == 'popup-closed-by-user' ||
           error.code == 'cancelled-popup-request') {
@@ -128,6 +234,8 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       throw const ServerException(
         'No se pudo iniciar sesión con Google. Inténtalo nuevamente.',
       );
+    } on FirebaseException catch (error) {
+      throw ServerException(_firestoreErrorMessage(error.code));
     } on GoogleSignInException catch (error) {
       if (error.code == GoogleSignInExceptionCode.canceled) {
         throw const ServerException(
@@ -137,6 +245,8 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       throw const ServerException(
         'No se pudo iniciar sesión con Google. Inténtalo nuevamente.',
       );
+    } on ServerException {
+      rethrow;
     } catch (_) {
       throw const ServerException(
         'No se pudo iniciar sesión con Google. Inténtalo nuevamente.',
@@ -156,8 +266,18 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       password: password,
     );
     if (displayName != null && displayName.trim().isNotEmpty) {
-      await credential.user?.updateDisplayName(displayName.trim());
+      try {
+        await credential.user?.updateDisplayName(displayName.trim());
+      } on FirebaseAuthException {
+        // El nombre también se guarda en Firestore; no se elimina la cuenta
+        // si Firebase Auth no puede actualizar este dato opcional.
+      }
     }
+    await _saveUserDocumentWithRetry(
+      credential,
+      displayName: displayName?.trim(),
+      companyName: companyName?.trim(),
+    );
     return _mapUser(_firebaseAuth.currentUser);
   });
 

@@ -29,7 +29,10 @@ class DashboardSidebar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const TalexLogo(width: 190, height: 58),
+          const Padding(
+            padding: EdgeInsets.only(top: 14, bottom: 8),
+            child: TalexLogo(width: 190, height: 58),
+          ),
           ...items.indexed.map(
             (entry) => _NavTile(
               item: entry.$2,
