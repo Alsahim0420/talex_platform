@@ -18,6 +18,7 @@ void main() {
     result.fold((failure) => fail(failure.message), (user) {
       expect(user.email, 'equipo@talex.com.co');
       expect(user.displayName, 'TaleX');
+      expect(user.isSuperAdmin, isFalse);
     });
   });
 

@@ -33,14 +33,20 @@ class DashboardSidebar extends StatelessWidget {
             padding: EdgeInsets.only(top: 14, bottom: 8),
             child: TalexLogo(width: 190, height: 58),
           ),
-          ...items.indexed.map(
-            (entry) => _NavTile(
-              item: entry.$2,
-              selected: entry.$1 == selectedIndex,
-              onTap: () => onSelected?.call(entry.$1),
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                ...items.indexed.map(
+                  (entry) => _NavTile(
+                    item: entry.$2,
+                    selected: entry.$1 == selectedIndex,
+                    onTap: () => onSelected?.call(entry.$1),
+                  ),
+                ),
+              ],
             ),
           ),
-          const Spacer(),
           const Divider(height: 1, color: AppColors.softBorder),
           ...footerItems.map((item) => _NavTile(item: item)),
           const SizedBox(height: 18),
@@ -113,10 +119,14 @@ class DashboardTopBar extends StatelessWidget {
     required this.signOutLabel,
     this.onMenu,
     this.onSignOut,
+    this.onSearch,
+    this.onNotifications,
+    this.onAssistant,
     this.showMenu = false,
   });
   final String searchHint, signOutLabel;
-  final VoidCallback? onMenu, onSignOut;
+  final VoidCallback? onMenu, onSignOut, onNotifications, onAssistant;
+  final ValueChanged<String>? onSearch;
   final bool showMenu;
   @override
   Widget build(BuildContext context) => Container(
@@ -132,6 +142,7 @@ class DashboardTopBar extends StatelessWidget {
           IconButton(onPressed: onMenu, icon: const Icon(Icons.menu)),
         Expanded(
           child: TextField(
+            onSubmitted: onSearch,
             decoration: InputDecoration(
               hintText: searchHint,
               prefixIcon: const Icon(Icons.search),
@@ -147,10 +158,13 @@ class DashboardTopBar extends StatelessWidget {
         ),
         const SizedBox(width: 16),
         IconButton(
-          onPressed: () {},
+          onPressed: onNotifications,
           icon: const Icon(Icons.notifications_none),
         ),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.bolt_outlined)),
+        IconButton(
+          onPressed: onAssistant,
+          icon: const Icon(Icons.bolt_outlined),
+        ),
         IconButton(onPressed: () {}, icon: const Icon(Icons.help_outline)),
         PopupMenuButton<void>(
           icon: const CircleAvatar(
@@ -181,14 +195,15 @@ class DashboardMetricCard extends StatelessWidget {
   final Color captionColor;
   @override
   Widget build(BuildContext context) => Container(
-    constraints: const BoxConstraints(minHeight: 166),
-    padding: const EdgeInsets.all(24),
+    constraints: const BoxConstraints(minHeight: 148),
+    padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: Colors.white,
       border: Border.all(color: const Color(0xFFC9CBD1)),
       borderRadius: BorderRadius.circular(8),
     ),
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -196,9 +211,11 @@ class DashboardMetricCard extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: AppColors.subtitle,
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -206,26 +223,34 @@ class DashboardMetricCard extends StatelessWidget {
             Icon(icon, color: AppColors.muted, size: 20),
           ],
         ),
-        const SizedBox(height: 16),
-        Text(
-          value,
-          style: const TextStyle(
-            color: AppColors.ink,
-            fontSize: 48,
-            height: 1,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -1.5,
+        const SizedBox(height: 12),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: AppColors.ink,
+              fontSize: 36,
+              height: 1,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -1.2,
+            ),
           ),
         ),
-        const Spacer(),
-        Text(
-          caption,
-          style: TextStyle(
-            color: captionColor,
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
+        if (caption.trim().isNotEmpty) ...[
+          const SizedBox(height: 10),
+          Text(
+            caption,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: captionColor,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
+        ],
       ],
     ),
   );

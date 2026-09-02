@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:talex_platform/core/auth/user_role.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
 import 'package:talex_platform/core/di/injection.dart';
@@ -19,6 +21,17 @@ class _AuthPageState extends State<AuthPage> {
   final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (kDebugMode && SuperAdminConfig.hasEmail) {
+      _email.text = SuperAdminConfig.email.trim();
+      if (SuperAdminConfig.password.isNotEmpty) {
+        _password.text = SuperAdminConfig.password;
+      }
+    }
+  }
 
   @override
   void dispose() {

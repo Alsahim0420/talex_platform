@@ -859,6 +859,684 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'30 minutos'**
   String get minutes30;
+
+  /// No description provided for @adminCommandCenter.
+  ///
+  /// In es, this message translates to:
+  /// **'Centro de mando'**
+  String get adminCommandCenter;
+
+  /// No description provided for @adminCommandSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Una lectura ejecutiva de TaleX: operación, clientes y crecimiento.'**
+  String get adminCommandSubtitle;
+
+  /// No description provided for @adminCompanies.
+  ///
+  /// In es, this message translates to:
+  /// **'Empresas'**
+  String get adminCompanies;
+
+  /// No description provided for @adminProcesses.
+  ///
+  /// In es, this message translates to:
+  /// **'Procesos'**
+  String get adminProcesses;
+
+  /// No description provided for @adminPeople.
+  ///
+  /// In es, this message translates to:
+  /// **'Personas'**
+  String get adminPeople;
+
+  /// No description provided for @adminAffinity.
+  ///
+  /// In es, this message translates to:
+  /// **'Afinidad'**
+  String get adminAffinity;
+
+  /// No description provided for @adminCommercial.
+  ///
+  /// In es, this message translates to:
+  /// **'Comercial'**
+  String get adminCommercial;
+
+  /// No description provided for @adminSales.
+  ///
+  /// In es, this message translates to:
+  /// **'Ventas'**
+  String get adminSales;
+
+  /// No description provided for @adminAnalytics.
+  ///
+  /// In es, this message translates to:
+  /// **'Analytics'**
+  String get adminAnalytics;
+
+  /// No description provided for @adminAlerts.
+  ///
+  /// In es, this message translates to:
+  /// **'Alertas'**
+  String get adminAlerts;
+
+  /// No description provided for @adminXebec.
+  ///
+  /// In es, this message translates to:
+  /// **'Xebec'**
+  String get adminXebec;
+
+  /// No description provided for @adminSettings.
+  ///
+  /// In es, this message translates to:
+  /// **'Configuración'**
+  String get adminSettings;
+
+  /// No description provided for @adminSearchHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar empresas, procesos o personas...'**
+  String get adminSearchHint;
+
+  /// No description provided for @kpiTotalCompanies.
+  ///
+  /// In es, this message translates to:
+  /// **'Empresas totales'**
+  String get kpiTotalCompanies;
+
+  /// No description provided for @kpiActiveCompanies.
+  ///
+  /// In es, this message translates to:
+  /// **'Empresas activas'**
+  String get kpiActiveCompanies;
+
+  /// No description provided for @kpiEvaluatedPeople.
+  ///
+  /// In es, this message translates to:
+  /// **'Personas evaluadas'**
+  String get kpiEvaluatedPeople;
+
+  /// No description provided for @kpiCompletedEvaluations.
+  ///
+  /// In es, this message translates to:
+  /// **'Evaluaciones completadas'**
+  String get kpiCompletedEvaluations;
+
+  /// No description provided for @kpiAffinities.
+  ///
+  /// In es, this message translates to:
+  /// **'Afinidades detectadas'**
+  String get kpiAffinities;
+
+  /// No description provided for @kpiPeriodSales.
+  ///
+  /// In es, this message translates to:
+  /// **'Ventas del periodo'**
+  String get kpiPeriodSales;
+
+  /// No description provided for @kpiMrr.
+  ///
+  /// In es, this message translates to:
+  /// **'MRR'**
+  String get kpiMrr;
+
+  /// No description provided for @kpiAtRisk.
+  ///
+  /// In es, this message translates to:
+  /// **'Empresas en riesgo'**
+  String get kpiAtRisk;
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In es, this message translates to:
+  /// **'Actividad reciente'**
+  String get recentActivity;
+
+  /// No description provided for @noActivity.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay actividad registrada.'**
+  String get noActivity;
+
+  /// No description provided for @talexFunnel.
+  ///
+  /// In es, this message translates to:
+  /// **'Embudo TaleX'**
+  String get talexFunnel;
+
+  /// No description provided for @funnelCompanies.
+  ///
+  /// In es, this message translates to:
+  /// **'Empresas'**
+  String get funnelCompanies;
+
+  /// No description provided for @funnelProcesses.
+  ///
+  /// In es, this message translates to:
+  /// **'Procesos'**
+  String get funnelProcesses;
+
+  /// No description provided for @funnelInvited.
+  ///
+  /// In es, this message translates to:
+  /// **'Personas invitadas'**
+  String get funnelInvited;
+
+  /// No description provided for @funnelStarted.
+  ///
+  /// In es, this message translates to:
+  /// **'Evaluaciones iniciadas'**
+  String get funnelStarted;
+
+  /// No description provided for @funnelCompleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Evaluaciones completadas'**
+  String get funnelCompleted;
+
+  /// No description provided for @funnelAffinities.
+  ///
+  /// In es, this message translates to:
+  /// **'Afinidades detectadas'**
+  String get funnelAffinities;
+
+  /// No description provided for @funnelDecisions.
+  ///
+  /// In es, this message translates to:
+  /// **'Resultados / decisiones'**
+  String get funnelDecisions;
+
+  /// No description provided for @noData.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin datos'**
+  String get noData;
+
+  /// No description provided for @noInformationYet.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay información.'**
+  String get noInformationYet;
+
+  /// No description provided for @retry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get retry;
+
+  /// No description provided for @newCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva empresa'**
+  String get newCompany;
+
+  /// No description provided for @newProcess.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo proceso'**
+  String get newProcess;
+
+  /// No description provided for @newPerson.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar persona'**
+  String get newPerson;
+
+  /// No description provided for @newDeal.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva oportunidad'**
+  String get newDeal;
+
+  /// No description provided for @newSale.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar venta'**
+  String get newSale;
+
+  /// No description provided for @companyStatusActive.
+  ///
+  /// In es, this message translates to:
+  /// **'Activa'**
+  String get companyStatusActive;
+
+  /// No description provided for @companyStatusOnboarding.
+  ///
+  /// In es, this message translates to:
+  /// **'En onboarding'**
+  String get companyStatusOnboarding;
+
+  /// No description provided for @companyStatusInactive.
+  ///
+  /// In es, this message translates to:
+  /// **'Inactiva'**
+  String get companyStatusInactive;
+
+  /// No description provided for @companyStatusAtRisk.
+  ///
+  /// In es, this message translates to:
+  /// **'En riesgo'**
+  String get companyStatusAtRisk;
+
+  /// No description provided for @companyStatusSuspended.
+  ///
+  /// In es, this message translates to:
+  /// **'Suspendida'**
+  String get companyStatusSuspended;
+
+  /// No description provided for @processStatusActive.
+  ///
+  /// In es, this message translates to:
+  /// **'Activo'**
+  String get processStatusActive;
+
+  /// No description provided for @processStatusClosed.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrado'**
+  String get processStatusClosed;
+
+  /// No description provided for @evaluationInvited.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitada'**
+  String get evaluationInvited;
+
+  /// No description provided for @evaluationStarted.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciada'**
+  String get evaluationStarted;
+
+  /// No description provided for @evaluationInProgress.
+  ///
+  /// In es, this message translates to:
+  /// **'En progreso'**
+  String get evaluationInProgress;
+
+  /// No description provided for @evaluationCompleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Completada'**
+  String get evaluationCompleted;
+
+  /// No description provided for @evaluationAbandoned.
+  ///
+  /// In es, this message translates to:
+  /// **'Abandonada'**
+  String get evaluationAbandoned;
+
+  /// No description provided for @affinityHigh.
+  ///
+  /// In es, this message translates to:
+  /// **'Afinidad alta'**
+  String get affinityHigh;
+
+  /// No description provided for @affinityMedium.
+  ///
+  /// In es, this message translates to:
+  /// **'Afinidad media'**
+  String get affinityMedium;
+
+  /// No description provided for @affinityLow.
+  ///
+  /// In es, this message translates to:
+  /// **'Afinidad baja'**
+  String get affinityLow;
+
+  /// No description provided for @affinityUnknown.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin clasificar'**
+  String get affinityUnknown;
+
+  /// No description provided for @dealProspect.
+  ///
+  /// In es, this message translates to:
+  /// **'Prospecto'**
+  String get dealProspect;
+
+  /// No description provided for @dealContacted.
+  ///
+  /// In es, this message translates to:
+  /// **'Contactado'**
+  String get dealContacted;
+
+  /// No description provided for @dealMeeting.
+  ///
+  /// In es, this message translates to:
+  /// **'Reunión'**
+  String get dealMeeting;
+
+  /// No description provided for @dealProposal.
+  ///
+  /// In es, this message translates to:
+  /// **'Propuesta'**
+  String get dealProposal;
+
+  /// No description provided for @dealNegotiation.
+  ///
+  /// In es, this message translates to:
+  /// **'Negociación'**
+  String get dealNegotiation;
+
+  /// No description provided for @dealClient.
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente'**
+  String get dealClient;
+
+  /// No description provided for @filterAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get filterAll;
+
+  /// No description provided for @lastActivity.
+  ///
+  /// In es, this message translates to:
+  /// **'Última actividad'**
+  String get lastActivity;
+
+  /// No description provided for @joinedAt.
+  ///
+  /// In es, this message translates to:
+  /// **'Incorporación'**
+  String get joinedAt;
+
+  /// No description provided for @openDetail.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir detalle'**
+  String get openDetail;
+
+  /// No description provided for @backToCompanies.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a empresas'**
+  String get backToCompanies;
+
+  /// No description provided for @companyOverview.
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen'**
+  String get companyOverview;
+
+  /// No description provided for @companyCommercial.
+  ///
+  /// In es, this message translates to:
+  /// **'Comercial'**
+  String get companyCommercial;
+
+  /// No description provided for @companyMetrics.
+  ///
+  /// In es, this message translates to:
+  /// **'Utilización'**
+  String get companyMetrics;
+
+  /// No description provided for @noCompanies.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay empresas en TaleX.'**
+  String get noCompanies;
+
+  /// No description provided for @noProcesses.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay procesos para mostrar.'**
+  String get noProcesses;
+
+  /// No description provided for @noPeople.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay personas evaluadas para mostrar. No se exponen respuestas sensibles.'**
+  String get noPeople;
+
+  /// No description provided for @noDeals.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay oportunidades en el pipeline.'**
+  String get noDeals;
+
+  /// No description provided for @noSales.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay ventas registradas en este periodo.'**
+  String get noSales;
+
+  /// No description provided for @noAlerts.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay alertas calculadas con los datos actuales.'**
+  String get noAlerts;
+
+  /// No description provided for @period7.
+  ///
+  /// In es, this message translates to:
+  /// **'7 días'**
+  String get period7;
+
+  /// No description provided for @period30.
+  ///
+  /// In es, this message translates to:
+  /// **'30 días'**
+  String get period30;
+
+  /// No description provided for @period90.
+  ///
+  /// In es, this message translates to:
+  /// **'90 días'**
+  String get period90;
+
+  /// No description provided for @period12m.
+  ///
+  /// In es, this message translates to:
+  /// **'12 meses'**
+  String get period12m;
+
+  /// No description provided for @completionRate.
+  ///
+  /// In es, this message translates to:
+  /// **'Tasa de finalización'**
+  String get completionRate;
+
+  /// No description provided for @suggestedAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Acción sugerida'**
+  String get suggestedAction;
+
+  /// No description provided for @xebecSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Xebec responde con el contexto real del centro de mando.'**
+  String get xebecSubtitle;
+
+  /// No description provided for @xebecPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cómo está TaleX?'**
+  String get xebecPlaceholder;
+
+  /// No description provided for @xebecEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Pregunta por el estado de TaleX, empresas en riesgo u oportunidades. Xebec usa métricas reales, no suposiciones.'**
+  String get xebecEmpty;
+
+  /// No description provided for @askXebec.
+  ///
+  /// In es, this message translates to:
+  /// **'Preguntar'**
+  String get askXebec;
+
+  /// No description provided for @adminSettingsSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Usuarios, roles y parámetros reales del sistema. Nada ficticio.'**
+  String get adminSettingsSubtitle;
+
+  /// No description provided for @superAdminHelp.
+  ///
+  /// In es, this message translates to:
+  /// **'El SuperAdmin se eleva si su correo está en config/superadmin.emails o si el documento de usuario ya tiene role=superadmin. Las credenciales viven en Firebase Auth; cámbialas con recuperación de contraseña o la consola.'**
+  String get superAdminHelp;
+
+  /// No description provided for @adminUsers.
+  ///
+  /// In es, this message translates to:
+  /// **'Usuarios'**
+  String get adminUsers;
+
+  /// No description provided for @roleLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Rol'**
+  String get roleLabel;
+
+  /// No description provided for @adminSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Los cambios se guardaron en TaleX.'**
+  String get adminSaved;
+
+  /// No description provided for @amount.
+  ///
+  /// In es, this message translates to:
+  /// **'Importe'**
+  String get amount;
+
+  /// No description provided for @plan.
+  ///
+  /// In es, this message translates to:
+  /// **'Plan'**
+  String get plan;
+
+  /// No description provided for @owner.
+  ///
+  /// In es, this message translates to:
+  /// **'Responsable'**
+  String get owner;
+
+  /// No description provided for @nextAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Próxima acción'**
+  String get nextAction;
+
+  /// No description provided for @product.
+  ///
+  /// In es, this message translates to:
+  /// **'Producto o servicio'**
+  String get product;
+
+  /// No description provided for @recurring.
+  ///
+  /// In es, this message translates to:
+  /// **'Recurrente (MRR)'**
+  String get recurring;
+
+  /// No description provided for @estimatedValue.
+  ///
+  /// In es, this message translates to:
+  /// **'Valor estimado'**
+  String get estimatedValue;
+
+  /// No description provided for @affinityScore.
+  ///
+  /// In es, this message translates to:
+  /// **'Puntaje de afinidad (0-100)'**
+  String get affinityScore;
+
+  /// No description provided for @statusLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Estado'**
+  String get statusLabel;
+
+  /// No description provided for @priorityHigh.
+  ///
+  /// In es, this message translates to:
+  /// **'Alta'**
+  String get priorityHigh;
+
+  /// No description provided for @priorityMedium.
+  ///
+  /// In es, this message translates to:
+  /// **'Media'**
+  String get priorityMedium;
+
+  /// No description provided for @priorityLow.
+  ///
+  /// In es, this message translates to:
+  /// **'Baja'**
+  String get priorityLow;
+
+  /// No description provided for @alertRisk.
+  ///
+  /// In es, this message translates to:
+  /// **'Riesgo'**
+  String get alertRisk;
+
+  /// No description provided for @alertOperational.
+  ///
+  /// In es, this message translates to:
+  /// **'Operacional'**
+  String get alertOperational;
+
+  /// No description provided for @alertCommercial.
+  ///
+  /// In es, this message translates to:
+  /// **'Comercial'**
+  String get alertCommercial;
+
+  /// No description provided for @alertProduct.
+  ///
+  /// In es, this message translates to:
+  /// **'Producto'**
+  String get alertProduct;
+
+  /// No description provided for @alertOpportunity.
+  ///
+  /// In es, this message translates to:
+  /// **'Oportunidad'**
+  String get alertOpportunity;
+
+  /// No description provided for @salesPeriod.
+  ///
+  /// In es, this message translates to:
+  /// **'Ventas del periodo'**
+  String get salesPeriod;
+
+  /// No description provided for @salesCumulative.
+  ///
+  /// In es, this message translates to:
+  /// **'Ventas acumuladas'**
+  String get salesCumulative;
+
+  /// No description provided for @newCustomers.
+  ///
+  /// In es, this message translates to:
+  /// **'Clientes en el periodo'**
+  String get newCustomers;
+
+  /// No description provided for @averageTicket.
+  ///
+  /// In es, this message translates to:
+  /// **'Ticket promedio'**
+  String get averageTicket;
+
+  /// No description provided for @growth.
+  ///
+  /// In es, this message translates to:
+  /// **'Crecimiento vs periodo anterior'**
+  String get growth;
+
+  /// No description provided for @activityByDay.
+  ///
+  /// In es, this message translates to:
+  /// **'Actividad por día'**
+  String get activityByDay;
 }
 
 class _AppLocalizationsDelegate

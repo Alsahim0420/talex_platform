@@ -2,22 +2,83 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return /databases/$(database)/documents/users/$(request.auth.uid);
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function isSuperAdmin() {
+      return signedIn()
+        && exists(userDoc())
+        && get(userDoc()).data.role == 'superadmin';
+    }
+
+    function isListedSuperAdminEmail() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/config/superadmin)
+        && request.auth.token.email in get(/databases/$(database)/documents/config/superadmin).data.emails;
+    }
+
+    match /config/{document} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
     match /users/{userId} {
-      allow create: if request.auth != null
-        && request.auth.uid == userId
+      allow create: if isOwner(userId)
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.role == 'user'
         && request.resource.data.isActive == true;
 
-      allow read: if request.auth != null && request.auth.uid == userId;
+      allow read: if isOwner(userId) || isSuperAdmin();
 
-      allow update: if request.auth != null
-        && request.auth.uid == userId
-        && request.resource.data.uid == request.auth.uid
-        && request.resource.data.role == resource.data.role
-        && request.resource.data.isActive == resource.data.isActive;
+      allow update: if isSuperAdmin()
+        || (isOwner(userId)
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.isActive == resource.data.isActive)
+        || (isOwner(userId)
+          && isListedSuperAdminEmail()
+          && request.resource.data.uid == request.auth.uid
+          && request.resource.data.role == 'superadmin');
 
       allow delete: if false;
+    }
+
+    match /companies/{id} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    match /processes/{id} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    match /people/{id} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    match /deals/{id} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    match /sales/{id} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    match /activity_events/{id} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    match /admin_audit_logs/{id} {
+      allow read, create: if isSuperAdmin();
+      allow update, delete: if false;
     }
   }
 }

@@ -3,6 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:talex_platform/core/services/notification_service.dart';
+import 'package:talex_platform/features/admin/data/datasources/admin_data_source.dart';
+import 'package:talex_platform/features/admin/data/repositories/admin_repository_impl.dart';
+import 'package:talex_platform/features/admin/domain/repositories/admin_repository.dart';
+import 'package:talex_platform/features/admin/presentation/bloc/admin_bloc.dart';
 import 'package:talex_platform/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:talex_platform/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:talex_platform/features/auth/domain/repositories/auth_repository.dart';
@@ -46,6 +50,19 @@ Future<void> configureDependencies() async {
       ),
     );
   configureInvitationDependencies();
+  configureAdminDependencies();
+}
+
+void configureAdminDependencies() {
+  if (getIt.isRegistered<AdminBloc>()) return;
+  getIt
+    ..registerLazySingleton<AdminDataSource>(
+      () => FirebaseAdminDataSource(getIt(), getIt()),
+    )
+    ..registerLazySingleton<AdminRepository>(
+      () => AdminRepositoryImpl(getIt()),
+    )
+    ..registerFactory(() => AdminBloc(repository: getIt()));
 }
 
 void configureInvitationDependencies() {

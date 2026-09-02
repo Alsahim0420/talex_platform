@@ -253,7 +253,7 @@ class _DashboardContent extends StatelessWidget {
               children: metrics
                   .map(
                     (card) =>
-                        SizedBox(width: cardWidth, height: 166, child: card),
+                        SizedBox(width: cardWidth, child: card),
                   )
                   .toList(),
             ),

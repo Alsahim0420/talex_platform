@@ -411,4 +411,349 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get minutes30 => '30 minutes';
+
+  @override
+  String get adminCommandCenter => 'Command center';
+
+  @override
+  String get adminCommandSubtitle =>
+      'An executive read of TaleX: operations, customers, and growth.';
+
+  @override
+  String get adminCompanies => 'Companies';
+
+  @override
+  String get adminProcesses => 'Processes';
+
+  @override
+  String get adminPeople => 'People';
+
+  @override
+  String get adminAffinity => 'Affinity';
+
+  @override
+  String get adminCommercial => 'Commercial';
+
+  @override
+  String get adminSales => 'Sales';
+
+  @override
+  String get adminAnalytics => 'Analytics';
+
+  @override
+  String get adminAlerts => 'Alerts';
+
+  @override
+  String get adminXebec => 'Xebec';
+
+  @override
+  String get adminSettings => 'Settings';
+
+  @override
+  String get adminSearchHint => 'Search companies, processes, or people...';
+
+  @override
+  String get kpiTotalCompanies => 'Total companies';
+
+  @override
+  String get kpiActiveCompanies => 'Active companies';
+
+  @override
+  String get kpiEvaluatedPeople => 'People evaluated';
+
+  @override
+  String get kpiCompletedEvaluations => 'Completed assessments';
+
+  @override
+  String get kpiAffinities => 'Affinities detected';
+
+  @override
+  String get kpiPeriodSales => 'Period sales';
+
+  @override
+  String get kpiMrr => 'MRR';
+
+  @override
+  String get kpiAtRisk => 'Companies at risk';
+
+  @override
+  String get recentActivity => 'Recent activity';
+
+  @override
+  String get noActivity => 'No activity has been recorded yet.';
+
+  @override
+  String get talexFunnel => 'TaleX funnel';
+
+  @override
+  String get funnelCompanies => 'Companies';
+
+  @override
+  String get funnelProcesses => 'Processes';
+
+  @override
+  String get funnelInvited => 'People invited';
+
+  @override
+  String get funnelStarted => 'Assessments started';
+
+  @override
+  String get funnelCompleted => 'Assessments completed';
+
+  @override
+  String get funnelAffinities => 'Affinities detected';
+
+  @override
+  String get funnelDecisions => 'Results / decisions';
+
+  @override
+  String get noData => 'No data';
+
+  @override
+  String get noInformationYet => 'There is no information yet.';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get newCompany => 'New company';
+
+  @override
+  String get newProcess => 'New process';
+
+  @override
+  String get newPerson => 'Register person';
+
+  @override
+  String get newDeal => 'New opportunity';
+
+  @override
+  String get newSale => 'Record sale';
+
+  @override
+  String get companyStatusActive => 'Active';
+
+  @override
+  String get companyStatusOnboarding => 'Onboarding';
+
+  @override
+  String get companyStatusInactive => 'Inactive';
+
+  @override
+  String get companyStatusAtRisk => 'At risk';
+
+  @override
+  String get companyStatusSuspended => 'Suspended';
+
+  @override
+  String get processStatusActive => 'Active';
+
+  @override
+  String get processStatusClosed => 'Closed';
+
+  @override
+  String get evaluationInvited => 'Invited';
+
+  @override
+  String get evaluationStarted => 'Started';
+
+  @override
+  String get evaluationInProgress => 'In progress';
+
+  @override
+  String get evaluationCompleted => 'Completed';
+
+  @override
+  String get evaluationAbandoned => 'Abandoned';
+
+  @override
+  String get affinityHigh => 'High affinity';
+
+  @override
+  String get affinityMedium => 'Medium affinity';
+
+  @override
+  String get affinityLow => 'Low affinity';
+
+  @override
+  String get affinityUnknown => 'Unclassified';
+
+  @override
+  String get dealProspect => 'Prospect';
+
+  @override
+  String get dealContacted => 'Contacted';
+
+  @override
+  String get dealMeeting => 'Meeting';
+
+  @override
+  String get dealProposal => 'Proposal';
+
+  @override
+  String get dealNegotiation => 'Negotiation';
+
+  @override
+  String get dealClient => 'Customer';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get lastActivity => 'Last activity';
+
+  @override
+  String get joinedAt => 'Joined';
+
+  @override
+  String get openDetail => 'Open details';
+
+  @override
+  String get backToCompanies => 'Back to companies';
+
+  @override
+  String get companyOverview => 'Overview';
+
+  @override
+  String get companyCommercial => 'Commercial';
+
+  @override
+  String get companyMetrics => 'Utilization';
+
+  @override
+  String get noCompanies => 'There are no companies in TaleX yet.';
+
+  @override
+  String get noProcesses => 'There are no processes to show.';
+
+  @override
+  String get noPeople =>
+      'There are no evaluated people to show. Sensitive answers are not exposed.';
+
+  @override
+  String get noDeals => 'There are no opportunities in the pipeline.';
+
+  @override
+  String get noSales => 'There are no sales recorded in this period.';
+
+  @override
+  String get noAlerts => 'There are no alerts calculated from current data.';
+
+  @override
+  String get period7 => '7 days';
+
+  @override
+  String get period30 => '30 days';
+
+  @override
+  String get period90 => '90 days';
+
+  @override
+  String get period12m => '12 months';
+
+  @override
+  String get completionRate => 'Completion rate';
+
+  @override
+  String get suggestedAction => 'Suggested action';
+
+  @override
+  String get xebecSubtitle =>
+      'Xebec answers with the real command-center context.';
+
+  @override
+  String get xebecPlaceholder => 'How is TaleX doing?';
+
+  @override
+  String get xebecEmpty =>
+      'Ask about TaleX health, companies at risk, or opportunities. Xebec uses real metrics, not guesses.';
+
+  @override
+  String get askXebec => 'Ask';
+
+  @override
+  String get adminSettingsSubtitle =>
+      'Users, roles, and real system parameters. Nothing fictional.';
+
+  @override
+  String get superAdminHelp =>
+      'SuperAdmin is granted if the email is listed in config/superadmin.emails or the user document already has role=superadmin. Credentials live in Firebase Auth; change them with password reset or the console.';
+
+  @override
+  String get adminUsers => 'Users';
+
+  @override
+  String get roleLabel => 'Role';
+
+  @override
+  String get adminSaved => 'Changes were saved in TaleX.';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get plan => 'Plan';
+
+  @override
+  String get owner => 'Owner';
+
+  @override
+  String get nextAction => 'Next action';
+
+  @override
+  String get product => 'Product or service';
+
+  @override
+  String get recurring => 'Recurring (MRR)';
+
+  @override
+  String get estimatedValue => 'Estimated value';
+
+  @override
+  String get affinityScore => 'Affinity score (0-100)';
+
+  @override
+  String get statusLabel => 'Status';
+
+  @override
+  String get priorityHigh => 'High';
+
+  @override
+  String get priorityMedium => 'Medium';
+
+  @override
+  String get priorityLow => 'Low';
+
+  @override
+  String get alertRisk => 'Risk';
+
+  @override
+  String get alertOperational => 'Operational';
+
+  @override
+  String get alertCommercial => 'Commercial';
+
+  @override
+  String get alertProduct => 'Product';
+
+  @override
+  String get alertOpportunity => 'Opportunity';
+
+  @override
+  String get salesPeriod => 'Period sales';
+
+  @override
+  String get salesCumulative => 'Cumulative sales';
+
+  @override
+  String get newCustomers => 'Customers in period';
+
+  @override
+  String get averageTicket => 'Average ticket';
+
+  @override
+  String get growth => 'Growth vs previous period';
+
+  @override
+  String get activityByDay => 'Activity by day';
 }
