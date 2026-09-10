@@ -1,0 +1,22 @@
+abstract final class TalentErrorCodes {
+  static const needSignIn = 'errorNeedSignIn';
+  static const needAuthEmail = 'errorNeedAuthEmail';
+  static const permissionDenied = 'errorPermissionDenied';
+  static const unexpected = 'errorUnexpected';
+  static const companyNotFound = 'errorCompanyNotFound';
+  static const respondentExists = 'errorRespondentExists';
+  static const inviteMissing = 'errorInviteMissing';
+  static const inviteUsed = 'errorInviteUsed';
+  static const invalidPin = 'errorInvalidPin';
+  static const pinExpired = 'errorPinExpired';
+  static const documentMismatch = 'errorDocumentMismatch';
+  static const assessmentMissing = 'errorAssessmentMissing';
+  static const documentPasswordTooShort = 'errorDocumentPasswordTooShort';
+  static const emailNotConfigured = 'errorEmailNotConfigured';
+  static const emailSendFailed = 'errorEmailSendFailed';
+  static const companyDisabled = 'errorCompanyDisabled';
+  static const resetCooldown = 'errorResetCooldown';
+  static const resetTooManyAttempts = 'errorResetTooManyAttempts';
+  static const passwordTooShort = 'errorPasswordTooShort';
+  static const accountNotFound = 'errorAccountNotFound';
+}

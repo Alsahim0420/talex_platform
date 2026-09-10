@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/constants/app_radii.dart';
+import 'package:talex_platform/core/widgets/app_select_field.dart';
+import 'package:talex_platform/core/widgets/location_picker.dart';
+import 'package:talex_platform/core/widgets/logo_field.dart';
 import 'package:talex_platform/features/admin/domain/entities/admin_entities.dart';
 import 'package:talex_platform/features/admin/presentation/bloc/admin_bloc.dart';
 import 'package:talex_platform/features/admin/presentation/widgets/admin_widgets.dart';
+import 'package:talex_platform/features/talent/presentation/company_options.dart';
 import 'package:talex_platform/l10n/l10n.dart';
 
 Future<void> showAdminCreateCompany(BuildContext context) {
@@ -280,6 +285,181 @@ Future<void> showAdminCreateDeal(BuildContext context, List<Company> companies) 
   );
 }
 
+Future<void> showAdminEditCompany(BuildContext context, Company company) {
+  return showDialog<void>(
+    context: context,
+    builder: (_) => BlocProvider.value(
+      value: context.read<AdminBloc>(),
+      child: _EditCompanyDialog(company: company),
+    ),
+  );
+}
+
+class _EditCompanyDialog extends StatefulWidget {
+  const _EditCompanyDialog({required this.company});
+  final Company company;
+  @override
+  State<_EditCompanyDialog> createState() => _EditCompanyDialogState();
+}
+
+class _EditCompanyDialogState extends State<_EditCompanyDialog> {
+  late final TextEditingController _name;
+  late final TextEditingController _nit;
+  late final TextEditingController _website;
+  late final TextEditingController _description;
+  late LocationValue _location;
+  late LogoSelection _logo;
+  late CompanyStatus _status;
+  String? _sector;
+  String? _size;
+
+  @override
+  void initState() {
+    super.initState();
+    final company = widget.company;
+    _name = TextEditingController(text: company.name);
+    _nit = TextEditingController(text: company.nit ?? '');
+    _website = TextEditingController(text: company.website ?? '');
+    _description = TextEditingController(text: company.description ?? '');
+    _location = LocationValue(
+      country: company.country ?? 'Colombia',
+      region: company.region,
+      city: company.city,
+    );
+    _logo = LogoSelection(url: company.logoUrl);
+    _status = company.status;
+    _sector = company.sector;
+    _size = company.size;
+  }
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _nit.dispose();
+    _website.dispose();
+    _description.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    if (_name.text.trim().isEmpty) return;
+    context.read<AdminBloc>().add(
+      AdminCompanyUpdated(
+        company: Company(
+          id: widget.company.id,
+          name: _name.text.trim(),
+          status: _status,
+          createdAt: widget.company.createdAt,
+          logoUrl: _logo.url,
+          website: _website.text.trim(),
+          description: _description.text.trim(),
+          nit: _nit.text.trim(),
+          sector: _sector,
+          size: _size,
+          city: _location.city,
+          region: _location.region,
+          country: _location.country,
+          lastActivityAt: widget.company.lastActivityAt,
+          activeProcesses: widget.company.activeProcesses,
+          invitedPeople: widget.company.invitedPeople,
+          startedEvaluations: widget.company.startedEvaluations,
+          completedEvaluations: widget.company.completedEvaluations,
+          affinitiesDetected: widget.company.affinitiesDetected,
+          plan: widget.company.plan,
+          contractValue: widget.company.contractValue,
+          mrr: widget.company.mrr,
+          renewalAt: widget.company.renewalAt,
+          commercialStage: widget.company.commercialStage,
+          archived: widget.company.archived,
+        ),
+        logoBytes: _logo.bytes,
+        logoContentType: _logo.contentType,
+      ),
+    );
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final labels = AdminLabels(context);
+    return _AdminFormDialog(
+      title: l10n.editCompany,
+      onSubmit: _save,
+      children: [
+        TextField(
+          controller: _name,
+          decoration: InputDecoration(
+            labelText: l10n.companyName,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 14),
+        TextField(
+          controller: _nit,
+          decoration: InputDecoration(
+            labelText: l10n.nit,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 14),
+        DropdownButtonFormField<CompanyStatus>(
+          key: ValueKey(_status),
+          initialValue: _status,
+          decoration: InputDecoration(
+            labelText: l10n.statusLabel,
+            border: const OutlineInputBorder(),
+          ),
+          items: [
+            for (final status in CompanyStatus.values)
+              DropdownMenuItem(value: status, child: Text(labels.companyStatus(status))),
+          ],
+          onChanged: (value) {
+            if (value != null) setState(() => _status = value);
+          },
+        ),
+        const SizedBox(height: 14),
+        AppSelectField(
+          label: l10n.sector,
+          value: resolveCompanySectorId(_sector, l10n),
+          options: companySectors(l10n),
+          onChanged: (value) => setState(() => _sector = value),
+        ),
+        AppSelectField(
+          label: l10n.companySize,
+          value: resolveCompanySizeId(_size, l10n),
+          options: companySizes(l10n),
+          onChanged: (value) => setState(() => _size = value),
+        ),
+        LocationPicker(
+          initial: _location,
+          onChanged: (value) => _location = value,
+        ),
+        TextField(
+          controller: _website,
+          decoration: InputDecoration(
+            labelText: l10n.website,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 14),
+        LogoField(
+          initialUrl: widget.company.logoUrl,
+          onChanged: (value) => _logo = value,
+        ),
+        TextField(
+          controller: _description,
+          maxLines: 3,
+          decoration: InputDecoration(
+            labelText: l10n.description,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 Future<void> showAdminCreateSale(BuildContext context, List<Company> companies) {
   if (companies.isEmpty) return Future.value();
   var companyId = companies.first.id;
@@ -347,6 +527,48 @@ Future<void> showAdminCreateSale(BuildContext context, List<Company> companies) 
   );
 }
 
+Future<void> showCompanyLifecycleDialog(
+  BuildContext context, {
+  required Company company,
+  required CompanyLifecycleAction action,
+}) async {
+  final l10n = context.l10n;
+  final title = switch (action) {
+    CompanyLifecycleAction.disable => l10n.disableCompanyTitle,
+    CompanyLifecycleAction.enable => l10n.enableCompanyTitle,
+    CompanyLifecycleAction.archive => l10n.archiveCompanyTitle,
+    CompanyLifecycleAction.restore => l10n.restoreCompanyTitle,
+  };
+  final body = switch (action) {
+    CompanyLifecycleAction.disable => l10n.disableCompanyBody,
+    CompanyLifecycleAction.enable => l10n.enableCompanyBody,
+    CompanyLifecycleAction.archive => l10n.archiveCompanyBody,
+    CompanyLifecycleAction.restore => l10n.restoreCompanyBody,
+  };
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: Text(title),
+      content: Text(body),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext, false),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(dialogContext, true),
+          style: FilledButton.styleFrom(backgroundColor: AppColors.primaryButton),
+          child: Text(l10n.confirmAction),
+        ),
+      ],
+    ),
+  );
+  if (confirmed != true || !context.mounted) return;
+  context.read<AdminBloc>().add(
+    AdminCompanyLifecycleRequested(id: company.id, action: action),
+  );
+}
+
 class _AdminFormDialog extends StatelessWidget {
   const _AdminFormDialog({
     required this.title,
@@ -359,7 +581,7 @@ class _AdminFormDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Dialog(
     insetPadding: const EdgeInsets.all(20),
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    shape: AppRadii.shape,
     child: ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 520),
       child: SingleChildScrollView(

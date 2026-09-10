@@ -7,10 +7,18 @@ class AuthUserModel {
     this.displayName,
     this.companyName,
     this.role = UserRole.user,
+    this.companyId,
+    this.documentNumber,
+    this.mustChangePassword = false,
+    this.mustReviewCompanyDna = false,
   });
   final String id;
   final String email;
   final String? displayName;
   final String? companyName;
   final UserRole role;
+  final String? companyId;
+  final String? documentNumber;
+  final bool mustChangePassword;
+  final bool mustReviewCompanyDna;
 }

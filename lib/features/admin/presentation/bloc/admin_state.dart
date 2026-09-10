@@ -21,8 +21,11 @@ class AdminState extends Equatable {
     this.alerts = const [],
     this.companies = const [],
     this.companyStatus,
+    this.archivedOnly = false,
     this.selectedCompany,
     this.showCompanyDetail = false,
+    this.selectedPerson,
+    this.selectedProcess,
     this.processes = const [],
     this.processStatus,
     this.people = const [],
@@ -50,8 +53,11 @@ class AdminState extends Equatable {
   final List<AdminAlert> alerts;
   final List<Company> companies;
   final CompanyStatus? companyStatus;
+  final bool archivedOnly;
   final CompanyDetail? selectedCompany;
   final bool showCompanyDetail;
+  final PersonEvaluation? selectedPerson;
+  final TalentProcess? selectedProcess;
   final List<TalentProcess> processes;
   final ProcessStatus? processStatus;
   final List<PersonEvaluation> people;
@@ -81,8 +87,11 @@ class AdminState extends Equatable {
     alerts,
     companies,
     companyStatus,
+    archivedOnly,
     selectedCompany,
     showCompanyDetail,
+    selectedPerson,
+    selectedProcess,
     processes,
     processStatus,
     people,

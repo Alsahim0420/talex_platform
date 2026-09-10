@@ -20,6 +20,12 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     on<AdminCompaniesRequested>(_onCompanies);
     on<AdminCompanyOpened>(_onCompanyOpened);
     on<AdminCompanyClosed>(_onCompanyClosed);
+    on<AdminCompanyUpdated>(_onCompanyUpdated);
+    on<AdminPersonOpened>(_onPersonOpened);
+    on<AdminPersonClosed>(_onPersonClosed);
+    on<AdminPersonUpdated>(_onPersonUpdated);
+    on<AdminProcessOpened>(_onProcessOpened);
+    on<AdminProcessClosed>(_onProcessClosed);
     on<AdminProcessesRequested>(_onProcesses);
     on<AdminPeopleRequested>(_onPeople);
     on<AdminAffinityRequested>(_onAffinity);
@@ -35,6 +41,7 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     on<AdminDealCreated>(_onCreateDeal);
     on<AdminSaleCreated>(_onCreateSale);
     on<AdminUserRoleUpdated>(_onUpdateRole);
+    on<AdminCompanyLifecycleRequested>(_onCompanyLifecycle);
   }
 
   final AdminRepository _repository;
@@ -57,7 +64,13 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     AdminSectionSelected event,
     Emitter<AdminState> emit,
   ) async {
-    emit(state.copyWith(section: event.section, showCompanyDetail: false, operation: null));
+    emit(
+      state.copyWith(
+        section: event.section,
+        showCompanyDetail: false,
+        operation: null,
+      ).copyWithNull(selectedPerson: true, selectedProcess: true),
+    );
     switch (event.section) {
       case AdminSection.dashboard:
         add(const AdminDashboardRequested());
@@ -120,15 +133,19 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
   ) async {
     emit(
       state.copyWith(
-        status: AdminViewStatus.loading,
+        status: state.companies.isEmpty
+            ? AdminViewStatus.loading
+            : AdminViewStatus.success,
         query: event.query,
         companyStatus: event.status,
+        archivedOnly: event.archivedOnly,
         failure: null,
       ),
     );
     final result = await _repository.getCompanies(
       query: event.query,
       status: event.status,
+      archivedOnly: event.archivedOnly,
     );
     result.fold(
       (failure) => _emitFailure(failure, emit),
@@ -166,7 +183,111 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     Emitter<AdminState> emit,
   ) async {
     emit(state.copyWith(showCompanyDetail: false, section: AdminSection.companies));
-    add(AdminCompaniesRequested(query: state.query, status: state.companyStatus));
+    add(
+      AdminCompaniesRequested(
+        query: state.query,
+        status: state.companyStatus,
+        archivedOnly: state.archivedOnly,
+      ),
+    );
+  }
+
+  Future<void> _onCompanyUpdated(
+    AdminCompanyUpdated event,
+    Emitter<AdminState> emit,
+  ) async {
+    final result = await _repository.updateCompany(
+      company: event.company,
+      logoBytes: event.logoBytes,
+      logoContentType: event.logoContentType,
+    );
+    await result.fold((failure) async => _emitFailure(failure, emit), (_) async {
+      final refreshed = await _repository.getCompany(event.company.id);
+      refreshed.fold(
+        (failure) => _emitFailure(failure, emit),
+        (detail) => emit(
+          state.copyWith(
+            status: AdminViewStatus.success,
+            selectedCompany: detail,
+            showCompanyDetail: true,
+            operation: AdminOperation.saved,
+            failure: null,
+          ),
+        ),
+      );
+    });
+  }
+
+  Future<void> _onPersonOpened(
+    AdminPersonOpened event,
+    Emitter<AdminState> emit,
+  ) async {
+    emit(state.copyWith(selectedPerson: event.person, failure: null));
+  }
+
+  Future<void> _onPersonClosed(
+    AdminPersonClosed event,
+    Emitter<AdminState> emit,
+  ) async {
+    emit(state.copyWithNull(selectedPerson: true));
+  }
+
+  Future<void> _onPersonUpdated(
+    AdminPersonUpdated event,
+    Emitter<AdminState> emit,
+  ) async {
+    final result = await _repository.updatePerson(
+      id: event.id,
+      displayName: event.displayName,
+      status: event.status,
+    );
+    await result.fold((failure) async => _emitFailure(failure, emit), (_) async {
+      final refreshed = await _repository.getPeople(
+        query: state.query,
+        status: state.evaluationStatus,
+      );
+      refreshed.fold(
+        (failure) => _emitFailure(failure, emit),
+        (items) => emit(
+          state.copyWith(
+            status: AdminViewStatus.success,
+            people: items,
+            selectedPerson: items
+                .where((item) => item.id == event.id)
+                .firstOrNull,
+            operation: AdminOperation.saved,
+            failure: null,
+          ),
+        ),
+      );
+    });
+  }
+
+  Future<void> _onProcessOpened(
+    AdminProcessOpened event,
+    Emitter<AdminState> emit,
+  ) async {
+    emit(state.copyWith(selectedProcess: event.process, failure: null));
+    final result = await _repository.getPeople(
+      companyId: event.process.companyId,
+    );
+    result.fold(
+      (failure) => emit(state.copyWith(failure: failure)),
+      (items) => emit(
+        state.copyWith(
+          selectedProcess: event.process,
+          people: items,
+          failure: null,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onProcessClosed(
+    AdminProcessClosed event,
+    Emitter<AdminState> emit,
+  ) async {
+    emit(state.copyWithNull(selectedProcess: true));
   }
 
   Future<void> _onProcesses(
@@ -461,6 +582,53 @@ class AdminBloc extends Bloc<AdminEvent, AdminState> {
     emit,
     () => _repository.updateUserRole(userId: event.userId, role: event.role),
   );
+
+  Future<void> _onCompanyLifecycle(
+    AdminCompanyLifecycleRequested event,
+    Emitter<AdminState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        status: AdminViewStatus.submitting,
+        failure: null,
+        operation: null,
+      ),
+    );
+    final result = await _repository.applyCompanyLifecycle(
+      id: event.id,
+      action: event.action,
+    );
+    await result.fold((failure) async => _emitFailure(failure, emit), (_) async {
+      emit(
+        state.copyWith(
+          operation: AdminOperation.saved,
+          status: AdminViewStatus.success,
+        ),
+      );
+      if (event.action == CompanyLifecycleAction.archive) {
+        emit(state.copyWith(showCompanyDetail: false));
+        add(
+          AdminCompaniesRequested(
+            query: state.query,
+            status: state.companyStatus,
+            archivedOnly: state.archivedOnly,
+          ),
+        );
+        return;
+      }
+      if (state.showCompanyDetail) {
+        add(AdminCompanyOpened(event.id));
+        return;
+      }
+      add(
+        AdminCompaniesRequested(
+          query: state.query,
+          status: state.companyStatus,
+          archivedOnly: state.archivedOnly,
+        ),
+      );
+    });
+  }
 }
 
 class DateTimeRange {

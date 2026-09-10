@@ -109,10 +109,16 @@ class AppLocalizationsEs extends AppLocalizations {
       '“TaleX transformó nuestro proceso de selección y ayudó a nuestro equipo a tomar mejores decisiones.”';
 
   @override
-  String get testimonialName => 'Sarah Jenkins';
+  String get testimonialName => 'Gabriel Ramirez';
 
   @override
-  String get testimonialRole => 'VP de Ingeniería, Nexus Dynamics';
+  String get testimonialRole => 'CEO, TaleX';
+
+  @override
+  String get testimonialNameSecondary => 'Pablo Melo';
+
+  @override
+  String get testimonialRoleSecondary => 'CTO, TaleX';
 
   @override
   String welcomeUser(String name) {
@@ -364,6 +370,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get timezone => 'Zona horaria';
 
   @override
+  String get timezoneBogota => 'Bogotá (UTC-5)';
+
+  @override
   String get notificationsTitle => 'Notificaciones';
 
   @override
@@ -601,6 +610,62 @@ class AppLocalizationsEs extends AppLocalizations {
   String get filterAll => 'Todos';
 
   @override
+  String get filterArchived => 'Archivadas';
+
+  @override
+  String get companyActions => 'Acciones de la empresa';
+
+  @override
+  String get disableCompany => 'Inhabilitar';
+
+  @override
+  String get enableCompany => 'Reactivar';
+
+  @override
+  String get archiveCompany => 'Quitar de la vista';
+
+  @override
+  String get restoreCompany => 'Restaurar a la vista';
+
+  @override
+  String get disableCompanyTitle => 'Inhabilitar empresa';
+
+  @override
+  String get disableCompanyBody =>
+      'La empresa dejará de operar en TaleX. Los datos se conservan. ¿Confirmas?';
+
+  @override
+  String get enableCompanyTitle => 'Reactivar empresa';
+
+  @override
+  String get enableCompanyBody =>
+      'La empresa volverá a estar activa y su equipo podrá entrar. ¿Confirmas?';
+
+  @override
+  String get archiveCompanyTitle => 'Quitar de la vista';
+
+  @override
+  String get archiveCompanyBody =>
+      'No se borra nada. La empresa deja de verse en el listado principal y queda en Archivadas. ¿Confirmas?';
+
+  @override
+  String get restoreCompanyTitle => 'Restaurar empresa';
+
+  @override
+  String get restoreCompanyBody =>
+      'La empresa volverá a aparecer en el listado. ¿Confirmas?';
+
+  @override
+  String get confirmAction => 'Confirmar';
+
+  @override
+  String get noArchivedCompanies => 'No hay empresas archivadas.';
+
+  @override
+  String get errorCompanyDisabled =>
+      'Esta empresa está inhabilitada. Un SuperAdmin puede reactivarla.';
+
+  @override
   String get lastActivity => 'Última actividad';
 
   @override
@@ -611,6 +676,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get backToCompanies => 'Volver a empresas';
+
+  @override
+  String get backToPeople => 'Volver a personas';
+
+  @override
+  String get backToProcesses => 'Volver a procesos';
+
+  @override
+  String get presentedPeople => 'Ya presentaron';
+
+  @override
+  String get pendingPeople => 'Pendientes';
+
+  @override
+  String get visitWebsite => 'Visitar sitio web';
+
+  @override
+  String get editCompany => 'Editar empresa';
 
   @override
   String get companyOverview => 'Resumen';
@@ -632,7 +715,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'No hay personas evaluadas para mostrar. No se exponen respuestas sensibles.';
 
   @override
-  String get noDeals => 'No hay oportunidades en el pipeline.';
+  String get noDeals => 'No hay oportunidades comerciales.';
 
   @override
   String get noSales => 'No hay ventas registradas en este periodo.';
@@ -757,4 +840,955 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get activityByDay => 'Actividad por día';
+
+  @override
+  String get language => 'Idioma';
+
+  @override
+  String get languageDescription =>
+      'Elige el idioma de la interfaz. El cambio se aplica de inmediato.';
+
+  @override
+  String get spanish => 'Español';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get vacancy => 'Vacante';
+
+  @override
+  String get createVacancy => 'Crear vacante';
+
+  @override
+  String get createRespondent => 'Crear encuestado';
+
+  @override
+  String get activationPin => 'PIN de activación';
+
+  @override
+  String pinGenerated(String pin) {
+    return 'Empresa creada. PIN de primer acceso: $pin.';
+  }
+
+  @override
+  String invitePinReady(String pin) {
+    return 'PIN de primer acceso: $pin.';
+  }
+
+  @override
+  String get nit => 'NIT';
+
+  @override
+  String get sector => 'Sector';
+
+  @override
+  String get city => 'Ciudad';
+
+  @override
+  String get website => 'Sitio web';
+
+  @override
+  String get logoUrl => 'URL del logo';
+
+  @override
+  String get description => 'Descripción';
+
+  @override
+  String get companyDna => 'ADN de la empresa';
+
+  @override
+  String get companyValues => 'Valores';
+
+  @override
+  String get companyCulture => 'Cultura';
+
+  @override
+  String get standoutPeople => '¿Qué destaca del personal?';
+
+  @override
+  String get skipCompanyDna =>
+      'Omitir el ADN de la empresa por ahora. La organización podrá completarlo después.';
+
+  @override
+  String get country => 'País';
+
+  @override
+  String get department => 'Departamento';
+
+  @override
+  String get divisionState => 'Estado';
+
+  @override
+  String get divisionCommunity => 'Comunidad autónoma';
+
+  @override
+  String get divisionRegion => 'Estado / departamento / región';
+
+  @override
+  String get cityMunicipality => 'Ciudad / municipio';
+
+  @override
+  String get searchLocation => 'Escribe para buscar...';
+
+  @override
+  String get searchCountry => 'Buscar país...';
+
+  @override
+  String get searchDivision => 'Buscar división...';
+
+  @override
+  String get searchCity => 'Buscar ciudad...';
+
+  @override
+  String get locationLoadError =>
+      'No pudimos cargar las ubicaciones. Intenta nuevamente.';
+
+  @override
+  String get locationNoResults => 'No hay resultados para esa búsqueda.';
+
+  @override
+  String get locationSelectCountryFirst => 'Primero elige un país';
+
+  @override
+  String get provisionStepCompany => 'Empresa';
+
+  @override
+  String get provisionStepDna => 'ADN';
+
+  @override
+  String get provisionStepInvite => 'Invitación';
+
+  @override
+  String get pasteLogoUrl => 'Pegar URL del logo';
+
+  @override
+  String get selectLogoFile => 'Seleccionar archivo';
+
+  @override
+  String get logoPreview => 'Vista previa del logo';
+
+  @override
+  String get sectorFinance => 'Financiero';
+
+  @override
+  String get sectorHealth => 'Salud';
+
+  @override
+  String get sectorEducation => 'Educación';
+
+  @override
+  String get sectorManufacturing => 'Manufactura';
+
+  @override
+  String get sectorRetail => 'Comercio';
+
+  @override
+  String get sectorServices => 'Servicios';
+
+  @override
+  String get sectorConstruction => 'Construcción';
+
+  @override
+  String get sectorEnergy => 'Energía';
+
+  @override
+  String get sectorAgribusiness => 'Agroindustria';
+
+  @override
+  String get sectorGovernment => 'Gobierno';
+
+  @override
+  String get sectorOther => 'Otro';
+
+  @override
+  String get size1to10 => '1–10 empleados';
+
+  @override
+  String get size11to50 => '11–50 empleados';
+
+  @override
+  String get size201to500 => '201–500 empleados';
+
+  @override
+  String get size500plus => 'Más de 500 empleados';
+
+  @override
+  String get emailSent => 'El correo de invitación se envió correctamente.';
+
+  @override
+  String get errorEmailNotConfigured =>
+      'La empresa se creó, pero falta configurar SMTP para enviar correos. El PIN quedó en pantalla.';
+
+  @override
+  String get errorEmailSendFailed =>
+      'La empresa se creó, pero el correo no se pudo enviar. Revisa spam o la configuración SMTP. El PIN quedó en pantalla.';
+
+  @override
+  String get completeCompanyDnaTitle => 'Completa el ADN de la empresa';
+
+  @override
+  String get completeCompanyDnaSubtitle =>
+      'Antes de entrar al espacio, registra los valores, la cultura y lo que destaca del personal.';
+
+  @override
+  String get reviewCompanyDnaTitle => 'Verifica el ADN de la empresa';
+
+  @override
+  String get reviewCompanyDnaSubtitle =>
+      'Revisa que estos datos describan bien a la organización. Si algo no cuadra, corrígelo antes de continuar.';
+
+  @override
+  String get confirmCompanyDna => 'Confirmar y continuar';
+
+  @override
+  String get dnaRequired =>
+      'Completa valores, cultura y lo que destaca del personal.';
+
+  @override
+  String get soughtCharacteristics => 'Características buscadas';
+
+  @override
+  String get firstName => 'Nombre';
+
+  @override
+  String get lastName => 'Apellido';
+
+  @override
+  String get activateAccount => 'Activar cuenta';
+
+  @override
+  String get activateSubtitle =>
+      'Usa el correo invitado y el PIN de 6 dígitos que llegó a esa bandeja. El PIN caduca a los 15 minutos.';
+
+  @override
+  String get activatePinHint =>
+      '6 dígitos · válido 15 minutos. Usa el PIN del correo más reciente, no uno de una prueba anterior.';
+
+  @override
+  String get mustChangePasswordTitle => 'Crea tu contraseña';
+
+  @override
+  String get mustChangePasswordSubtitle =>
+      'Esta contraseña es la que usarás de ahora en adelante para entrar a TaleX.';
+
+  @override
+  String get createPassword => 'Nueva contraseña';
+
+  @override
+  String get confirmPassword => 'Confirmar contraseña';
+
+  @override
+  String get passwordsDoNotMatch => 'Las contraseñas no coinciden.';
+
+  @override
+  String get documentNumber => 'Número de documento';
+
+  @override
+  String get activeVacancies => 'Vacantes activas';
+
+  @override
+  String get closedVacancies => 'Vacantes cerradas';
+
+  @override
+  String get pendingAssessments => 'Evaluaciones pendientes';
+
+  @override
+  String get completedAssessments => 'Evaluaciones completadas';
+
+  @override
+  String get noVacancies => 'Todavía no tienes vacantes creadas.';
+
+  @override
+  String get noCandidates => 'Todavía no hay encuestados en este proceso.';
+
+  @override
+  String get noTeamMembers => 'Todavía no hay personas en el equipo.';
+
+  @override
+  String get affinityWithCompany => 'Afinidad con la empresa';
+
+  @override
+  String get affinityWithVacancy => 'Afinidad con la vacante';
+
+  @override
+  String get likertStronglyDisagree => 'Muy en desacuerdo';
+
+  @override
+  String get likertDisagree => 'En desacuerdo';
+
+  @override
+  String get likertNeutral => 'Ni de acuerdo ni en desacuerdo';
+
+  @override
+  String get likertAgree => 'De acuerdo';
+
+  @override
+  String get likertStronglyAgree => 'Muy de acuerdo';
+
+  @override
+  String questionProgress(int current, int total) {
+    return 'Pregunta $current de $total';
+  }
+
+  @override
+  String get next => 'Siguiente';
+
+  @override
+  String get goBack => 'Anterior';
+
+  @override
+  String get finish => 'Finalizar';
+
+  @override
+  String get basicResult => 'Resultado básico';
+
+  @override
+  String get fullResultLocked =>
+      'El resultado completo estará disponible cuando se habilite el acceso.';
+
+  @override
+  String get compare => 'Comparar';
+
+  @override
+  String get characteristic => 'Característica';
+
+  @override
+  String get team => 'Equipo';
+
+  @override
+  String get inviteRecruiter => 'Invitar al equipo';
+
+  @override
+  String get inviteTeamSubtitle =>
+      'La persona recibirá un PIN de 6 dígitos al correo. Caduca a los 15 minutos.';
+
+  @override
+  String get teamRole => 'Rol en la empresa';
+
+  @override
+  String get teamRoleCompanyAdmin => 'Administración de empresa';
+
+  @override
+  String get teamRoleCompanyLead => 'Dirección';
+
+  @override
+  String get teamRolePeopleOps => 'Personas';
+
+  @override
+  String get teamRoleRecruiter => 'Reclutamiento';
+
+  @override
+  String get teamRoleHiringManager => 'Liderazgo de área';
+
+  @override
+  String get teamRoleHint =>
+      'Dirección y administración pueden completar el ADN e invitar al resto del equipo. Reclutamiento y liderazgo de área gestionan vacantes y candidatos.';
+
+  @override
+  String get vacanciesSubtitle =>
+      'Crea y da contexto a las vacantes de tu proceso. La ubicación de la vacante no cambia el perfil de la empresa.';
+
+  @override
+  String get teamSubtitle => 'Personas con acceso a TaleX en tu empresa.';
+
+  @override
+  String get workModeOnsite => 'Presencial';
+
+  @override
+  String get workModeRemote => 'Virtual';
+
+  @override
+  String get workModeHybrid => 'Híbrida';
+
+  @override
+  String get workModeHint =>
+      'Si es virtual, la ciudad es opcional. Si es presencial o híbrida, usa la ubicación de la empresa y ajústala solo para esta vacante.';
+
+  @override
+  String get vacancyCityOptional => 'Ciudad de referencia (opcional)';
+
+  @override
+  String get seniorityHint =>
+      'Indica la experiencia esperada para el rol. No entra en el cálculo de afinidad.';
+
+  @override
+  String get seniorityJunior => 'Inicial';
+
+  @override
+  String get seniorityMid => 'Intermedio';
+
+  @override
+  String get senioritySenior => 'Con experiencia';
+
+  @override
+  String get seniorityLead => 'Liderazgo';
+
+  @override
+  String get contractIndefinite => 'Indefinido';
+
+  @override
+  String get contractFixed => 'Término fijo';
+
+  @override
+  String get contractServices => 'Prestación de servicios';
+
+  @override
+  String get contractInternship => 'Práctica o pasantía';
+
+  @override
+  String get contractTemporary => 'Temporal';
+
+  @override
+  String get areaPeople => 'Personas y cultura';
+
+  @override
+  String get areaFinanceOps => 'Finanzas';
+
+  @override
+  String get areaOperations => 'Operaciones';
+
+  @override
+  String get areaCommercial => 'Comercial';
+
+  @override
+  String get areaCustomer => 'Atención a clientes';
+
+  @override
+  String get areaAdmin => 'Administración';
+
+  @override
+  String get areaEngineering => 'Ingeniería y desarrollo';
+
+  @override
+  String get areaProduct => 'Producto';
+
+  @override
+  String get areaData => 'Datos y analítica';
+
+  @override
+  String get areaSupport => 'Soporte';
+
+  @override
+  String get areaRisk => 'Riesgo y cumplimiento';
+
+  @override
+  String get areaAccounting => 'Contabilidad';
+
+  @override
+  String get areaClinical => 'Clínica';
+
+  @override
+  String get areaCare => 'Cuidado y atención';
+
+  @override
+  String get areaAcademic => 'Académica';
+
+  @override
+  String get areaTraining => 'Formación';
+
+  @override
+  String get areaProduction => 'Producción';
+
+  @override
+  String get areaQuality => 'Calidad';
+
+  @override
+  String get areaMaintenance => 'Mantenimiento';
+
+  @override
+  String get areaStore => 'Punto de venta';
+
+  @override
+  String get areaLogistics => 'Logística';
+
+  @override
+  String get areaProjects => 'Proyectos';
+
+  @override
+  String get areaField => 'Campo u obra';
+
+  @override
+  String get areaPublicService => 'Servicio público';
+
+  @override
+  String get vacancyAreaHint =>
+      'Las áreas cambian según el sector de la empresa. Elige la más cercana al rol.';
+
+  @override
+  String get invitationUsed => 'Activada';
+
+  @override
+  String get invitationPending => 'Invitación pendiente';
+
+  @override
+  String get statusInReview => 'En revisión';
+
+  @override
+  String get statusShortlisted => 'Preseleccionado';
+
+  @override
+  String get statusInterview => 'Entrevista';
+
+  @override
+  String get statusFinalist => 'Finalista';
+
+  @override
+  String get statusHired => 'Contratado';
+
+  @override
+  String get statusRejected => 'No seleccionado';
+
+  @override
+  String get vacancyName => 'Nombre de la vacante';
+
+  @override
+  String get vacancyArea => 'Área';
+
+  @override
+  String get workMode => 'Modalidad';
+
+  @override
+  String get contractType => 'Tipo de contrato';
+
+  @override
+  String get seniority => 'Nivel';
+
+  @override
+  String get roleProfile => 'Perfil buscado';
+
+  @override
+  String get close => 'Cerrar';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get companyProfile => 'Perfil de empresa';
+
+  @override
+  String get vacancyInsights => 'Lectura de la vacante';
+
+  @override
+  String get vacancyInsightsEmpty =>
+      'Aún no hay suficiente información para mostrar una lectura de esta vacante.';
+
+  @override
+  String vacancyInsightsCounts(int invited, int started, int completed) {
+    return '$invited invitados · $started en curso · $completed completaron la evaluación.';
+  }
+
+  @override
+  String get dnaSelectSeveral =>
+      'Puedes elegir varias opciones. Si agregas una que no estaba en la lista, también puedes quitarla.';
+
+  @override
+  String get removeCustomOption => 'Eliminar esta opción';
+
+  @override
+  String get results => 'Resultados';
+
+  @override
+  String get resultsSubtitle =>
+      'Lectura de afinidad de las personas que ya se presentaron. Aquí verás el detalle cuando la metodología complete la ficha.';
+
+  @override
+  String get compareHint =>
+      'El recuadro a la izquierda sirve para elegir dos o más personas y usar Comparar. No cambia el estado del proceso.';
+
+  @override
+  String get affinityCompany => 'Empresa';
+
+  @override
+  String get affinityVacancy => 'Vacante';
+
+  @override
+  String get affinityCompanyHighHint =>
+      'Hay alta correspondencia con la cultura y la forma de trabajar descritas por la empresa. Texto de maqueta: más adelante aquí irá la lectura real de las dimensiones evaluadas.';
+
+  @override
+  String get affinityCompanyMediumHint =>
+      'Hay correspondencia parcial con el ADN de la empresa. Texto de maqueta: luego se detallará qué dimensiones coinciden y cuáles no.';
+
+  @override
+  String get affinityCompanyLowHint =>
+      'Hay menor correspondencia con la cultura descrita por la empresa. Texto de maqueta: la ficha real explicará en qué se distancia.';
+
+  @override
+  String get affinityVacancyHighHint =>
+      'El perfil de esta persona se acerca a lo que la vacante busca. Texto de maqueta: luego se mostrarán las características del rol con mayor coincidencia.';
+
+  @override
+  String get affinityVacancyMediumHint =>
+      'Hay coincidencia intermedia con el perfil de la vacante. Texto de maqueta: la ficha real indicará qué aspectos del rol calzan mejor.';
+
+  @override
+  String get affinityVacancyLowHint =>
+      'Hay menor correspondencia con el perfil buscado para esta vacante. Texto de maqueta: no significa un juicio sobre la persona, solo respecto a este rol.';
+
+  @override
+  String get affinityUnknownHint =>
+      'Todavía no hay evaluación completa, por eso la afinidad no está clasificada.';
+
+  @override
+  String get affinityMockNote =>
+      'Esta explicación es orientativa. La lectura definitiva se construirá con la metodología de TaleX.';
+
+  @override
+  String get continueAction => 'Continuar';
+
+  @override
+  String respondentHello(String name) {
+    return 'Hola, $name';
+  }
+
+  @override
+  String get respondentHomeTitle => 'Tu evaluación de afinidad';
+
+  @override
+  String get respondentHomeSubtitle =>
+      'TaleX no decide si te contratan. Mide qué tan cerca estás del perfil que la empresa describió para esta vacante.';
+
+  @override
+  String get respondentDuration =>
+      'Reserva unos 40 minutos en un lugar tranquilo. Puedes avanzar con calma.';
+
+  @override
+  String get respondentLikertHint =>
+      'Todas las preguntas son de acuerdo o desacuerdo. No hay respuestas correctas o incorrectas.';
+
+  @override
+  String get startAssessment => 'Iniciar evaluación';
+
+  @override
+  String get assignedVacancy => 'Vacante asignada';
+
+  @override
+  String get viewFullSummary => 'Ver resumen orientativo';
+
+  @override
+  String get hideFullSummary => 'Ocultar resumen';
+
+  @override
+  String get fullSummaryTitle => 'Resumen orientativo';
+
+  @override
+  String get fullSummaryIntro =>
+      'Esta vista es una maqueta de cómo se verá la lectura. Las dimensiones de abajo son de ejemplo hasta que TaleX entregue el detalle real.';
+
+  @override
+  String get dimensionCommunication => 'Comunicación';
+
+  @override
+  String get dimensionAdaptability => 'Adaptabilidad';
+
+  @override
+  String get dimensionCollaboration => 'Colaboración';
+
+  @override
+  String get dimensionInitiative => 'Iniciativa';
+
+  @override
+  String get veryHigh => 'Muy alta';
+
+  @override
+  String get resultThanks =>
+      'Gracias por completar la evaluación. La empresa podrá ver tu afinidad con su cultura y con esta vacante.';
+
+  @override
+  String get newAssessment => 'Nueva evaluación';
+
+  @override
+  String get pendingAssessmentNotification =>
+      'Tienes una evaluación pendiente.';
+
+  @override
+  String get assessmentCompletedNotification => 'La evaluación fue completada.';
+
+  @override
+  String get newVacancyNotification => 'Se creó una nueva vacante.';
+
+  @override
+  String get newActivityNotification => 'Hay nueva actividad en TaleX.';
+
+  @override
+  String get errorNeedSignIn => 'Necesitas iniciar sesión.';
+
+  @override
+  String get errorNeedAuthEmail => 'Necesitas un correo autenticado.';
+
+  @override
+  String get errorPermissionDenied => 'No tienes permiso para esta operación.';
+
+  @override
+  String get errorUnexpected =>
+      'No se pudo completar la operación. Inténtalo nuevamente.';
+
+  @override
+  String get errorCompanyNotFound => 'No se encontró la empresa.';
+
+  @override
+  String get errorRespondentExists =>
+      'Ya existe un encuestado con este correo en la vacante.';
+
+  @override
+  String get errorInviteMissing => 'No hay una invitación para este correo.';
+
+  @override
+  String get errorInviteUsed => 'Esta invitación ya fue utilizada.';
+
+  @override
+  String get errorInvalidPin => 'El PIN no es válido.';
+
+  @override
+  String get errorPinExpired =>
+      'El PIN caducó. Pide una invitación nueva; dura 15 minutos.';
+
+  @override
+  String get errorDocumentMismatch =>
+      'El documento no coincide con la invitación.';
+
+  @override
+  String get errorAssessmentMissing => 'No hay una evaluación asignada.';
+
+  @override
+  String get errorDocumentPasswordTooShort =>
+      'El número de documento debe tener al menos 6 caracteres para usarse como contraseña.';
+
+  @override
+  String get registerPinHint => 'PIN de 6 dígitos que llegó al correo';
+
+  @override
+  String get googlePinTitle => 'Ingresa el PIN del correo';
+
+  @override
+  String get googlePinSubtitle =>
+      'Tu cuenta de Google ya está lista. Confirma el PIN de 6 dígitos para vincular la invitación.';
+
+  @override
+  String addCustomOption(String value) {
+    return 'Agregar \"$value\"';
+  }
+
+  @override
+  String get searchOrAdd => 'Escribe para buscar o agregar...';
+
+  @override
+  String get customAreaLabel => 'Nombre del área';
+
+  @override
+  String get areaOther => 'Otra';
+
+  @override
+  String get dnaValueIntegrity => 'Integridad';
+
+  @override
+  String get dnaValueRespect => 'Respeto';
+
+  @override
+  String get dnaValueCollaboration => 'Colaboración';
+
+  @override
+  String get dnaValueInnovation => 'Innovación';
+
+  @override
+  String get dnaValueExcellence => 'Excelencia';
+
+  @override
+  String get dnaValueEmpathy => 'Empatía';
+
+  @override
+  String get dnaCultureClose => 'Cercana y humana';
+
+  @override
+  String get dnaCultureFormal => 'Formal y estructurada';
+
+  @override
+  String get dnaCultureLearning => 'Aprendizaje continuo';
+
+  @override
+  String get dnaCultureAgile => 'Ágil';
+
+  @override
+  String get dnaCultureAutonomous => 'Autónoma';
+
+  @override
+  String get dnaStandoutOwnership => 'Sentido de dueño';
+
+  @override
+  String get dnaStandoutCommunication => 'Comunicación clara';
+
+  @override
+  String get dnaStandoutAdaptability => 'Adaptabilidad';
+
+  @override
+  String get dnaStandoutInitiative => 'Iniciativa';
+
+  @override
+  String get dnaStandoutTeamwork => 'Trabajo en equipo';
+
+  @override
+  String get assessmentKindLabel => 'Esta es tu evaluación';
+
+  @override
+  String get assessmentKindAffinity => 'Afinidad';
+
+  @override
+  String get assessmentKindFit => 'Fit';
+
+  @override
+  String get sentByCompany => 'Te la envió';
+
+  @override
+  String respondentQuestionCount(int count) {
+    return 'En total son $count preguntas.';
+  }
+
+  @override
+  String get assessmentFinishedTitle => 'Muy bien, acabaste';
+
+  @override
+  String get downloadPdf => 'Descargar informe PDF';
+
+  @override
+  String get candidateResultTitle => 'Informe de resultados';
+
+  @override
+  String get backToResults => 'Volver';
+
+  @override
+  String get candidatesSubtitle =>
+      'Personas invitadas a evaluar afinidad con tus vacantes.';
+
+  @override
+  String get candidateProcessStatus => 'Estado del proceso';
+
+  @override
+  String get respondentInviteHint =>
+      'La persona recibirá un PIN de 6 dígitos al correo. Caduca a los 15 minutos. Luego se registra con su contraseña o con Google y ese PIN.';
+
+  @override
+  String get firstAccessCompany => 'Primer acceso';
+
+  @override
+  String get assessmentSignInHint =>
+      'Si te invitaron a una evaluación, entra por Registrarse con el PIN del correo. Si usas Google, después te pediremos el PIN.';
+
+  @override
+  String get respondentInviteSent =>
+      'Invitación lista. El encuestado recibe un PIN por correo.';
+
+  @override
+  String get assessmentC1 =>
+      'Me identifico con la forma de trabajar de esta organización.';
+
+  @override
+  String get assessmentC2 =>
+      'El ambiente descrito se alinea con cómo me gusta colaborar.';
+
+  @override
+  String get assessmentC3 =>
+      'La manera de tomar decisiones de la empresa me resulta clara y coherente.';
+
+  @override
+  String get assessmentC4 =>
+      'Valoro el entorno laboral que describe la organización.';
+
+  @override
+  String get assessmentC5 =>
+      'Las personas que destacan aquí se parecen a cómo me gusta aportar.';
+
+  @override
+  String get assessmentV1 =>
+      'El rol descrito se alinea con el tipo de trabajo que quiero realizar.';
+
+  @override
+  String get assessmentV2 =>
+      'Las responsabilidades de la vacante coinciden con mi forma de contribuir.';
+
+  @override
+  String get assessmentV3 =>
+      'El entorno de este rol me permitiría desempeñarme con naturalidad.';
+
+  @override
+  String get assessmentV4 =>
+      'Las características buscadas para el rol coinciden con las mías.';
+
+  @override
+  String get assessmentV5 =>
+      'Esta vacante representa un contexto en el que me veo aportando de forma sostenida.';
+
+  @override
+  String get recoverPasswordTitle => 'Recuperar acceso';
+
+  @override
+  String get recoverPasswordSubtitle =>
+      'Escribe el correo de tu cuenta TaleX. Te enviaremos un PIN de 6 dígitos para continuar.';
+
+  @override
+  String get recoverContinue => 'Enviar PIN';
+
+  @override
+  String get recoverPinTitle => 'Revisa tu correo';
+
+  @override
+  String get recoverPinSubtitle =>
+      'Te enviamos un PIN. Ingrésalo para actualizar tu contraseña.';
+
+  @override
+  String get recoverPinHint =>
+      '6 dígitos · válido 15 minutos. Revisa también spam. Si no pediste este cambio, ignora el mensaje.';
+
+  @override
+  String get recoverPinSent => 'Enviamos un PIN a tu correo.';
+
+  @override
+  String get recoverVerifyPin => 'Verificar PIN';
+
+  @override
+  String get recoverResendPin => 'Reenviar PIN';
+
+  @override
+  String get recoverUpdatePassword => 'Actualizar contraseña';
+
+  @override
+  String get recoverSuccessTitle => 'Contraseña actualizada';
+
+  @override
+  String get recoverSuccessBody =>
+      'Ya puedes iniciar sesión en TaleX con tu nueva contraseña.';
+
+  @override
+  String get errorResetCooldown => 'Espera un minuto antes de pedir otro PIN.';
+
+  @override
+  String get errorResetTooManyAttempts =>
+      'Demasiados intentos. Espera un momento e inténtalo de nuevo.';
+
+  @override
+  String dashboardReadyToReview(int count) {
+    return '$count evaluaciones listas para revisar';
+  }
+
+  @override
+  String dashboardPendingToStart(int count) {
+    return '$count personas aún no inician la evaluación';
+  }
+
+  @override
+  String dashboardStalledAssessments(int count) {
+    return '$count evaluaciones detenidas más de 24 h';
+  }
+
+  @override
+  String get dashboardRecentEmpty =>
+      'Todavía no hay actividad de encuestados en este espacio.';
+
+  @override
+  String get dashboardAlertsEmpty =>
+      'No hay alertas pendientes en este momento.';
+
+  @override
+  String get errorAccountNotFound =>
+      'No hay una cuenta TaleX con este correo. Si te invitaron, entra por Primer acceso con el PIN.';
 }

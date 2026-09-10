@@ -21,6 +21,7 @@ abstract interface class AuthRemoteDataSource {
     String? companyName,
   });
   Future<void> signOut();
+  Future<void> discardCurrentUser();
   Future<void> sendPasswordResetEmail(String email);
 }
 
@@ -97,6 +98,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       final snapshot = await _firestore.collection('users').doc(user.uid).get();
       data = snapshot.data();
       await _maybeElevateSuperAdmin(user, data);
+      await _linkCompanyInvite(user);
       final refreshed = await _firestore.collection('users').doc(user.uid).get();
       data = refreshed.data() ?? data;
     } on FirebaseException {
@@ -108,6 +110,10 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       displayName: (data?['displayName'] as String?) ?? user.displayName,
       companyName: data?['companyName'] as String?,
       role: UserRoleX.parse(data?['role']),
+      companyId: data?['companyId'] as String?,
+      documentNumber: data?['documentNumber'] as String?,
+      mustChangePassword: data?['mustChangePassword'] == true,
+      mustReviewCompanyDna: data?['mustReviewCompanyDna'] == true,
     );
   }
 
@@ -135,6 +141,59 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       }, SetOptions(merge: true));
     } on FirebaseException {
       // La elevación exige config/superadmin.emails o un rol ya asignado.
+    }
+  }
+
+  Future<void> _linkCompanyInvite(User user) async {
+    final email = user.email?.trim().toLowerCase();
+    if (email == null || !email.contains('@')) return;
+    final userRef = _firestore.collection('users').doc(user.uid);
+    Map<String, dynamic>? data;
+    try {
+      data = (await userRef.get()).data();
+    } on FirebaseException {
+      return;
+    }
+    final current = UserRoleX.parse(data?['role']);
+    if (current == UserRole.superadmin || current == UserRole.respondent) {
+      return;
+    }
+    if (current.isCompanyStaffRole && (data?['companyId'] as String?)?.isNotEmpty == true) {
+      return;
+    }
+    DocumentSnapshot<Map<String, dynamic>> invite;
+    try {
+      invite = await _firestore.collection('activation_invites').doc(email).get();
+    } on FirebaseException {
+      return;
+    }
+    if (!invite.exists) return;
+    final payload = invite.data() ?? const <String, dynamic>{};
+    if (payload['kind'] == 'respondent') return;
+    final companyId = payload['companyId'] as String?;
+    final role = UserRoleX.parse(payload['role']);
+    if (companyId == null || companyId.isEmpty || !role.isCompanyStaffRole) {
+      return;
+    }
+    try {
+      final linked = <String, Object?>{
+        'uid': user.uid,
+        'email': email,
+        'role': role.value,
+        'companyId': companyId,
+        'displayName': [
+          payload['firstName'],
+          payload['lastName'],
+        ].whereType<String>().join(' ').trim(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      if (data?['mustReviewCompanyDna'] == null &&
+          (role == UserRole.companyAdmin || role == UserRole.companyLead)) {
+        linked['mustReviewCompanyDna'] = true;
+      }
+      await userRef.set(linked, SetOptions(merge: true));
+    } on FirebaseException {
+      // Sin permiso se deja el perfil como está; el usuario puede registrarse con el PIN.
     }
   }
 
@@ -331,6 +390,11 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
   });
 
   @override
+  Future<void> discardCurrentUser() => _handleFirebaseErrors(() async {
+    await _firebaseAuth.currentUser?.delete();
+  });
+
+  @override
   Future<void> sendPasswordResetEmail(String email) => _handleFirebaseErrors(
     () => _firebaseAuth.sendPasswordResetEmail(email: email),
   );
@@ -384,6 +448,9 @@ final class InMemoryAuthRemoteDataSource implements AuthRemoteDataSource {
 
   @override
   Future<void> signOut() async => _currentUser = null;
+
+  @override
+  Future<void> discardCurrentUser() async => _currentUser = null;
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {

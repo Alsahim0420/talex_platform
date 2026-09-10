@@ -1,12 +1,19 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:talex_platform/core/error/exceptions.dart';
 import 'package:talex_platform/features/admin/domain/entities/admin_entities.dart';
 import 'package:talex_platform/features/admin/domain/services/admin_alert_engine.dart';
 
 abstract interface class AdminDataSource {
   Future<AdminDashboardData> getDashboard();
-  Future<List<Company>> getCompanies({String query, CompanyStatus? status});
+  Future<List<Company>> getCompanies({
+    String query,
+    CompanyStatus? status,
+    bool archivedOnly = false,
+  });
   Future<CompanyDetail> getCompany(String id);
   Future<List<TalentProcess>> getProcesses({
     String query,
@@ -57,6 +64,20 @@ abstract interface class AdminDataSource {
     bool recurring = false,
   });
   Future<void> updateUserRole({required String userId, required String role});
+  Future<void> applyCompanyLifecycle({
+    required String id,
+    required CompanyLifecycleAction action,
+  });
+  Future<void> updatePerson({
+    required String id,
+    required String displayName,
+    required EvaluationStatus status,
+  });
+  Future<void> updateCompany({
+    required Company company,
+    List<int>? logoBytes,
+    String? logoContentType,
+  });
 }
 
 final class FirebaseAdminDataSource implements AdminDataSource {
@@ -78,6 +99,10 @@ final class FirebaseAdminDataSource implements AdminDataSource {
       _firestore.collection('activity_events');
   CollectionReference<Map<String, dynamic>> get _audit =>
       _firestore.collection('admin_audit_logs');
+  CollectionReference<Map<String, dynamic>> get _vacancies =>
+      _firestore.collection('vacancies');
+  CollectionReference<Map<String, dynamic>> get _candidates =>
+      _firestore.collection('candidates');
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
@@ -122,6 +147,14 @@ final class FirebaseAdminDataSource implements AdminDataSource {
       id: doc.id,
       name: (data['name'] as String?) ?? 'Empresa',
       logoUrl: data['logoUrl'] as String?,
+      website: data['website'] as String?,
+      description: data['description'] as String?,
+      nit: data['nit'] as String?,
+      sector: data['sector'] as String?,
+      size: data['size'] as String?,
+      city: data['city'] as String?,
+      region: data['region'] as String?,
+      country: data['country'] as String?,
       status: CompanyStatus.values.firstWhere(
         (item) => item.name == data['status'],
         orElse: () => CompanyStatus.onboarding,
@@ -142,6 +175,7 @@ final class FirebaseAdminDataSource implements AdminDataSource {
       commercialStage: DealStage.values
           .where((item) => item.name == data['commercialStage'])
           .firstOrNull,
+      archived: data['archived'] == true,
     );
   }
 
@@ -168,6 +202,54 @@ final class FirebaseAdminDataSource implements AdminDataSource {
     );
   }
 
+  Company _decorateCompany(
+    Company company, {
+    required Iterable<TalentProcess> processes,
+    required Iterable<PersonEvaluation> people,
+  }) {
+    final companyPeople = people.where((item) => item.companyId == company.id);
+    final companyProcesses = processes.where((item) => item.companyId == company.id);
+    return Company(
+      id: company.id,
+      name: company.name,
+      status: company.status,
+      createdAt: company.createdAt,
+      logoUrl: company.logoUrl,
+      website: company.website,
+      description: company.description,
+      nit: company.nit,
+      sector: company.sector,
+      size: company.size,
+      city: company.city,
+      region: company.region,
+      country: company.country,
+      lastActivityAt: company.lastActivityAt,
+      activeProcesses: companyProcesses
+          .where((item) => item.status == ProcessStatus.active)
+          .length,
+      invitedPeople: companyPeople.length,
+      startedEvaluations: companyPeople
+          .where(
+            (item) =>
+                item.status != EvaluationStatus.invited &&
+                item.status != EvaluationStatus.abandoned,
+          )
+          .length,
+      completedEvaluations: companyPeople
+          .where((item) => item.status == EvaluationStatus.completed)
+          .length,
+      affinitiesDetected: companyPeople
+          .where((item) => item.affinityScore != null)
+          .length,
+      plan: company.plan,
+      contractValue: company.contractValue,
+      mrr: company.mrr,
+      renewalAt: company.renewalAt,
+      commercialStage: company.commercialStage,
+      archived: company.archived,
+    );
+  }
+
   PersonEvaluation _person(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data() ?? const <String, dynamic>{};
     return PersonEvaluation(
@@ -183,6 +265,7 @@ final class FirebaseAdminDataSource implements AdminDataSource {
       ),
       updatedAt: _date(data['updatedAt'], DateTime.now()),
       affinityScore: (data['affinityScore'] as num?)?.toDouble(),
+      email: (data['email'] as String?) ?? '',
     );
   }
 
@@ -231,6 +314,125 @@ final class FirebaseAdminDataSource implements AdminDataSource {
       statusLabel: data['statusLabel'] as String?,
       context: data['context'] as String?,
     );
+  }
+
+  TalentProcess _processFromVacancy(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+    Map<String, String> companyNames,
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> candidates,
+  ) {
+    final data = doc.data() ?? const <String, dynamic>{};
+    final companyId = (data['companyId'] as String?) ?? '';
+    final related = candidates
+        .where((item) => item.data()['vacancyId'] == doc.id)
+        .toList();
+    final started = related
+        .where((item) => item.data()['processStatus'] != 'pending')
+        .length;
+    final completed = related
+        .where((item) => item.data()['evaluationCompleted'] == true)
+        .length;
+    return TalentProcess(
+      id: doc.id,
+      companyId: companyId,
+      companyName: companyNames[companyId] ?? '',
+      name: (data['name'] as String?) ?? 'Vacante',
+      status: data['status'] == 'closed'
+          ? ProcessStatus.closed
+          : ProcessStatus.active,
+      createdAt: _date(data['createdAt'], DateTime.now()),
+      invitedPeople: related.length,
+      startedEvaluations: started,
+      completedEvaluations: completed,
+      affinitiesDetected: related
+          .where(
+            (item) =>
+                item.data()['companyAffinity'] == 'high' ||
+                item.data()['companyAffinity'] == 'medium',
+          )
+          .length,
+    );
+  }
+
+  PersonEvaluation _personFromCandidate(
+    DocumentSnapshot<Map<String, dynamic>> doc,
+    Map<String, String> companyNames,
+  ) {
+    final data = doc.data() ?? const <String, dynamic>{};
+    final companyId = (data['companyId'] as String?) ?? '';
+    final statusName = data['processStatus'] as String?;
+    final completed = data['evaluationCompleted'] == true;
+    final affinity = data['companyAffinity'] as String?;
+    return PersonEvaluation(
+      id: doc.id,
+      displayName: ((data['displayName'] as String?)?.trim().isNotEmpty == true)
+          ? data['displayName'] as String
+          : ((data['email'] as String?) ?? 'Persona'),
+      companyId: companyId,
+      companyName: companyNames[companyId] ?? '',
+      processId: (data['vacancyId'] as String?) ?? '',
+      processName: (data['vacancyName'] as String?) ?? '',
+      status: completed
+          ? EvaluationStatus.completed
+          : statusName == 'inProgress'
+              ? EvaluationStatus.inProgress
+              : EvaluationStatus.invited,
+      updatedAt: _date(data['updatedAt'] ?? data['createdAt'], DateTime.now()),
+      affinityScore: switch (affinity) {
+        'high' => 85,
+        'medium' => 60,
+        'low' => 30,
+        _ => null,
+      },
+      email: (data['email'] as String?) ?? '',
+    );
+  }
+
+  List<ActivityEvent> _activityFromVacancies(
+    Iterable<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
+    Map<String, String> companyNames,
+  ) {
+    return [
+      for (final doc in docs)
+        ActivityEvent(
+          id: 'vacancy_${doc.id}',
+          kind: ActivityKind.vacancyCreated,
+          entityName: (doc.data()['name'] as String?) ?? 'Vacante',
+          createdAt: _date(doc.data()['createdAt'], DateTime.now()),
+          companyId: doc.data()['companyId'] as String?,
+          context: companyNames[doc.data()['companyId'] as String? ?? ''],
+        ),
+    ];
+  }
+
+  List<ActivityEvent> _activityFromCandidates(
+    Iterable<QueryDocumentSnapshot<Map<String, dynamic>>> docs,
+    Map<String, String> companyNames,
+  ) {
+    return [
+      for (final doc in docs)
+        ActivityEvent(
+          id: 'candidate_${doc.id}',
+          kind: doc.data()['evaluationCompleted'] == true
+              ? ActivityKind.evaluationCompleted
+              : doc.data()['processStatus'] == 'inProgress'
+                  ? ActivityKind.evaluationStarted
+                  : ActivityKind.respondentInvited,
+          entityName: ((doc.data()['displayName'] as String?)?.trim().isNotEmpty ==
+                  true)
+              ? doc.data()['displayName'] as String
+              : ((doc.data()['email'] as String?) ?? 'Encuestado'),
+          createdAt: _date(
+            doc.data()['updatedAt'] ?? doc.data()['createdAt'],
+            DateTime.now(),
+          ),
+          companyId: doc.data()['companyId'] as String?,
+          context: [
+            doc.data()['vacancyName'] as String?,
+            companyNames[doc.data()['companyId'] as String? ?? ''],
+          ].whereType<String>().where((item) => item.isNotEmpty).join(' · '),
+        ),
+    ];
   }
 
   Future<void> _log({
@@ -293,18 +495,49 @@ final class FirebaseAdminDataSource implements AdminDataSource {
   @override
   Future<AdminDashboardData> getDashboard() => _guard(() async {
     final companiesSnap = await _companies.limit(200).get();
-    final companies = companiesSnap.docs.map(_company).toList();
+    final companies = companiesSnap.docs
+        .map(_company)
+        .where((item) => !item.archived)
+        .toList();
     final processesSnap = await _processes.limit(400).get();
     final peopleSnap = await _people.limit(500).get();
     final dealsSnap = await _deals.limit(200).get();
     final salesSnap = await _sales.limit(200).get();
-    final activitySnap = await _activity
-        .orderBy('createdAt', descending: true)
-        .limit(20)
-        .get();
     final people = peopleSnap.docs.map(_person).toList();
     final deals = dealsSnap.docs.map(_deal).toList();
     final sales = salesSnap.docs.map(_sale).toList();
+    final companyNames = {
+      for (final company in companies) company.id: company.name,
+    };
+    final vacanciesSnap = await _vacancies.limit(200).get();
+    final candidatesSnap = await _candidates.limit(400).get();
+    final vacancyProcesses = vacanciesSnap.docs
+        .map((doc) => _processFromVacancy(doc, companyNames, candidatesSnap.docs))
+        .toList();
+    final candidatePeople = candidatesSnap.docs
+        .map((doc) => _personFromCandidate(doc, companyNames))
+        .toList();
+    final mergedPeople = [
+      ...people,
+      ...candidatePeople.where(
+        (item) => people.every((existing) => existing.id != item.id),
+      ),
+    ];
+    final recentCutoff = DateTime.now().subtract(const Duration(days: 45));
+    List<ActivityEvent> activity = [
+      ..._activityFromVacancies(vacanciesSnap.docs, companyNames),
+      ..._activityFromCandidates(candidatesSnap.docs, companyNames),
+      for (final company in companies)
+        if (!company.createdAt.isBefore(recentCutoff))
+          ActivityEvent(
+            id: 'company_${company.id}',
+            kind: ActivityKind.companyCreated,
+            entityName: company.name,
+            createdAt: company.createdAt,
+            companyId: company.id,
+          ),
+    ]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    if (activity.length > 12) activity = activity.take(12).toList();
     final monthStart = DateTime(DateTime.now().year, DateTime.now().month, 1);
     final periodSales = sales
         .where((item) => !item.soldAt.isBefore(monthStart))
@@ -317,28 +550,34 @@ final class FirebaseAdminDataSource implements AdminDataSource {
       activeCompanies: companies
           .where((item) => item.status == CompanyStatus.active)
           .length,
-      evaluatedPeople: people
+      evaluatedPeople: mergedPeople
           .where(
             (item) =>
                 item.status != EvaluationStatus.invited &&
                 item.status != EvaluationStatus.abandoned,
           )
           .length,
-      completedEvaluations: people
+      completedEvaluations: mergedPeople
           .where((item) => item.status == EvaluationStatus.completed)
           .length,
-      affinitiesDetected: people.where((item) => item.affinityScore != null).length,
+      affinitiesDetected: mergedPeople.where((item) => item.affinityScore != null).length,
       periodSales: periodSales,
       mrr: mrr,
       companiesAtRisk: companies
           .where((item) => item.status == CompanyStatus.atRisk)
           .length,
     );
+    final mergedProcesses = [
+      ...processesSnap.docs.map(_process),
+      ...vacancyProcesses.where(
+        (item) => processesSnap.docs.every((doc) => doc.id != item.id),
+      ),
+    ];
     final funnel = AdminFunnel(
       companies: companies.length,
-      processes: processesSnap.docs.length,
-      invitedPeople: people.length,
-      startedEvaluations: people
+      processes: mergedProcesses.length,
+      invitedPeople: mergedPeople.length,
+      startedEvaluations: mergedPeople
           .where(
             (item) =>
                 item.status == EvaluationStatus.started ||
@@ -348,37 +587,51 @@ final class FirebaseAdminDataSource implements AdminDataSource {
           .length,
       completedEvaluations: metrics.completedEvaluations,
       affinitiesDetected: metrics.affinitiesDetected,
-      decisions: people.where((item) => item.affinityScore != null).length,
+      decisions: mergedPeople.where((item) => item.affinityScore != null).length,
     );
     return AdminDashboardData(
       metrics: metrics,
       funnel: funnel,
-      activity: activitySnap.docs.map(_event).toList(),
+      activity: activity,
       alerts: AdminAlertEngine.from(
         companies: companies,
-        processes: processesSnap.docs.map(_process).toList(),
-        people: people,
+        processes: mergedProcesses,
+        people: mergedPeople,
         deals: deals,
       ),
     );
   });
 
   @override
-  Future<List<Company>> getCompanies({String query = '', CompanyStatus? status}) =>
+  Future<List<Company>> getCompanies({
+    String query = '',
+    CompanyStatus? status,
+    bool archivedOnly = false,
+  }) =>
       _guard(() async {
         final snapshot = await _companies.limit(200).get();
-        var items = snapshot.docs.map(_company).toList();
-        if (status != null) {
-          items = items.where((item) => item.status == status).toList();
-        }
-        final needle = query.trim().toLowerCase();
-        if (needle.isNotEmpty) {
-          items = items
-              .where((item) => item.name.toLowerCase().contains(needle))
-              .toList();
-        }
-        items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        return items;
+        final raw = snapshot.docs.map(_company).toList();
+        final names = {for (final item in raw) item.id: item.name};
+        final vacancies = await _vacancies.limit(300).get();
+        final candidates = await _candidates.limit(400).get();
+        final processes = vacancies.docs
+            .map((doc) => _processFromVacancy(doc, names, candidates.docs))
+            .toList();
+        final people = candidates.docs
+            .map((doc) => _personFromCandidate(doc, names))
+            .toList();
+        return filterCompanies(
+          raw.map(
+            (item) => _decorateCompany(
+              item,
+              processes: processes,
+              people: people,
+            ),
+          ),
+          query: query,
+          status: status,
+          archivedOnly: archivedOnly,
+        );
       });
 
   @override
@@ -390,16 +643,34 @@ final class FirebaseAdminDataSource implements AdminDataSource {
     final company = _company(doc);
     final processes = await _processes.where('companyId', isEqualTo: id).get();
     final people = await _people.where('companyId', isEqualTo: id).get();
-    final activity = await _activity
-        .where('companyId', isEqualTo: id)
-        .limit(30)
-        .get();
-    final events = activity.docs.map(_event).toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    final vacancies = await _vacancies.where('companyId', isEqualTo: id).get();
+    final candidates = await _candidates.where('companyId', isEqualTo: id).get();
+    final companyNames = {id: company.name};
+    final vacancyProcesses = vacancies.docs
+        .map((item) => _processFromVacancy(item, companyNames, candidates.docs))
+        .toList();
+    final mappedProcesses = [
+      ...processes.docs.map((item) => _process(item, companyName: company.name)),
+      ...vacancyProcesses.where(
+        (item) => processes.docs.every((doc) => doc.id != item.id),
+      ),
+    ];
+    final mappedPeople = [
+      ...people.docs.map(_person),
+      ...candidates.docs.map((item) => _personFromCandidate(item, companyNames)),
+    ];
+    final events = [
+      ..._activityFromVacancies(vacancies.docs, companyNames),
+      ..._activityFromCandidates(candidates.docs, companyNames),
+    ]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return CompanyDetail(
-      company: company,
-      processes: processes.docs.map((item) => _process(item, companyName: company.name)).toList(),
-      people: people.docs.map(_person).toList(),
+      company: _decorateCompany(
+        company,
+        processes: mappedProcesses,
+        people: mappedPeople,
+      ),
+      processes: mappedProcesses,
+      people: mappedPeople,
       activity: events,
     );
   });
@@ -416,6 +687,23 @@ final class FirebaseAdminDataSource implements AdminDataSource {
     }
     final snapshot = await ref.limit(300).get();
     var items = snapshot.docs.map(_process).toList();
+    final companiesSnap = await _companies.limit(200).get();
+    final companyNames = {
+      for (final doc in companiesSnap.docs)
+        doc.id: (doc.data()['name'] as String?) ?? '',
+    };
+    Query<Map<String, dynamic>> vacanciesQuery = _vacancies;
+    if (companyId != null && companyId.isNotEmpty) {
+      vacanciesQuery = vacanciesQuery.where('companyId', isEqualTo: companyId);
+    }
+    final vacancies = await vacanciesQuery.limit(300).get();
+    final candidates = await _candidates.limit(400).get();
+    items = [
+      ...items,
+      ...vacancies.docs
+          .map((doc) => _processFromVacancy(doc, companyNames, candidates.docs))
+          .where((item) => items.every((existing) => existing.id != item.id)),
+    ];
     if (status != null) {
       items = items.where((item) => item.status == status).toList();
     }
@@ -445,6 +733,22 @@ final class FirebaseAdminDataSource implements AdminDataSource {
     }
     final snapshot = await ref.limit(400).get();
     var items = snapshot.docs.map(_person).toList();
+    final companiesSnap = await _companies.limit(200).get();
+    final companyNames = {
+      for (final doc in companiesSnap.docs)
+        doc.id: (doc.data()['name'] as String?) ?? '',
+    };
+    Query<Map<String, dynamic>> candidatesQuery = _candidates;
+    if (companyId != null && companyId.isNotEmpty) {
+      candidatesQuery = candidatesQuery.where('companyId', isEqualTo: companyId);
+    }
+    final candidates = await candidatesQuery.limit(400).get();
+    items = [
+      ...items,
+      ...candidates.docs
+          .map((doc) => _personFromCandidate(doc, companyNames))
+          .where((item) => items.every((existing) => existing.id != item.id)),
+    ];
     if (status != null) {
       items = items.where((item) => item.status == status).toList();
     }
@@ -610,6 +914,7 @@ final class FirebaseAdminDataSource implements AdminDataSource {
       'name': name.trim(),
       'nameLower': name.trim().toLowerCase(),
       'status': status.name,
+      'archived': false,
       'plan': plan,
       'createdAt': FieldValue.serverTimestamp(),
       'lastActivityAt': FieldValue.serverTimestamp(),
@@ -799,6 +1104,116 @@ final class FirebaseAdminDataSource implements AdminDataSource {
       'result': 'ok',
     });
   });
+
+  @override
+  Future<void> applyCompanyLifecycle({
+    required String id,
+    required CompanyLifecycleAction action,
+  }) => _guard(() async {
+    final doc = await _companies.doc(id).get();
+    if (!doc.exists) {
+      throw const ServerException('No se encontró la empresa.');
+    }
+    final company = _company(doc);
+    final previous = doc.data()?['statusBeforeArchive'] as String?;
+    final payload = <String, dynamic>{
+      'updatedAt': FieldValue.serverTimestamp(),
+    };
+    switch (action) {
+      case CompanyLifecycleAction.disable:
+        payload['archived'] = false;
+        payload['status'] = CompanyStatus.inactive.name;
+      case CompanyLifecycleAction.enable:
+        payload['archived'] = false;
+        payload['status'] = CompanyStatus.active.name;
+      case CompanyLifecycleAction.archive:
+        payload['archived'] = true;
+        payload['status'] = CompanyStatus.inactive.name;
+        payload['statusBeforeArchive'] = company.status.name;
+        payload['archivedAt'] = FieldValue.serverTimestamp();
+      case CompanyLifecycleAction.restore:
+        final restored = CompanyStatus.values
+            .where((item) => item.name == previous)
+            .firstOrNull;
+        payload['archived'] = false;
+        payload['status'] = (restored ?? CompanyStatus.onboarding).name;
+        payload['statusBeforeArchive'] = FieldValue.delete();
+        payload['archivedAt'] = FieldValue.delete();
+    }
+    await _companies.doc(id).set(payload, SetOptions(merge: true));
+    await _log(
+      kind: ActivityKind.statusChanged,
+      entityName: company.name,
+      companyId: id,
+      statusLabel: payload['status'] as String?,
+      context: action.name,
+    );
+  });
+
+  @override
+  Future<void> updatePerson({
+    required String id,
+    required String displayName,
+    required EvaluationStatus status,
+  }) => _guard(() async {
+    final processStatus = switch (status) {
+      EvaluationStatus.invited => 'pending',
+      EvaluationStatus.started => 'inProgress',
+      EvaluationStatus.inProgress => 'inProgress',
+      EvaluationStatus.completed => 'completed',
+      EvaluationStatus.abandoned => 'rejected',
+    };
+    await _candidates.doc(id).set({
+      'displayName': displayName.trim(),
+      'processStatus': processStatus,
+      'evaluationCompleted': status == EvaluationStatus.completed,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+    await _people.doc(id).set({
+      'displayName': displayName.trim(),
+      'status': status.name,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  });
+
+  @override
+  Future<void> updateCompany({
+    required Company company,
+    List<int>? logoBytes,
+    String? logoContentType,
+  }) => _guard(() async {
+    var logoUrl = company.logoUrl?.trim();
+    if (logoUrl != null && logoUrl.isEmpty) logoUrl = null;
+    final bytes = logoBytes == null ? null : Uint8List.fromList(logoBytes);
+    if (bytes != null && bytes.isNotEmpty) {
+      try {
+        final ref = FirebaseStorage.instance.ref('company_logos/${company.id}');
+        await ref
+            .putData(
+              bytes,
+              SettableMetadata(contentType: logoContentType ?? 'image/png'),
+            )
+            .timeout(const Duration(seconds: 15));
+        logoUrl = await ref.getDownloadURL().timeout(const Duration(seconds: 8));
+      } catch (_) {}
+    }
+    await _companies.doc(company.id).set({
+      'name': company.name.trim(),
+      'nameLower': company.name.trim().toLowerCase(),
+      'nit': company.nit,
+      'website': company.website,
+      'logoUrl': logoUrl,
+      'description': company.description,
+      'sector': company.sector,
+      'size': company.size,
+      'city': company.city,
+      'country': company.country,
+      'region': company.region,
+      'status': company.status.name,
+      'updatedAt': FieldValue.serverTimestamp(),
+      'lastActivityAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  });
 }
 
 final class InMemoryAdminDataSource implements AdminDataSource {
@@ -809,18 +1224,20 @@ final class InMemoryAdminDataSource implements AdminDataSource {
   final sales = <Sale>[];
   final activity = <ActivityEvent>[];
   final users = <AdminUserAccount>[];
+  final priorStatus = <String, CompanyStatus>{};
 
   AdminDashboardData _dashboard() {
+    final visible = companies.where((item) => !item.archived).toList();
     final alerts = AdminAlertEngine.from(
-      companies: companies,
+      companies: visible,
       processes: processes,
       people: people,
       deals: deals,
     );
     return AdminDashboardData(
       metrics: AdminMetrics(
-        totalCompanies: companies.length,
-        activeCompanies: companies.where((item) => item.status == CompanyStatus.active).length,
+        totalCompanies: visible.length,
+        activeCompanies: visible.where((item) => item.status == CompanyStatus.active).length,
         evaluatedPeople: people
             .where((item) => item.status != EvaluationStatus.invited)
             .length,
@@ -830,10 +1247,10 @@ final class InMemoryAdminDataSource implements AdminDataSource {
         affinitiesDetected: people.where((item) => item.affinityScore != null).length,
         periodSales: sales.fold<double>(0, (acc, item) => acc + item.amount),
         mrr: sales.where((item) => item.recurring).fold<double>(0, (acc, item) => acc + item.amount),
-        companiesAtRisk: companies.where((item) => item.status == CompanyStatus.atRisk).length,
+        companiesAtRisk: visible.where((item) => item.status == CompanyStatus.atRisk).length,
       ),
       funnel: AdminFunnel(
-        companies: companies.length,
+        companies: visible.length,
         processes: processes.length,
         invitedPeople: people.length,
         startedEvaluations: people
@@ -854,15 +1271,17 @@ final class InMemoryAdminDataSource implements AdminDataSource {
   Future<AdminDashboardData> getDashboard() async => _dashboard();
 
   @override
-  Future<List<Company>> getCompanies({String query = '', CompanyStatus? status}) async {
-    var items = [...companies];
-    if (status != null) items = items.where((item) => item.status == status).toList();
-    if (query.trim().isNotEmpty) {
-      items = items
-          .where((item) => item.name.toLowerCase().contains(query.toLowerCase()))
-          .toList();
-    }
-    return items;
+  Future<List<Company>> getCompanies({
+    String query = '',
+    CompanyStatus? status,
+    bool archivedOnly = false,
+  }) async {
+    return filterCompanies(
+      companies,
+      query: query,
+      status: status,
+      archivedOnly: archivedOnly,
+    );
   }
 
   @override
@@ -1093,5 +1512,74 @@ final class InMemoryAdminDataSource implements AdminDataSource {
       displayName: current.displayName,
       companyName: current.companyName,
     );
+  }
+
+  @override
+  Future<void> applyCompanyLifecycle({
+    required String id,
+    required CompanyLifecycleAction action,
+  }) async {
+    final index = companies.indexWhere((item) => item.id == id);
+    if (index < 0) {
+      throw const ServerException('No se encontró la empresa.');
+    }
+    final current = companies[index];
+    switch (action) {
+      case CompanyLifecycleAction.disable:
+        companies[index] = current.copyWith(
+          status: CompanyStatus.inactive,
+          archived: false,
+        );
+      case CompanyLifecycleAction.enable:
+        companies[index] = current.copyWith(
+          status: CompanyStatus.active,
+          archived: false,
+        );
+      case CompanyLifecycleAction.archive:
+        priorStatus[id] = current.status;
+        companies[index] = current.copyWith(
+          status: CompanyStatus.inactive,
+          archived: true,
+        );
+      case CompanyLifecycleAction.restore:
+        companies[index] = current.copyWith(
+          status: priorStatus.remove(id) ?? CompanyStatus.onboarding,
+          archived: false,
+        );
+    }
+  }
+
+  @override
+  Future<void> updatePerson({
+    required String id,
+    required String displayName,
+    required EvaluationStatus status,
+  }) async {
+    final index = people.indexWhere((item) => item.id == id);
+    if (index < 0) return;
+    final current = people[index];
+    people[index] = PersonEvaluation(
+      id: current.id,
+      displayName: displayName,
+      companyId: current.companyId,
+      companyName: current.companyName,
+      processId: current.processId,
+      processName: current.processName,
+      status: status,
+      updatedAt: DateTime.now(),
+      affinityScore: current.affinityScore,
+      email: current.email,
+    );
+  }
+
+  @override
+  Future<void> updateCompany({
+    required Company company,
+    List<int>? logoBytes,
+    String? logoContentType,
+  }) async {
+    final index = companies.indexWhere((item) => item.id == company.id);
+    if (index < 0) return;
+    companies[index] = company;
   }
 }

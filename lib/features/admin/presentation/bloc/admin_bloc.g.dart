@@ -35,9 +35,15 @@ abstract class _$AdminStateCWProxy {
 
   AdminState companyStatus(CompanyStatus? companyStatus);
 
+  AdminState archivedOnly(bool archivedOnly);
+
   AdminState selectedCompany(CompanyDetail? selectedCompany);
 
   AdminState showCompanyDetail(bool showCompanyDetail);
+
+  AdminState selectedPerson(PersonEvaluation? selectedPerson);
+
+  AdminState selectedProcess(TalentProcess? selectedProcess);
 
   AdminState processes(List<TalentProcess> processes);
 
@@ -85,8 +91,11 @@ abstract class _$AdminStateCWProxy {
     List<AdminAlert> alerts,
     List<Company> companies,
     CompanyStatus? companyStatus,
+    bool archivedOnly,
     CompanyDetail? selectedCompany,
     bool showCompanyDetail,
+    PersonEvaluation? selectedPerson,
+    TalentProcess? selectedProcess,
     List<TalentProcess> processes,
     ProcessStatus? processStatus,
     List<PersonEvaluation> people,
@@ -153,12 +162,23 @@ class _$AdminStateCWProxyImpl implements _$AdminStateCWProxy {
       call(companyStatus: companyStatus);
 
   @override
+  AdminState archivedOnly(bool archivedOnly) => call(archivedOnly: archivedOnly);
+
+  @override
   AdminState selectedCompany(CompanyDetail? selectedCompany) =>
       call(selectedCompany: selectedCompany);
 
   @override
   AdminState showCompanyDetail(bool showCompanyDetail) =>
       call(showCompanyDetail: showCompanyDetail);
+
+  @override
+  AdminState selectedPerson(PersonEvaluation? selectedPerson) =>
+      call(selectedPerson: selectedPerson);
+
+  @override
+  AdminState selectedProcess(TalentProcess? selectedProcess) =>
+      call(selectedProcess: selectedProcess);
 
   @override
   AdminState processes(List<TalentProcess> processes) =>
@@ -225,8 +245,11 @@ class _$AdminStateCWProxyImpl implements _$AdminStateCWProxy {
     Object? alerts = const $CopyWithPlaceholder(),
     Object? companies = const $CopyWithPlaceholder(),
     Object? companyStatus = const $CopyWithPlaceholder(),
+    Object? archivedOnly = const $CopyWithPlaceholder(),
     Object? selectedCompany = const $CopyWithPlaceholder(),
     Object? showCompanyDetail = const $CopyWithPlaceholder(),
+    Object? selectedPerson = const $CopyWithPlaceholder(),
+    Object? selectedProcess = const $CopyWithPlaceholder(),
     Object? processes = const $CopyWithPlaceholder(),
     Object? processStatus = const $CopyWithPlaceholder(),
     Object? people = const $CopyWithPlaceholder(),
@@ -297,6 +320,11 @@ class _$AdminStateCWProxyImpl implements _$AdminStateCWProxy {
           ? _value.companyStatus
           // ignore: cast_nullable_to_non_nullable
           : companyStatus as CompanyStatus?,
+      archivedOnly:
+          archivedOnly == const $CopyWithPlaceholder() || archivedOnly == null
+          ? _value.archivedOnly
+          // ignore: cast_nullable_to_non_nullable
+          : archivedOnly as bool,
       selectedCompany: selectedCompany == const $CopyWithPlaceholder()
           ? _value.selectedCompany
           // ignore: cast_nullable_to_non_nullable
@@ -307,6 +335,14 @@ class _$AdminStateCWProxyImpl implements _$AdminStateCWProxy {
           ? _value.showCompanyDetail
           // ignore: cast_nullable_to_non_nullable
           : showCompanyDetail as bool,
+      selectedPerson: selectedPerson == const $CopyWithPlaceholder()
+          ? _value.selectedPerson
+          // ignore: cast_nullable_to_non_nullable
+          : selectedPerson as PersonEvaluation?,
+      selectedProcess: selectedProcess == const $CopyWithPlaceholder()
+          ? _value.selectedProcess
+          // ignore: cast_nullable_to_non_nullable
+          : selectedProcess as TalentProcess?,
       processes: processes == const $CopyWithPlaceholder() || processes == null
           ? _value.processes
           // ignore: cast_nullable_to_non_nullable
@@ -382,6 +418,8 @@ extension $AdminStateCopyWith on AdminState {
     bool funnel = false,
     bool companyStatus = false,
     bool selectedCompany = false,
+    bool selectedPerson = false,
+    bool selectedProcess = false,
     bool processStatus = false,
     bool evaluationStatus = false,
     bool affinity = false,
@@ -404,8 +442,11 @@ extension $AdminStateCopyWith on AdminState {
       alerts: alerts,
       companies: companies,
       companyStatus: companyStatus == true ? null : this.companyStatus,
+      archivedOnly: archivedOnly,
       selectedCompany: selectedCompany == true ? null : this.selectedCompany,
       showCompanyDetail: showCompanyDetail,
+      selectedPerson: selectedPerson == true ? null : this.selectedPerson,
+      selectedProcess: selectedProcess == true ? null : this.selectedProcess,
       processes: processes,
       processStatus: processStatus == true ? null : this.processStatus,
       people: people,

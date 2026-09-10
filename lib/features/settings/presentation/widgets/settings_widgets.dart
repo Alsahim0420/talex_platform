@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/constants/app_radii.dart';
 
 class SettingsSection extends StatelessWidget {
   const SettingsSection({
@@ -17,7 +18,7 @@ class SettingsSection extends StatelessWidget {
     decoration: BoxDecoration(
       color: Colors.white,
       border: Border.all(color: const Color(0xFFD1D1D6)),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: AppRadii.border,
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -33,7 +34,7 @@ class SettingsSection extends StatelessWidget {
                   height: 38,
                   decoration: BoxDecoration(
                     color: const Color(0xFFF0EFFF),
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: AppRadii.border,
                   ),
                   child: Icon(icon, color: AppColors.dashboardAccent, size: 20),
                 ),

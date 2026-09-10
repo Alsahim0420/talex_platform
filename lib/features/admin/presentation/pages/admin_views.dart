@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/constants/app_radii.dart';
 import 'package:talex_platform/features/admin/domain/entities/admin_entities.dart';
 import 'package:talex_platform/features/admin/presentation/bloc/admin_bloc.dart';
 import 'package:talex_platform/features/admin/presentation/widgets/admin_dialogs.dart';
+import 'package:talex_platform/features/admin/presentation/widgets/provision_company_dialog.dart';
 import 'package:talex_platform/features/admin/presentation/widgets/admin_widgets.dart';
 import 'package:talex_platform/features/dashboard/presentation/widgets/dashboard_widgets.dart';
 import 'package:talex_platform/features/settings/presentation/widgets/settings_widgets.dart';
@@ -16,8 +18,12 @@ class AdminSectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdminBloc, AdminState>(
       builder: (context, state) {
-        if (state.status == AdminViewStatus.loading ||
-            state.status == AdminViewStatus.initial) {
+        if (state.status == AdminViewStatus.initial ||
+            (state.status == AdminViewStatus.loading &&
+                state.companies.isEmpty &&
+                state.metrics == null &&
+                state.processes.isEmpty &&
+                state.people.isEmpty)) {
           return const Center(child: CircularProgressIndicator());
         }
         if (state.status == AdminViewStatus.failure) {
@@ -36,8 +42,19 @@ class AdminSectionView extends StatelessWidget {
             state.showCompanyDetail && state.selectedCompany != null
                 ? AdminCompanyDetailView(detail: state.selectedCompany!)
                 : AdminCompaniesView(state: state),
-          AdminSection.processes => AdminProcessesView(state: state),
-          AdminSection.people => AdminPeopleView(state: state),
+          AdminSection.processes =>
+            state.selectedProcess != null
+                ? AdminProcessDetailView(
+                    process: state.selectedProcess!,
+                    people: state.people
+                        .where((item) => item.processId == state.selectedProcess!.id)
+                        .toList(),
+                  )
+                : AdminProcessesView(state: state),
+          AdminSection.people =>
+            state.selectedPerson != null
+                ? AdminPersonDetailView(person: state.selectedPerson!)
+                : AdminPeopleView(state: state),
           AdminSection.affinity => AdminAffinityView(state: state),
           AdminSection.commercial => AdminPipelineView(state: state),
           AdminSection.sales => AdminSalesView(state: state),
@@ -219,11 +236,27 @@ class _ActivityPanel extends StatelessWidget {
               ),
             )
           else
-            ...state.activity.take(8).map(
+            ...state.activity.take(12).map(
               (item) => ListTile(
+                leading: Icon(
+                  switch (item.kind) {
+                    ActivityKind.vacancyCreated => Icons.work_outline,
+                    ActivityKind.respondentInvited => Icons.person_add_alt_1_outlined,
+                    ActivityKind.evaluationCompleted => Icons.task_alt_outlined,
+                    ActivityKind.evaluationStarted => Icons.play_circle_outline,
+                    ActivityKind.companyCreated => Icons.apartment_outlined,
+                    _ => Icons.timeline_outlined,
+                  },
+                  color: AppColors.dashboardAccent,
+                ),
                 title: Text(item.entityName),
                 subtitle: Text(
-                  '${labels.activity(item.kind)} · ${labels.date(item.createdAt)}',
+                  [
+                    labels.activity(item.kind),
+                    if (item.context != null && item.context!.isNotEmpty)
+                      item.context,
+                    labels.date(item.createdAt),
+                  ].join(' · '),
                 ),
                 trailing: item.statusLabel == null
                     ? null
@@ -293,7 +326,7 @@ class AdminCompaniesView extends StatelessWidget {
             subtitle: context.l10n.adminCommandSubtitle,
             actions: [
               FilledButton.icon(
-                onPressed: () => showAdminCreateCompany(context),
+                onPressed: () => showProvisionCompanyDialog(context),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.primaryButton,
                 ),
@@ -308,7 +341,7 @@ class AdminCompaniesView extends StatelessWidget {
             children: [
               _FilterChip(
                 label: context.l10n.filterAll,
-                selected: state.companyStatus == null,
+                selected: state.companyStatus == null && !state.archivedOnly,
                 onTap: () => context.read<AdminBloc>().add(
                   AdminCompaniesRequested(query: state.query),
                 ),
@@ -316,9 +349,19 @@ class AdminCompaniesView extends StatelessWidget {
               ...CompanyStatus.values.map(
                 (status) => _FilterChip(
                   label: labels.companyStatus(status),
-                  selected: state.companyStatus == status,
+                  selected: state.companyStatus == status && !state.archivedOnly,
                   onTap: () => context.read<AdminBloc>().add(
                     AdminCompaniesRequested(query: state.query, status: status),
+                  ),
+                ),
+              ),
+              _FilterChip(
+                label: context.l10n.filterArchived,
+                selected: state.archivedOnly,
+                onTap: () => context.read<AdminBloc>().add(
+                  AdminCompaniesRequested(
+                    query: state.query,
+                    archivedOnly: true,
                   ),
                 ),
               ),
@@ -326,7 +369,11 @@ class AdminCompaniesView extends StatelessWidget {
           ),
           const SizedBox(height: 22),
           if (state.companies.isEmpty)
-            AdminEmptyState(message: context.l10n.noCompanies)
+            AdminEmptyState(
+              message: state.archivedOnly
+                  ? context.l10n.noArchivedCompanies
+                  : context.l10n.noCompanies,
+            )
           else if (compact)
             ...state.companies.map(
               (company) => AdminEntityCard(
@@ -334,6 +381,7 @@ class AdminCompaniesView extends StatelessWidget {
                 subtitle:
                     '${context.l10n.lastActivity}: ${labels.date(company.lastActivityAt ?? company.createdAt)}',
                 trailing: labels.companyStatus(company.status),
+                action: _CompanyOverflowMenu(company),
                 onTap: () =>
                     context.read<AdminBloc>().add(AdminCompanyOpened(company.id)),
               ),
@@ -353,6 +401,7 @@ class AdminCompaniesView extends StatelessWidget {
                     DataColumn(label: Text(context.l10n.funnelCompleted), numeric: true),
                     DataColumn(label: Text(context.l10n.kpiAffinities), numeric: true),
                     DataColumn(label: Text(context.l10n.lastActivity)),
+                    DataColumn(label: Text(context.l10n.companyActions)),
                   ],
                   rows: [
                     for (final company in state.companies)
@@ -361,7 +410,18 @@ class AdminCompaniesView extends StatelessWidget {
                           AdminCompanyOpened(company.id),
                         ),
                         cells: [
-                          DataCell(Text(company.name)),
+                          DataCell(
+                            Row(
+                              children: [
+                                CompanyLogoView(url: company.logoUrl, size: 32),
+                                const SizedBox(width: 10),
+                                Flexible(child: Text(company.name)),
+                              ],
+                            ),
+                            onTap: () => context.read<AdminBloc>().add(
+                              AdminCompanyOpened(company.id),
+                            ),
+                          ),
                           DataCell(Text(labels.companyStatus(company.status))),
                           DataCell(Text('${company.activeProcesses}')),
                           DataCell(Text('${company.invitedPeople}')),
@@ -375,6 +435,7 @@ class AdminCompaniesView extends StatelessWidget {
                               ),
                             ),
                           ),
+                          DataCell(_CompanyOverflowMenu(company)),
                         ],
                       ),
                   ],
@@ -409,7 +470,20 @@ class AdminCompanyDetailView extends StatelessWidget {
             title: company.name,
             subtitle:
                 '${labels.companyStatus(company.status)} · ${context.l10n.joinedAt} ${labels.date(company.createdAt)}',
+            actions: [
+              FilledButton.icon(
+                onPressed: () => showAdminEditCompany(context, company),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.primaryButton,
+                ),
+                icon: const Icon(Icons.edit_outlined),
+                label: Text(context.l10n.editCompany),
+              ),
+              _CompanyOverflowMenu(company),
+            ],
           ),
+          const SizedBox(height: 24),
+          CompanyIdentityCard(company: company),
           const SizedBox(height: 24),
           Wrap(
             spacing: 16,
@@ -460,6 +534,38 @@ class AdminCompanyDetailView extends StatelessWidget {
                 subtitle:
                     '${labels.processStatus(item.status)} · ${labels.date(item.createdAt)}',
                 trailing: '${item.completedEvaluations}/${item.invitedPeople}',
+                onTap: () {
+                  final bloc = context.read<AdminBloc>();
+                  bloc
+                    ..add(const AdminSectionSelected(AdminSection.processes))
+                    ..add(AdminProcessOpened(item));
+                },
+              ),
+            ),
+          const SizedBox(height: 24),
+          Text(
+            context.l10n.adminPeople,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: AppColors.ink,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (detail.people.isEmpty)
+            AdminEmptyState(message: context.l10n.noPeople)
+          else
+            ...detail.people.map(
+              (item) => AdminEntityCard(
+                title: item.displayName,
+                subtitle: item.processName,
+                trailing: labels.evaluation(item.status),
+                onTap: () {
+                  final bloc = context.read<AdminBloc>();
+                  bloc
+                    ..add(const AdminSectionSelected(AdminSection.people))
+                    ..add(AdminPersonOpened(item));
+                },
               ),
             ),
           const SizedBox(height: 24),
@@ -564,6 +670,8 @@ class AdminProcessesView extends StatelessWidget {
                 subtitle:
                     '${item.companyName} · ${labels.date(item.createdAt)}',
                 trailing: labels.processStatus(item.status),
+                onTap: () =>
+                    context.read<AdminBloc>().add(AdminProcessOpened(item)),
               ),
             ),
         ],
@@ -584,30 +692,6 @@ class AdminPeopleView extends StatelessWidget {
           AdminPageHeader(
             title: context.l10n.adminPeople,
             subtitle: context.l10n.noPeople,
-            actions: [
-              FilledButton.icon(
-                onPressed: () async {
-                  final companies = state.companies.isEmpty
-                      ? await _ensureCompanies(context)
-                      : state.companies;
-                  if (!context.mounted) return;
-                  final processes = state.processes.isEmpty
-                      ? await _ensureProcesses(context)
-                      : state.processes;
-                  if (!context.mounted) return;
-                  await showAdminCreatePerson(
-                    context,
-                    companies: companies,
-                    processes: processes,
-                  );
-                },
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primaryButton,
-                ),
-                icon: const Icon(Icons.add),
-                label: Text(context.l10n.newPerson),
-              ),
-            ],
           ),
           const SizedBox(height: 16),
           Wrap(
@@ -633,6 +717,7 @@ class AdminPeopleView extends StatelessWidget {
                 title: item.displayName,
                 subtitle: '${item.companyName} · ${item.processName}',
                 trailing: labels.evaluation(item.status),
+                onTap: () => context.read<AdminBloc>().add(AdminPersonOpened(item)),
               ),
             ),
         ],
@@ -973,7 +1058,7 @@ class _AdminXebecViewState extends State<AdminXebecView> {
                             color: item.fromXebec
                                 ? const Color(0xFFF0EFFF)
                                 : const Color(0xFFF4F2F3),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: AppRadii.border,
                           ),
                           child: Text(item.text),
                         ),
@@ -1108,6 +1193,46 @@ class _PeriodChips extends StatelessWidget {
   }
 }
 
+class _CompanyOverflowMenu extends StatelessWidget {
+  const _CompanyOverflowMenu(this.company);
+  final Company company;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return PopupMenuButton<CompanyLifecycleAction>(
+      tooltip: l10n.companyActions,
+      onSelected: (action) => showCompanyLifecycleDialog(
+        context,
+        company: company,
+        action: action,
+      ),
+      itemBuilder: (context) => [
+        if (!company.archived && !company.isDisabled)
+          PopupMenuItem(
+            value: CompanyLifecycleAction.disable,
+            child: Text(l10n.disableCompany),
+          ),
+        if (!company.archived && company.isDisabled)
+          PopupMenuItem(
+            value: CompanyLifecycleAction.enable,
+            child: Text(l10n.enableCompany),
+          ),
+        if (!company.archived)
+          PopupMenuItem(
+            value: CompanyLifecycleAction.archive,
+            child: Text(l10n.archiveCompany),
+          ),
+        if (company.archived)
+          PopupMenuItem(
+            value: CompanyLifecycleAction.restore,
+            child: Text(l10n.restoreCompany),
+          ),
+      ],
+    );
+  }
+}
+
 class _FilterChip extends StatelessWidget {
   const _FilterChip({
     required this.label,
@@ -1126,6 +1251,193 @@ class _FilterChip extends StatelessWidget {
   );
 }
 
+class AdminPersonDetailView extends StatefulWidget {
+  const AdminPersonDetailView({super.key, required this.person});
+  final PersonEvaluation person;
+  @override
+  State<AdminPersonDetailView> createState() => _AdminPersonDetailViewState();
+}
+
+class _AdminPersonDetailViewState extends State<AdminPersonDetailView> {
+  late final TextEditingController _name;
+  late EvaluationStatus _status;
+
+  @override
+  void initState() {
+    super.initState();
+    _name = TextEditingController(text: widget.person.displayName);
+    _status = widget.person.status;
+  }
+
+  @override
+  void didUpdateWidget(AdminPersonDetailView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.person != widget.person) {
+      _name.text = widget.person.displayName;
+      _status = widget.person.status;
+    }
+  }
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final labels = AdminLabels(context);
+    final person = widget.person;
+    return _Page(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextButton.icon(
+            onPressed: () =>
+                context.read<AdminBloc>().add(const AdminPersonClosed()),
+            icon: const Icon(Icons.arrow_back),
+            label: Text(context.l10n.backToPeople),
+          ),
+          const SizedBox(height: 8),
+          AdminPageHeader(
+            title: person.displayName,
+            subtitle: '${person.companyName} · ${person.processName}',
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            children: [
+              _Stat(context.l10n.statusLabel, labels.evaluation(person.status)),
+              _Stat(
+                context.l10n.emailAddress,
+                person.email.isEmpty ? context.l10n.noData : person.email,
+              ),
+              _Stat(
+                context.l10n.adminAffinity,
+                person.affinityScore?.toStringAsFixed(0) ?? context.l10n.noData,
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          TextField(
+            controller: _name,
+            decoration: InputDecoration(labelText: context.l10n.fullName),
+          ),
+          const SizedBox(height: 16),
+          DropdownButtonFormField<EvaluationStatus>(
+            key: ValueKey(_status),
+            initialValue: _status,
+            decoration: InputDecoration(labelText: context.l10n.statusLabel),
+            items: [
+              for (final status in EvaluationStatus.values)
+                DropdownMenuItem(
+                  value: status,
+                  child: Text(labels.evaluation(status)),
+                ),
+            ],
+            onChanged: (value) {
+              if (value != null) setState(() => _status = value);
+            },
+          ),
+          const SizedBox(height: 20),
+          FilledButton(
+            onPressed: () => context.read<AdminBloc>().add(
+              AdminPersonUpdated(
+                id: person.id,
+                displayName: _name.text.trim(),
+                status: _status,
+              ),
+            ),
+            child: Text(context.l10n.saveChanges),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AdminProcessDetailView extends StatelessWidget {
+  const AdminProcessDetailView({
+    super.key,
+    required this.process,
+    required this.people,
+  });
+  final TalentProcess process;
+  final List<PersonEvaluation> people;
+
+  @override
+  Widget build(BuildContext context) {
+    final labels = AdminLabels(context);
+    final presented = people
+        .where((item) => item.status == EvaluationStatus.completed)
+        .length;
+    final pending = people
+        .where((item) => item.status == EvaluationStatus.invited)
+        .length;
+    return _Page(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TextButton.icon(
+            onPressed: () =>
+                context.read<AdminBloc>().add(const AdminProcessClosed()),
+            icon: const Icon(Icons.arrow_back),
+            label: Text(context.l10n.backToProcesses),
+          ),
+          const SizedBox(height: 8),
+          AdminPageHeader(
+            title: process.name,
+            subtitle: process.companyName,
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            spacing: 16,
+            runSpacing: 16,
+            children: [
+              _Stat(context.l10n.adminCompanies, process.companyName),
+              _Stat(context.l10n.funnelInvited, '${people.length}'),
+              _Stat(context.l10n.presentedPeople, '$presented'),
+              _Stat(context.l10n.pendingPeople, '$pending'),
+              _Stat(
+                context.l10n.statusLabel,
+                labels.processStatus(process.status),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Text(
+            context.l10n.adminPeople,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: AppColors.ink,
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (people.isEmpty)
+            AdminEmptyState(message: context.l10n.noPeople)
+          else
+            ...people.map(
+              (item) => AdminEntityCard(
+                title: item.displayName,
+                subtitle: labels.evaluation(item.status),
+                trailing: item.affinityScore?.toStringAsFixed(0) ??
+                    context.l10n.noData,
+                onTap: () {
+                  final bloc = context.read<AdminBloc>();
+                  bloc
+                    ..add(const AdminSectionSelected(AdminSection.people))
+                    ..add(AdminPersonOpened(item));
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 Future<List<Company>> _ensureCompanies(BuildContext context) async {
   final bloc = context.read<AdminBloc>();
   if (bloc.state.companies.isNotEmpty) return bloc.state.companies;
@@ -1136,16 +1448,4 @@ Future<List<Company>> _ensureCompanies(BuildContext context) async {
         state.status == AdminViewStatus.failure,
   );
   return bloc.state.companies;
-}
-
-Future<List<TalentProcess>> _ensureProcesses(BuildContext context) async {
-  final bloc = context.read<AdminBloc>();
-  if (bloc.state.processes.isNotEmpty) return bloc.state.processes;
-  bloc.add(const AdminProcessesRequested());
-  await bloc.stream.firstWhere(
-    (state) =>
-        state.status == AdminViewStatus.success ||
-        state.status == AdminViewStatus.failure,
-  );
-  return bloc.state.processes;
 }

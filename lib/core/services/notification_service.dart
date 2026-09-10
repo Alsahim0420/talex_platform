@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:talex_platform/core/constants/app_radii.dart';
 
 enum AppNotificationType { success, error, info }
 
@@ -75,7 +76,7 @@ class _CornerNotification extends StatelessWidget {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 color: color,
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: AppRadii.border,
                 boxShadow: const [
                   BoxShadow(
                     color: Color(0x33000000),

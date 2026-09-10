@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 
 enum CompanyStatus { active, onboarding, inactive, atRisk, suspended }
 
+enum CompanyLifecycleAction { disable, enable, archive, restore }
+
 enum ProcessStatus { active, closed }
 
 enum EvaluationStatus { invited, started, inProgress, completed, abandoned }
@@ -14,7 +16,9 @@ enum ActivityKind {
   companyCreated,
   companyActivated,
   processCreated,
-  evaluationStarted,
+    vacancyCreated,
+    respondentInvited,
+    evaluationStarted,
   evaluationCompleted,
   affinityDetected,
   saleRecorded,
@@ -55,6 +59,14 @@ class Company extends Equatable {
     required this.status,
     required this.createdAt,
     this.logoUrl,
+    this.website,
+    this.description,
+    this.nit,
+    this.sector,
+    this.size,
+    this.city,
+    this.region,
+    this.country,
     this.lastActivityAt,
     this.activeProcesses = 0,
     this.invitedPeople = 0,
@@ -66,12 +78,22 @@ class Company extends Equatable {
     this.mrr,
     this.renewalAt,
     this.commercialStage,
+    this.archived = false,
   });
   final String id, name;
   final CompanyStatus status;
   final DateTime createdAt;
   final DateTime? lastActivityAt, renewalAt;
-  final String? logoUrl, plan;
+  final String? logoUrl,
+      website,
+      description,
+      nit,
+      sector,
+      size,
+      city,
+      region,
+      country,
+      plan;
   final int activeProcesses,
       invitedPeople,
       startedEvaluations,
@@ -79,8 +101,72 @@ class Company extends Equatable {
       affinitiesDetected;
   final double? contractValue, mrr;
   final DealStage? commercialStage;
+  final bool archived;
+  bool get isDisabled =>
+      status == CompanyStatus.inactive || status == CompanyStatus.suspended;
+
+  Company copyWith({
+    CompanyStatus? status,
+    bool? archived,
+    DateTime? lastActivityAt,
+  }) => Company(
+    id: id,
+    name: name,
+    status: status ?? this.status,
+    createdAt: createdAt,
+    logoUrl: logoUrl,
+    website: website,
+    description: description,
+    nit: nit,
+    sector: sector,
+    size: size,
+    city: city,
+    region: region,
+    country: country,
+    lastActivityAt: lastActivityAt ?? this.lastActivityAt,
+    activeProcesses: activeProcesses,
+    invitedPeople: invitedPeople,
+    startedEvaluations: startedEvaluations,
+    completedEvaluations: completedEvaluations,
+    affinitiesDetected: affinitiesDetected,
+    plan: plan,
+    contractValue: contractValue,
+    mrr: mrr,
+    renewalAt: renewalAt,
+    commercialStage: commercialStage,
+    archived: archived ?? this.archived,
+  );
+
   @override
-  List<Object?> get props => [id, name, status, lastActivityAt];
+  List<Object?> get props => [
+    id,
+    name,
+    status,
+    lastActivityAt,
+    archived,
+    logoUrl,
+    website,
+  ];
+}
+
+List<Company> filterCompanies(
+  Iterable<Company> companies, {
+  String query = '',
+  CompanyStatus? status,
+  bool archivedOnly = false,
+}) {
+  var items = companies.where((item) => item.archived == archivedOnly).toList();
+  if (!archivedOnly && status != null) {
+    items = items.where((item) => item.status == status).toList();
+  }
+  final needle = query.trim().toLowerCase();
+  if (needle.isNotEmpty) {
+    items = items
+        .where((item) => item.name.toLowerCase().contains(needle))
+        .toList();
+  }
+  items.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  return items;
 }
 
 class TalentProcess extends Equatable {
@@ -120,14 +206,16 @@ class PersonEvaluation extends Equatable {
     required this.status,
     required this.updatedAt,
     this.affinityScore,
+    this.email = '',
   });
   final String id, displayName, companyId, companyName, processId, processName;
+  final String email;
   final EvaluationStatus status;
   final DateTime updatedAt;
   final double? affinityScore;
   AffinityBand get band => affinityBandFor(affinityScore);
   @override
-  List<Object?> get props => [id, displayName, status, affinityScore];
+  List<Object?> get props => [id, displayName, status, affinityScore, email];
 }
 
 class Deal extends Equatable {

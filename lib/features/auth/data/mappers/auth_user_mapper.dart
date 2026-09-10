@@ -8,5 +8,9 @@ extension AuthUserModelMapper on AuthUserModel {
     displayName: displayName,
     companyName: companyName,
     role: role,
+    companyId: companyId,
+    documentNumber: documentNumber,
+    mustChangePassword: mustChangePassword,
+    mustReviewCompanyDna: mustReviewCompanyDna,
   );
 }

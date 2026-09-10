@@ -7,12 +7,15 @@ import 'package:talex_platform/core/di/injection.dart';
 import 'package:talex_platform/core/responsive/responsive_layout.dart';
 import 'package:talex_platform/core/services/notification_service.dart';
 import 'package:talex_platform/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:talex_platform/core/widgets/language_selector.dart';
+import 'package:talex_platform/features/auth/presentation/pages/recover_access_page.dart';
 import 'package:talex_platform/features/auth/presentation/pages/register_page.dart';
 import 'package:talex_platform/features/auth/presentation/widgets/auth_widgets.dart';
 import 'package:talex_platform/l10n/l10n.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
+  static const routeName = '/login';
   @override
   State<AuthPage> createState() => _AuthPageState();
 }
@@ -90,6 +93,10 @@ class _AuthPageState extends State<AuthPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      const Align(
+                        alignment: Alignment.centerRight,
+                        child: LanguageSelector(compact: true),
+                      ),
                       AuthBrandHeader(
                         logoWidth: size.logoWidth,
                         logoHeight: size.logoHeight,
@@ -106,11 +113,19 @@ class _AuthPageState extends State<AuthPage> {
                               emailController: _email,
                               passwordController: _password,
                               onSubmit: _submit,
-                              onForgot: () => context.read<AuthBloc>().add(
-                                AuthPasswordResetRequested(
-                                  email: _email.text.trim(),
-                                ),
-                              ),
+                              onForgot: () {
+                                final email = _email.text.trim();
+                                if (!email.contains('@')) {
+                                  getIt<NotificationService>().error(
+                                    context.l10n.validEmailError,
+                                  );
+                                  return;
+                                }
+                                Navigator.of(context).pushNamed(
+                                  RecoverAccessPage.routeName,
+                                  arguments: email,
+                                );
+                              },
                               isLoading: state.status == AuthStatus.loading,
                               isSocialLoading:
                                   state.status == AuthStatus.googleLoading,
@@ -129,7 +144,9 @@ class _AuthPageState extends State<AuthPage> {
                                       state.status == AuthStatus.googleLoading
                                   ? null
                                   : () => context.read<AuthBloc>().add(
-                                      const AuthGoogleSignInRequested(),
+                                      const AuthGoogleSignInRequested(
+                                        awaitInvitePin: true,
+                                      ),
                                     ),
                               emailValidator: (value) =>
                                   value == null || !value.contains('@')
@@ -141,6 +158,15 @@ class _AuthPageState extends State<AuthPage> {
                                   : null,
                             ),
                           ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        context.l10n.assessmentSignInHint,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: AppColors.subtitle,
+                          fontSize: 13,
                         ),
                       ),
                       const SizedBox(height: 14),

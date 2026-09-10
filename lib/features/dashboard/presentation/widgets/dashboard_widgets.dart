@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/constants/app_radii.dart';
 import 'package:talex_platform/core/widgets/talex_logo.dart';
 
 class DashboardNavItem {
@@ -67,10 +68,10 @@ class _NavTile extends StatelessWidget {
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
     child: Material(
       color: selected ? const Color(0xFFEAE8EB) : Colors.transparent,
-      borderRadius: BorderRadius.circular(5),
+      borderRadius: AppRadii.border,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: AppRadii.border,
         child: Container(
           height: 42,
           decoration: BoxDecoration(
@@ -122,11 +123,13 @@ class DashboardTopBar extends StatelessWidget {
     this.onSearch,
     this.onNotifications,
     this.onAssistant,
+    this.trailing,
     this.showMenu = false,
   });
   final String searchHint, signOutLabel;
   final VoidCallback? onMenu, onSignOut, onNotifications, onAssistant;
   final ValueChanged<String>? onSearch;
+  final Widget? trailing;
   final bool showMenu;
   @override
   Widget build(BuildContext context) => Container(
@@ -150,13 +153,14 @@ class DashboardTopBar extends StatelessWidget {
               fillColor: const Color(0xFFF4F2F3),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: AppRadii.border,
               ),
               contentPadding: EdgeInsets.zero,
             ),
           ),
         ),
         const SizedBox(width: 16),
+        ?trailing,
         IconButton(
           onPressed: onNotifications,
           icon: const Icon(Icons.notifications_none),
@@ -200,7 +204,7 @@ class DashboardMetricCard extends StatelessWidget {
     decoration: BoxDecoration(
       color: Colors.white,
       border: Border.all(color: const Color(0xFFC9CBD1)),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: AppRadii.border,
     ),
     child: Column(
       mainAxisSize: MainAxisSize.min,
@@ -267,9 +271,13 @@ class TopMatchesCard extends StatelessWidget {
     required this.title,
     required this.viewAll,
     required this.candidates,
+    this.onViewAll,
+    this.onCandidateTap,
   });
   final String title, viewAll;
   final List<CandidateMatch> candidates;
+  final VoidCallback? onViewAll;
+  final ValueChanged<int>? onCandidateTap;
   @override
   Widget build(BuildContext context) => _Panel(
     child: Column(
@@ -288,13 +296,19 @@ class TopMatchesCard extends StatelessWidget {
                   ),
                 ),
               ),
-              TextButton(onPressed: () {}, child: Text(viewAll)),
+              TextButton(onPressed: onViewAll, child: Text(viewAll)),
             ],
           ),
         ),
         const Divider(height: 1),
-        ...candidates.map(
-          (candidate) => Container(
+        ...candidates.asMap().entries.map(
+          (entry) => Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onCandidateTap == null
+                  ? null
+                  : () => onCandidateTap!(entry.key),
+              child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
             decoration: const BoxDecoration(
               border: Border(bottom: BorderSide(color: Color(0xFFF0EEF0))),
@@ -307,15 +321,15 @@ class TopMatchesCard extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: const Color(0xFFE5E3E5),
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: AppRadii.border,
                   ),
-                  child: Text(candidate.initials),
+                  child: Text(entry.value.initials),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   flex: 2,
                   child: Text(
-                    candidate.name,
+                    entry.value.name,
                     style: const TextStyle(
                       color: AppColors.ink,
                       fontWeight: FontWeight.w600,
@@ -325,7 +339,7 @@ class TopMatchesCard extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    candidate.assessment,
+                    entry.value.assessment,
                     style: const TextStyle(color: AppColors.subtitle),
                   ),
                 ),
@@ -340,10 +354,10 @@ class TopMatchesCard extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF0EFFF),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: AppRadii.border,
                       ),
                       child: Text(
-                        candidate.status,
+                        entry.value.status,
                         style: const TextStyle(
                           color: AppColors.dashboardAccent,
                           fontSize: 12,
@@ -358,6 +372,8 @@ class TopMatchesCard extends StatelessWidget {
               ],
             ),
           ),
+            ),
+          ),
         ),
       ],
     ),
@@ -365,9 +381,10 @@ class TopMatchesCard extends StatelessWidget {
 }
 
 class PendingActionItem {
-  const PendingActionItem(this.title, this.subtitle, this.icon);
+  const PendingActionItem(this.title, this.subtitle, this.icon, {this.onTap});
   final String title, subtitle;
   final IconData icon;
+  final VoidCallback? onTap;
 }
 
 class PendingActionsCard extends StatelessWidget {
@@ -396,7 +413,9 @@ class PendingActionsCard extends StatelessWidget {
         ),
         const Divider(height: 1),
         ...actions.map(
-          (action) => Padding(
+          (action) => InkWell(
+            onTap: action.onTap,
+            child: Padding(
             padding: const EdgeInsets.fromLTRB(28, 24, 20, 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -427,8 +446,11 @@ class PendingActionsCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (action.onTap != null)
+                  const Icon(Icons.chevron_right, color: AppColors.accent),
               ],
             ),
+          ),
           ),
         ),
       ],
@@ -444,7 +466,7 @@ class _Panel extends StatelessWidget {
     decoration: BoxDecoration(
       color: Colors.white,
       border: Border.all(color: const Color(0xFFC9CBD1)),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: AppRadii.border,
     ),
     child: child,
   );

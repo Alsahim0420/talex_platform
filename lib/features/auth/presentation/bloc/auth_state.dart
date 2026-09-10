@@ -6,9 +6,10 @@ enum AuthStatus {
   googleLoading,
   googleFailure,
   authenticated,
-  unauthenticated,
-  passwordResetSent,
-  failure,
+    unauthenticated,
+    passwordResetSent,
+    needsInvitePin,
+    failure,
 }
 
 @CopyWith()

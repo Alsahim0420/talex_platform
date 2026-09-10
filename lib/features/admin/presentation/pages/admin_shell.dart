@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
 import 'package:talex_platform/core/di/injection.dart';
 import 'package:talex_platform/core/services/notification_service.dart';
+import 'package:talex_platform/core/widgets/language_selector.dart';
 import 'package:talex_platform/features/admin/domain/entities/admin_entities.dart';
 import 'package:talex_platform/features/admin/presentation/bloc/admin_bloc.dart';
 import 'package:talex_platform/features/admin/presentation/pages/admin_views.dart';
@@ -117,6 +118,7 @@ class _AdminShellState extends State<AdminShell> {
                       ),
                       onSearch: (query) => _search(query, state.section),
                       onNotifications: () => _select(_sections.indexOf(AdminSection.alerts)),
+                      trailing: const LanguageSelector(compact: true),
                       // onAssistant: () => _select(AdminSection.xebec.index),
                     ),
                     const Expanded(child: AdminSectionView()),

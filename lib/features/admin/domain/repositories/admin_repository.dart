@@ -8,6 +8,7 @@ abstract interface class AdminRepository {
   Future<Either<Failure, List<Company>>> getCompanies({
     String query,
     CompanyStatus? status,
+    bool archivedOnly = false,
   });
   Future<Either<Failure, CompanyDetail>> getCompany(String id);
   Future<Either<Failure, List<TalentProcess>>> getProcesses({
@@ -64,6 +65,20 @@ abstract interface class AdminRepository {
   Future<Either<Failure, Unit>> updateUserRole({
     required String userId,
     required String role,
+  });
+  Future<Either<Failure, Unit>> applyCompanyLifecycle({
+    required String id,
+    required CompanyLifecycleAction action,
+  });
+  Future<Either<Failure, Unit>> updatePerson({
+    required String id,
+    required String displayName,
+    required EvaluationStatus status,
+  });
+  Future<Either<Failure, Unit>> updateCompany({
+    required Company company,
+    List<int>? logoBytes,
+    String? logoContentType,
   });
 }
 

@@ -31,7 +31,14 @@ final class AdminRepositoryImpl implements AdminRepository {
   Future<Either<Failure, List<Company>>> getCompanies({
     String query = '',
     CompanyStatus? status,
-  }) => _guard(() => _source.getCompanies(query: query, status: status));
+    bool archivedOnly = false,
+  }) => _guard(
+    () => _source.getCompanies(
+      query: query,
+      status: status,
+      archivedOnly: archivedOnly,
+    ),
+  );
 
   @override
   Future<Either<Failure, CompanyDetail>> getCompany(String id) =>
@@ -163,6 +170,43 @@ final class AdminRepositoryImpl implements AdminRepository {
     required String role,
   }) => _guard(() async {
     await _source.updateUserRole(userId: userId, role: role);
+    return unit;
+  });
+
+  @override
+  Future<Either<Failure, Unit>> applyCompanyLifecycle({
+    required String id,
+    required CompanyLifecycleAction action,
+  }) => _guard(() async {
+    await _source.applyCompanyLifecycle(id: id, action: action);
+    return unit;
+  });
+
+  @override
+  Future<Either<Failure, Unit>> updatePerson({
+    required String id,
+    required String displayName,
+    required EvaluationStatus status,
+  }) => _guard(() async {
+    await _source.updatePerson(
+      id: id,
+      displayName: displayName,
+      status: status,
+    );
+    return unit;
+  });
+
+  @override
+  Future<Either<Failure, Unit>> updateCompany({
+    required Company company,
+    List<int>? logoBytes,
+    String? logoContentType,
+  }) => _guard(() async {
+    await _source.updateCompany(
+      company: company,
+      logoBytes: logoBytes,
+      logoContentType: logoContentType,
+    );
     return unit;
   });
 }

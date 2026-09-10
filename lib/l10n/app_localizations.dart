@@ -67,8 +67,8 @@ abstract class AppLocalizations {
 
   final String localeName;
 
-  static AppLocalizations? of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
@@ -293,14 +293,26 @@ abstract class AppLocalizations {
   /// No description provided for @testimonialName.
   ///
   /// In es, this message translates to:
-  /// **'Sarah Jenkins'**
+  /// **'Gabriel Ramirez'**
   String get testimonialName;
 
   /// No description provided for @testimonialRole.
   ///
   /// In es, this message translates to:
-  /// **'VP de Ingeniería, Nexus Dynamics'**
+  /// **'CEO, TaleX'**
   String get testimonialRole;
+
+  /// No description provided for @testimonialNameSecondary.
+  ///
+  /// In es, this message translates to:
+  /// **'Pablo Melo'**
+  String get testimonialNameSecondary;
+
+  /// No description provided for @testimonialRoleSecondary.
+  ///
+  /// In es, this message translates to:
+  /// **'CTO, TaleX'**
+  String get testimonialRoleSecondary;
 
   /// No description provided for @welcomeUser.
   ///
@@ -770,6 +782,12 @@ abstract class AppLocalizations {
   /// **'Zona horaria'**
   String get timezone;
 
+  /// No description provided for @timezoneBogota.
+  ///
+  /// In es, this message translates to:
+  /// **'Bogotá (UTC-5)'**
+  String get timezoneBogota;
+
   /// No description provided for @notificationsTitle.
   ///
   /// In es, this message translates to:
@@ -1232,6 +1250,108 @@ abstract class AppLocalizations {
   /// **'Todos'**
   String get filterAll;
 
+  /// No description provided for @filterArchived.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivadas'**
+  String get filterArchived;
+
+  /// No description provided for @companyActions.
+  ///
+  /// In es, this message translates to:
+  /// **'Acciones de la empresa'**
+  String get companyActions;
+
+  /// No description provided for @disableCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Inhabilitar'**
+  String get disableCompany;
+
+  /// No description provided for @enableCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Reactivar'**
+  String get enableCompany;
+
+  /// No description provided for @archiveCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar de la vista'**
+  String get archiveCompany;
+
+  /// No description provided for @restoreCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurar a la vista'**
+  String get restoreCompany;
+
+  /// No description provided for @disableCompanyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Inhabilitar empresa'**
+  String get disableCompanyTitle;
+
+  /// No description provided for @disableCompanyBody.
+  ///
+  /// In es, this message translates to:
+  /// **'La empresa dejará de operar en TaleX. Los datos se conservan. ¿Confirmas?'**
+  String get disableCompanyBody;
+
+  /// No description provided for @enableCompanyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Reactivar empresa'**
+  String get enableCompanyTitle;
+
+  /// No description provided for @enableCompanyBody.
+  ///
+  /// In es, this message translates to:
+  /// **'La empresa volverá a estar activa y su equipo podrá entrar. ¿Confirmas?'**
+  String get enableCompanyBody;
+
+  /// No description provided for @archiveCompanyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar de la vista'**
+  String get archiveCompanyTitle;
+
+  /// No description provided for @archiveCompanyBody.
+  ///
+  /// In es, this message translates to:
+  /// **'No se borra nada. La empresa deja de verse en el listado principal y queda en Archivadas. ¿Confirmas?'**
+  String get archiveCompanyBody;
+
+  /// No description provided for @restoreCompanyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Restaurar empresa'**
+  String get restoreCompanyTitle;
+
+  /// No description provided for @restoreCompanyBody.
+  ///
+  /// In es, this message translates to:
+  /// **'La empresa volverá a aparecer en el listado. ¿Confirmas?'**
+  String get restoreCompanyBody;
+
+  /// No description provided for @confirmAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar'**
+  String get confirmAction;
+
+  /// No description provided for @noArchivedCompanies.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay empresas archivadas.'**
+  String get noArchivedCompanies;
+
+  /// No description provided for @errorCompanyDisabled.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta empresa está inhabilitada. Un SuperAdmin puede reactivarla.'**
+  String get errorCompanyDisabled;
+
   /// No description provided for @lastActivity.
   ///
   /// In es, this message translates to:
@@ -1255,6 +1375,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Volver a empresas'**
   String get backToCompanies;
+
+  /// No description provided for @backToPeople.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a personas'**
+  String get backToPeople;
+
+  /// No description provided for @backToProcesses.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a procesos'**
+  String get backToProcesses;
+
+  /// No description provided for @presentedPeople.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya presentaron'**
+  String get presentedPeople;
+
+  /// No description provided for @pendingPeople.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendientes'**
+  String get pendingPeople;
+
+  /// No description provided for @visitWebsite.
+  ///
+  /// In es, this message translates to:
+  /// **'Visitar sitio web'**
+  String get visitWebsite;
+
+  /// No description provided for @editCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar empresa'**
+  String get editCompany;
 
   /// No description provided for @companyOverview.
   ///
@@ -1295,7 +1451,7 @@ abstract class AppLocalizations {
   /// No description provided for @noDeals.
   ///
   /// In es, this message translates to:
-  /// **'No hay oportunidades en el pipeline.'**
+  /// **'No hay oportunidades comerciales.'**
   String get noDeals;
 
   /// No description provided for @noSales.
@@ -1537,6 +1693,1740 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Actividad por día'**
   String get activityByDay;
+
+  /// No description provided for @language.
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma'**
+  String get language;
+
+  /// No description provided for @languageDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige el idioma de la interfaz. El cambio se aplica de inmediato.'**
+  String get languageDescription;
+
+  /// No description provided for @spanish.
+  ///
+  /// In es, this message translates to:
+  /// **'Español'**
+  String get spanish;
+
+  /// No description provided for @english.
+  ///
+  /// In es, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @vacancy.
+  ///
+  /// In es, this message translates to:
+  /// **'Vacante'**
+  String get vacancy;
+
+  /// No description provided for @createVacancy.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear vacante'**
+  String get createVacancy;
+
+  /// No description provided for @createRespondent.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear encuestado'**
+  String get createRespondent;
+
+  /// No description provided for @activationPin.
+  ///
+  /// In es, this message translates to:
+  /// **'PIN de activación'**
+  String get activationPin;
+
+  /// No description provided for @pinGenerated.
+  ///
+  /// In es, this message translates to:
+  /// **'Empresa creada. PIN de primer acceso: {pin}.'**
+  String pinGenerated(String pin);
+
+  /// No description provided for @invitePinReady.
+  ///
+  /// In es, this message translates to:
+  /// **'PIN de primer acceso: {pin}.'**
+  String invitePinReady(String pin);
+
+  /// No description provided for @nit.
+  ///
+  /// In es, this message translates to:
+  /// **'NIT'**
+  String get nit;
+
+  /// No description provided for @sector.
+  ///
+  /// In es, this message translates to:
+  /// **'Sector'**
+  String get sector;
+
+  /// No description provided for @city.
+  ///
+  /// In es, this message translates to:
+  /// **'Ciudad'**
+  String get city;
+
+  /// No description provided for @website.
+  ///
+  /// In es, this message translates to:
+  /// **'Sitio web'**
+  String get website;
+
+  /// No description provided for @logoUrl.
+  ///
+  /// In es, this message translates to:
+  /// **'URL del logo'**
+  String get logoUrl;
+
+  /// No description provided for @description.
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get description;
+
+  /// No description provided for @companyDna.
+  ///
+  /// In es, this message translates to:
+  /// **'ADN de la empresa'**
+  String get companyDna;
+
+  /// No description provided for @companyValues.
+  ///
+  /// In es, this message translates to:
+  /// **'Valores'**
+  String get companyValues;
+
+  /// No description provided for @companyCulture.
+  ///
+  /// In es, this message translates to:
+  /// **'Cultura'**
+  String get companyCulture;
+
+  /// No description provided for @standoutPeople.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Qué destaca del personal?'**
+  String get standoutPeople;
+
+  /// No description provided for @skipCompanyDna.
+  ///
+  /// In es, this message translates to:
+  /// **'Omitir el ADN de la empresa por ahora. La organización podrá completarlo después.'**
+  String get skipCompanyDna;
+
+  /// No description provided for @country.
+  ///
+  /// In es, this message translates to:
+  /// **'País'**
+  String get country;
+
+  /// No description provided for @department.
+  ///
+  /// In es, this message translates to:
+  /// **'Departamento'**
+  String get department;
+
+  /// No description provided for @divisionState.
+  ///
+  /// In es, this message translates to:
+  /// **'Estado'**
+  String get divisionState;
+
+  /// No description provided for @divisionCommunity.
+  ///
+  /// In es, this message translates to:
+  /// **'Comunidad autónoma'**
+  String get divisionCommunity;
+
+  /// No description provided for @divisionRegion.
+  ///
+  /// In es, this message translates to:
+  /// **'Estado / departamento / región'**
+  String get divisionRegion;
+
+  /// No description provided for @cityMunicipality.
+  ///
+  /// In es, this message translates to:
+  /// **'Ciudad / municipio'**
+  String get cityMunicipality;
+
+  /// No description provided for @searchLocation.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe para buscar...'**
+  String get searchLocation;
+
+  /// No description provided for @searchCountry.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar país...'**
+  String get searchCountry;
+
+  /// No description provided for @searchDivision.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar división...'**
+  String get searchDivision;
+
+  /// No description provided for @searchCity.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar ciudad...'**
+  String get searchCity;
+
+  /// No description provided for @locationLoadError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar las ubicaciones. Intenta nuevamente.'**
+  String get locationLoadError;
+
+  /// No description provided for @locationNoResults.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay resultados para esa búsqueda.'**
+  String get locationNoResults;
+
+  /// No description provided for @locationSelectCountryFirst.
+  ///
+  /// In es, this message translates to:
+  /// **'Primero elige un país'**
+  String get locationSelectCountryFirst;
+
+  /// No description provided for @provisionStepCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Empresa'**
+  String get provisionStepCompany;
+
+  /// No description provided for @provisionStepDna.
+  ///
+  /// In es, this message translates to:
+  /// **'ADN'**
+  String get provisionStepDna;
+
+  /// No description provided for @provisionStepInvite.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitación'**
+  String get provisionStepInvite;
+
+  /// No description provided for @pasteLogoUrl.
+  ///
+  /// In es, this message translates to:
+  /// **'Pegar URL del logo'**
+  String get pasteLogoUrl;
+
+  /// No description provided for @selectLogoFile.
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar archivo'**
+  String get selectLogoFile;
+
+  /// No description provided for @logoPreview.
+  ///
+  /// In es, this message translates to:
+  /// **'Vista previa del logo'**
+  String get logoPreview;
+
+  /// No description provided for @sectorFinance.
+  ///
+  /// In es, this message translates to:
+  /// **'Financiero'**
+  String get sectorFinance;
+
+  /// No description provided for @sectorHealth.
+  ///
+  /// In es, this message translates to:
+  /// **'Salud'**
+  String get sectorHealth;
+
+  /// No description provided for @sectorEducation.
+  ///
+  /// In es, this message translates to:
+  /// **'Educación'**
+  String get sectorEducation;
+
+  /// No description provided for @sectorManufacturing.
+  ///
+  /// In es, this message translates to:
+  /// **'Manufactura'**
+  String get sectorManufacturing;
+
+  /// No description provided for @sectorRetail.
+  ///
+  /// In es, this message translates to:
+  /// **'Comercio'**
+  String get sectorRetail;
+
+  /// No description provided for @sectorServices.
+  ///
+  /// In es, this message translates to:
+  /// **'Servicios'**
+  String get sectorServices;
+
+  /// No description provided for @sectorConstruction.
+  ///
+  /// In es, this message translates to:
+  /// **'Construcción'**
+  String get sectorConstruction;
+
+  /// No description provided for @sectorEnergy.
+  ///
+  /// In es, this message translates to:
+  /// **'Energía'**
+  String get sectorEnergy;
+
+  /// No description provided for @sectorAgribusiness.
+  ///
+  /// In es, this message translates to:
+  /// **'Agroindustria'**
+  String get sectorAgribusiness;
+
+  /// No description provided for @sectorGovernment.
+  ///
+  /// In es, this message translates to:
+  /// **'Gobierno'**
+  String get sectorGovernment;
+
+  /// No description provided for @sectorOther.
+  ///
+  /// In es, this message translates to:
+  /// **'Otro'**
+  String get sectorOther;
+
+  /// No description provided for @size1to10.
+  ///
+  /// In es, this message translates to:
+  /// **'1–10 empleados'**
+  String get size1to10;
+
+  /// No description provided for @size11to50.
+  ///
+  /// In es, this message translates to:
+  /// **'11–50 empleados'**
+  String get size11to50;
+
+  /// No description provided for @size201to500.
+  ///
+  /// In es, this message translates to:
+  /// **'201–500 empleados'**
+  String get size201to500;
+
+  /// No description provided for @size500plus.
+  ///
+  /// In es, this message translates to:
+  /// **'Más de 500 empleados'**
+  String get size500plus;
+
+  /// No description provided for @emailSent.
+  ///
+  /// In es, this message translates to:
+  /// **'El correo de invitación se envió correctamente.'**
+  String get emailSent;
+
+  /// No description provided for @errorEmailNotConfigured.
+  ///
+  /// In es, this message translates to:
+  /// **'La empresa se creó, pero falta configurar SMTP para enviar correos. El PIN quedó en pantalla.'**
+  String get errorEmailNotConfigured;
+
+  /// No description provided for @errorEmailSendFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'La empresa se creó, pero el correo no se pudo enviar. Revisa spam o la configuración SMTP. El PIN quedó en pantalla.'**
+  String get errorEmailSendFailed;
+
+  /// No description provided for @completeCompanyDnaTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Completa el ADN de la empresa'**
+  String get completeCompanyDnaTitle;
+
+  /// No description provided for @completeCompanyDnaSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Antes de entrar al espacio, registra los valores, la cultura y lo que destaca del personal.'**
+  String get completeCompanyDnaSubtitle;
+
+  /// No description provided for @reviewCompanyDnaTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Verifica el ADN de la empresa'**
+  String get reviewCompanyDnaTitle;
+
+  /// No description provided for @reviewCompanyDnaSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa que estos datos describan bien a la organización. Si algo no cuadra, corrígelo antes de continuar.'**
+  String get reviewCompanyDnaSubtitle;
+
+  /// No description provided for @confirmCompanyDna.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar y continuar'**
+  String get confirmCompanyDna;
+
+  /// No description provided for @dnaRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Completa valores, cultura y lo que destaca del personal.'**
+  String get dnaRequired;
+
+  /// No description provided for @soughtCharacteristics.
+  ///
+  /// In es, this message translates to:
+  /// **'Características buscadas'**
+  String get soughtCharacteristics;
+
+  /// No description provided for @firstName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In es, this message translates to:
+  /// **'Apellido'**
+  String get lastName;
+
+  /// No description provided for @activateAccount.
+  ///
+  /// In es, this message translates to:
+  /// **'Activar cuenta'**
+  String get activateAccount;
+
+  /// No description provided for @activateSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa el correo invitado y el PIN de 6 dígitos que llegó a esa bandeja. El PIN caduca a los 15 minutos.'**
+  String get activateSubtitle;
+
+  /// No description provided for @activatePinHint.
+  ///
+  /// In es, this message translates to:
+  /// **'6 dígitos · válido 15 minutos. Usa el PIN del correo más reciente, no uno de una prueba anterior.'**
+  String get activatePinHint;
+
+  /// No description provided for @mustChangePasswordTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea tu contraseña'**
+  String get mustChangePasswordTitle;
+
+  /// No description provided for @mustChangePasswordSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta contraseña es la que usarás de ahora en adelante para entrar a TaleX.'**
+  String get mustChangePasswordSubtitle;
+
+  /// No description provided for @createPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva contraseña'**
+  String get createPassword;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar contraseña'**
+  String get confirmPassword;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In es, this message translates to:
+  /// **'Las contraseñas no coinciden.'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @documentNumber.
+  ///
+  /// In es, this message translates to:
+  /// **'Número de documento'**
+  String get documentNumber;
+
+  /// No description provided for @activeVacancies.
+  ///
+  /// In es, this message translates to:
+  /// **'Vacantes activas'**
+  String get activeVacancies;
+
+  /// No description provided for @closedVacancies.
+  ///
+  /// In es, this message translates to:
+  /// **'Vacantes cerradas'**
+  String get closedVacancies;
+
+  /// No description provided for @pendingAssessments.
+  ///
+  /// In es, this message translates to:
+  /// **'Evaluaciones pendientes'**
+  String get pendingAssessments;
+
+  /// No description provided for @completedAssessments.
+  ///
+  /// In es, this message translates to:
+  /// **'Evaluaciones completadas'**
+  String get completedAssessments;
+
+  /// No description provided for @noVacancies.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no tienes vacantes creadas.'**
+  String get noVacancies;
+
+  /// No description provided for @noCandidates.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay encuestados en este proceso.'**
+  String get noCandidates;
+
+  /// No description provided for @noTeamMembers.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay personas en el equipo.'**
+  String get noTeamMembers;
+
+  /// No description provided for @affinityWithCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Afinidad con la empresa'**
+  String get affinityWithCompany;
+
+  /// No description provided for @affinityWithVacancy.
+  ///
+  /// In es, this message translates to:
+  /// **'Afinidad con la vacante'**
+  String get affinityWithVacancy;
+
+  /// No description provided for @likertStronglyDisagree.
+  ///
+  /// In es, this message translates to:
+  /// **'Muy en desacuerdo'**
+  String get likertStronglyDisagree;
+
+  /// No description provided for @likertDisagree.
+  ///
+  /// In es, this message translates to:
+  /// **'En desacuerdo'**
+  String get likertDisagree;
+
+  /// No description provided for @likertNeutral.
+  ///
+  /// In es, this message translates to:
+  /// **'Ni de acuerdo ni en desacuerdo'**
+  String get likertNeutral;
+
+  /// No description provided for @likertAgree.
+  ///
+  /// In es, this message translates to:
+  /// **'De acuerdo'**
+  String get likertAgree;
+
+  /// No description provided for @likertStronglyAgree.
+  ///
+  /// In es, this message translates to:
+  /// **'Muy de acuerdo'**
+  String get likertStronglyAgree;
+
+  /// No description provided for @questionProgress.
+  ///
+  /// In es, this message translates to:
+  /// **'Pregunta {current} de {total}'**
+  String questionProgress(int current, int total);
+
+  /// No description provided for @next.
+  ///
+  /// In es, this message translates to:
+  /// **'Siguiente'**
+  String get next;
+
+  /// No description provided for @goBack.
+  ///
+  /// In es, this message translates to:
+  /// **'Anterior'**
+  String get goBack;
+
+  /// No description provided for @finish.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizar'**
+  String get finish;
+
+  /// No description provided for @basicResult.
+  ///
+  /// In es, this message translates to:
+  /// **'Resultado básico'**
+  String get basicResult;
+
+  /// No description provided for @fullResultLocked.
+  ///
+  /// In es, this message translates to:
+  /// **'El resultado completo estará disponible cuando se habilite el acceso.'**
+  String get fullResultLocked;
+
+  /// No description provided for @compare.
+  ///
+  /// In es, this message translates to:
+  /// **'Comparar'**
+  String get compare;
+
+  /// No description provided for @characteristic.
+  ///
+  /// In es, this message translates to:
+  /// **'Característica'**
+  String get characteristic;
+
+  /// No description provided for @team.
+  ///
+  /// In es, this message translates to:
+  /// **'Equipo'**
+  String get team;
+
+  /// No description provided for @inviteRecruiter.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitar al equipo'**
+  String get inviteRecruiter;
+
+  /// No description provided for @inviteTeamSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'La persona recibirá un PIN de 6 dígitos al correo. Caduca a los 15 minutos.'**
+  String get inviteTeamSubtitle;
+
+  /// No description provided for @teamRole.
+  ///
+  /// In es, this message translates to:
+  /// **'Rol en la empresa'**
+  String get teamRole;
+
+  /// No description provided for @teamRoleCompanyAdmin.
+  ///
+  /// In es, this message translates to:
+  /// **'Administración de empresa'**
+  String get teamRoleCompanyAdmin;
+
+  /// No description provided for @teamRoleCompanyLead.
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección'**
+  String get teamRoleCompanyLead;
+
+  /// No description provided for @teamRolePeopleOps.
+  ///
+  /// In es, this message translates to:
+  /// **'Personas'**
+  String get teamRolePeopleOps;
+
+  /// No description provided for @teamRoleRecruiter.
+  ///
+  /// In es, this message translates to:
+  /// **'Reclutamiento'**
+  String get teamRoleRecruiter;
+
+  /// No description provided for @teamRoleHiringManager.
+  ///
+  /// In es, this message translates to:
+  /// **'Liderazgo de área'**
+  String get teamRoleHiringManager;
+
+  /// No description provided for @teamRoleHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección y administración pueden completar el ADN e invitar al resto del equipo. Reclutamiento y liderazgo de área gestionan vacantes y candidatos.'**
+  String get teamRoleHint;
+
+  /// No description provided for @vacanciesSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea y da contexto a las vacantes de tu proceso. La ubicación de la vacante no cambia el perfil de la empresa.'**
+  String get vacanciesSubtitle;
+
+  /// No description provided for @teamSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Personas con acceso a TaleX en tu empresa.'**
+  String get teamSubtitle;
+
+  /// No description provided for @workModeOnsite.
+  ///
+  /// In es, this message translates to:
+  /// **'Presencial'**
+  String get workModeOnsite;
+
+  /// No description provided for @workModeRemote.
+  ///
+  /// In es, this message translates to:
+  /// **'Virtual'**
+  String get workModeRemote;
+
+  /// No description provided for @workModeHybrid.
+  ///
+  /// In es, this message translates to:
+  /// **'Híbrida'**
+  String get workModeHybrid;
+
+  /// No description provided for @workModeHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Si es virtual, la ciudad es opcional. Si es presencial o híbrida, usa la ubicación de la empresa y ajústala solo para esta vacante.'**
+  String get workModeHint;
+
+  /// No description provided for @vacancyCityOptional.
+  ///
+  /// In es, this message translates to:
+  /// **'Ciudad de referencia (opcional)'**
+  String get vacancyCityOptional;
+
+  /// No description provided for @seniorityHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Indica la experiencia esperada para el rol. No entra en el cálculo de afinidad.'**
+  String get seniorityHint;
+
+  /// No description provided for @seniorityJunior.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicial'**
+  String get seniorityJunior;
+
+  /// No description provided for @seniorityMid.
+  ///
+  /// In es, this message translates to:
+  /// **'Intermedio'**
+  String get seniorityMid;
+
+  /// No description provided for @senioritySenior.
+  ///
+  /// In es, this message translates to:
+  /// **'Con experiencia'**
+  String get senioritySenior;
+
+  /// No description provided for @seniorityLead.
+  ///
+  /// In es, this message translates to:
+  /// **'Liderazgo'**
+  String get seniorityLead;
+
+  /// No description provided for @contractIndefinite.
+  ///
+  /// In es, this message translates to:
+  /// **'Indefinido'**
+  String get contractIndefinite;
+
+  /// No description provided for @contractFixed.
+  ///
+  /// In es, this message translates to:
+  /// **'Término fijo'**
+  String get contractFixed;
+
+  /// No description provided for @contractServices.
+  ///
+  /// In es, this message translates to:
+  /// **'Prestación de servicios'**
+  String get contractServices;
+
+  /// No description provided for @contractInternship.
+  ///
+  /// In es, this message translates to:
+  /// **'Práctica o pasantía'**
+  String get contractInternship;
+
+  /// No description provided for @contractTemporary.
+  ///
+  /// In es, this message translates to:
+  /// **'Temporal'**
+  String get contractTemporary;
+
+  /// No description provided for @areaPeople.
+  ///
+  /// In es, this message translates to:
+  /// **'Personas y cultura'**
+  String get areaPeople;
+
+  /// No description provided for @areaFinanceOps.
+  ///
+  /// In es, this message translates to:
+  /// **'Finanzas'**
+  String get areaFinanceOps;
+
+  /// No description provided for @areaOperations.
+  ///
+  /// In es, this message translates to:
+  /// **'Operaciones'**
+  String get areaOperations;
+
+  /// No description provided for @areaCommercial.
+  ///
+  /// In es, this message translates to:
+  /// **'Comercial'**
+  String get areaCommercial;
+
+  /// No description provided for @areaCustomer.
+  ///
+  /// In es, this message translates to:
+  /// **'Atención a clientes'**
+  String get areaCustomer;
+
+  /// No description provided for @areaAdmin.
+  ///
+  /// In es, this message translates to:
+  /// **'Administración'**
+  String get areaAdmin;
+
+  /// No description provided for @areaEngineering.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingeniería y desarrollo'**
+  String get areaEngineering;
+
+  /// No description provided for @areaProduct.
+  ///
+  /// In es, this message translates to:
+  /// **'Producto'**
+  String get areaProduct;
+
+  /// No description provided for @areaData.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos y analítica'**
+  String get areaData;
+
+  /// No description provided for @areaSupport.
+  ///
+  /// In es, this message translates to:
+  /// **'Soporte'**
+  String get areaSupport;
+
+  /// No description provided for @areaRisk.
+  ///
+  /// In es, this message translates to:
+  /// **'Riesgo y cumplimiento'**
+  String get areaRisk;
+
+  /// No description provided for @areaAccounting.
+  ///
+  /// In es, this message translates to:
+  /// **'Contabilidad'**
+  String get areaAccounting;
+
+  /// No description provided for @areaClinical.
+  ///
+  /// In es, this message translates to:
+  /// **'Clínica'**
+  String get areaClinical;
+
+  /// No description provided for @areaCare.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuidado y atención'**
+  String get areaCare;
+
+  /// No description provided for @areaAcademic.
+  ///
+  /// In es, this message translates to:
+  /// **'Académica'**
+  String get areaAcademic;
+
+  /// No description provided for @areaTraining.
+  ///
+  /// In es, this message translates to:
+  /// **'Formación'**
+  String get areaTraining;
+
+  /// No description provided for @areaProduction.
+  ///
+  /// In es, this message translates to:
+  /// **'Producción'**
+  String get areaProduction;
+
+  /// No description provided for @areaQuality.
+  ///
+  /// In es, this message translates to:
+  /// **'Calidad'**
+  String get areaQuality;
+
+  /// No description provided for @areaMaintenance.
+  ///
+  /// In es, this message translates to:
+  /// **'Mantenimiento'**
+  String get areaMaintenance;
+
+  /// No description provided for @areaStore.
+  ///
+  /// In es, this message translates to:
+  /// **'Punto de venta'**
+  String get areaStore;
+
+  /// No description provided for @areaLogistics.
+  ///
+  /// In es, this message translates to:
+  /// **'Logística'**
+  String get areaLogistics;
+
+  /// No description provided for @areaProjects.
+  ///
+  /// In es, this message translates to:
+  /// **'Proyectos'**
+  String get areaProjects;
+
+  /// No description provided for @areaField.
+  ///
+  /// In es, this message translates to:
+  /// **'Campo u obra'**
+  String get areaField;
+
+  /// No description provided for @areaPublicService.
+  ///
+  /// In es, this message translates to:
+  /// **'Servicio público'**
+  String get areaPublicService;
+
+  /// No description provided for @vacancyAreaHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Las áreas cambian según el sector de la empresa. Elige la más cercana al rol.'**
+  String get vacancyAreaHint;
+
+  /// No description provided for @invitationUsed.
+  ///
+  /// In es, this message translates to:
+  /// **'Activada'**
+  String get invitationUsed;
+
+  /// No description provided for @invitationPending.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitación pendiente'**
+  String get invitationPending;
+
+  /// No description provided for @statusInReview.
+  ///
+  /// In es, this message translates to:
+  /// **'En revisión'**
+  String get statusInReview;
+
+  /// No description provided for @statusShortlisted.
+  ///
+  /// In es, this message translates to:
+  /// **'Preseleccionado'**
+  String get statusShortlisted;
+
+  /// No description provided for @statusInterview.
+  ///
+  /// In es, this message translates to:
+  /// **'Entrevista'**
+  String get statusInterview;
+
+  /// No description provided for @statusFinalist.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalista'**
+  String get statusFinalist;
+
+  /// No description provided for @statusHired.
+  ///
+  /// In es, this message translates to:
+  /// **'Contratado'**
+  String get statusHired;
+
+  /// No description provided for @statusRejected.
+  ///
+  /// In es, this message translates to:
+  /// **'No seleccionado'**
+  String get statusRejected;
+
+  /// No description provided for @vacancyName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre de la vacante'**
+  String get vacancyName;
+
+  /// No description provided for @vacancyArea.
+  ///
+  /// In es, this message translates to:
+  /// **'Área'**
+  String get vacancyArea;
+
+  /// No description provided for @workMode.
+  ///
+  /// In es, this message translates to:
+  /// **'Modalidad'**
+  String get workMode;
+
+  /// No description provided for @contractType.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de contrato'**
+  String get contractType;
+
+  /// No description provided for @seniority.
+  ///
+  /// In es, this message translates to:
+  /// **'Nivel'**
+  String get seniority;
+
+  /// No description provided for @roleProfile.
+  ///
+  /// In es, this message translates to:
+  /// **'Perfil buscado'**
+  String get roleProfile;
+
+  /// No description provided for @close.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get close;
+
+  /// No description provided for @cancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get cancel;
+
+  /// No description provided for @companyProfile.
+  ///
+  /// In es, this message translates to:
+  /// **'Perfil de empresa'**
+  String get companyProfile;
+
+  /// No description provided for @vacancyInsights.
+  ///
+  /// In es, this message translates to:
+  /// **'Lectura de la vacante'**
+  String get vacancyInsights;
+
+  /// No description provided for @vacancyInsightsEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no hay suficiente información para mostrar una lectura de esta vacante.'**
+  String get vacancyInsightsEmpty;
+
+  /// No description provided for @vacancyInsightsCounts.
+  ///
+  /// In es, this message translates to:
+  /// **'{invited} invitados · {started} en curso · {completed} completaron la evaluación.'**
+  String vacancyInsightsCounts(int invited, int started, int completed);
+
+  /// No description provided for @dnaSelectSeveral.
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes elegir varias opciones. Si agregas una que no estaba en la lista, también puedes quitarla.'**
+  String get dnaSelectSeveral;
+
+  /// No description provided for @removeCustomOption.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar esta opción'**
+  String get removeCustomOption;
+
+  /// No description provided for @results.
+  ///
+  /// In es, this message translates to:
+  /// **'Resultados'**
+  String get results;
+
+  /// No description provided for @resultsSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Lectura de afinidad de las personas que ya se presentaron. Aquí verás el detalle cuando la metodología complete la ficha.'**
+  String get resultsSubtitle;
+
+  /// No description provided for @compareHint.
+  ///
+  /// In es, this message translates to:
+  /// **'El recuadro a la izquierda sirve para elegir dos o más personas y usar Comparar. No cambia el estado del proceso.'**
+  String get compareHint;
+
+  /// No description provided for @affinityCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Empresa'**
+  String get affinityCompany;
+
+  /// No description provided for @affinityVacancy.
+  ///
+  /// In es, this message translates to:
+  /// **'Vacante'**
+  String get affinityVacancy;
+
+  /// No description provided for @affinityCompanyHighHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay alta correspondencia con la cultura y la forma de trabajar descritas por la empresa. Texto de maqueta: más adelante aquí irá la lectura real de las dimensiones evaluadas.'**
+  String get affinityCompanyHighHint;
+
+  /// No description provided for @affinityCompanyMediumHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay correspondencia parcial con el ADN de la empresa. Texto de maqueta: luego se detallará qué dimensiones coinciden y cuáles no.'**
+  String get affinityCompanyMediumHint;
+
+  /// No description provided for @affinityCompanyLowHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay menor correspondencia con la cultura descrita por la empresa. Texto de maqueta: la ficha real explicará en qué se distancia.'**
+  String get affinityCompanyLowHint;
+
+  /// No description provided for @affinityVacancyHighHint.
+  ///
+  /// In es, this message translates to:
+  /// **'El perfil de esta persona se acerca a lo que la vacante busca. Texto de maqueta: luego se mostrarán las características del rol con mayor coincidencia.'**
+  String get affinityVacancyHighHint;
+
+  /// No description provided for @affinityVacancyMediumHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay coincidencia intermedia con el perfil de la vacante. Texto de maqueta: la ficha real indicará qué aspectos del rol calzan mejor.'**
+  String get affinityVacancyMediumHint;
+
+  /// No description provided for @affinityVacancyLowHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay menor correspondencia con el perfil buscado para esta vacante. Texto de maqueta: no significa un juicio sobre la persona, solo respecto a este rol.'**
+  String get affinityVacancyLowHint;
+
+  /// No description provided for @affinityUnknownHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay evaluación completa, por eso la afinidad no está clasificada.'**
+  String get affinityUnknownHint;
+
+  /// No description provided for @affinityMockNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta explicación es orientativa. La lectura definitiva se construirá con la metodología de TaleX.'**
+  String get affinityMockNote;
+
+  /// No description provided for @continueAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get continueAction;
+
+  /// No description provided for @respondentHello.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola, {name}'**
+  String respondentHello(String name);
+
+  /// No description provided for @respondentHomeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu evaluación de afinidad'**
+  String get respondentHomeTitle;
+
+  /// No description provided for @respondentHomeSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'TaleX no decide si te contratan. Mide qué tan cerca estás del perfil que la empresa describió para esta vacante.'**
+  String get respondentHomeSubtitle;
+
+  /// No description provided for @respondentDuration.
+  ///
+  /// In es, this message translates to:
+  /// **'Reserva unos 40 minutos en un lugar tranquilo. Puedes avanzar con calma.'**
+  String get respondentDuration;
+
+  /// No description provided for @respondentLikertHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Todas las preguntas son de acuerdo o desacuerdo. No hay respuestas correctas o incorrectas.'**
+  String get respondentLikertHint;
+
+  /// No description provided for @startAssessment.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar evaluación'**
+  String get startAssessment;
+
+  /// No description provided for @assignedVacancy.
+  ///
+  /// In es, this message translates to:
+  /// **'Vacante asignada'**
+  String get assignedVacancy;
+
+  /// No description provided for @viewFullSummary.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver resumen orientativo'**
+  String get viewFullSummary;
+
+  /// No description provided for @hideFullSummary.
+  ///
+  /// In es, this message translates to:
+  /// **'Ocultar resumen'**
+  String get hideFullSummary;
+
+  /// No description provided for @fullSummaryTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen orientativo'**
+  String get fullSummaryTitle;
+
+  /// No description provided for @fullSummaryIntro.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta vista es una maqueta de cómo se verá la lectura. Las dimensiones de abajo son de ejemplo hasta que TaleX entregue el detalle real.'**
+  String get fullSummaryIntro;
+
+  /// No description provided for @dimensionCommunication.
+  ///
+  /// In es, this message translates to:
+  /// **'Comunicación'**
+  String get dimensionCommunication;
+
+  /// No description provided for @dimensionAdaptability.
+  ///
+  /// In es, this message translates to:
+  /// **'Adaptabilidad'**
+  String get dimensionAdaptability;
+
+  /// No description provided for @dimensionCollaboration.
+  ///
+  /// In es, this message translates to:
+  /// **'Colaboración'**
+  String get dimensionCollaboration;
+
+  /// No description provided for @dimensionInitiative.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciativa'**
+  String get dimensionInitiative;
+
+  /// No description provided for @veryHigh.
+  ///
+  /// In es, this message translates to:
+  /// **'Muy alta'**
+  String get veryHigh;
+
+  /// No description provided for @resultThanks.
+  ///
+  /// In es, this message translates to:
+  /// **'Gracias por completar la evaluación. La empresa podrá ver tu afinidad con su cultura y con esta vacante.'**
+  String get resultThanks;
+
+  /// No description provided for @newAssessment.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva evaluación'**
+  String get newAssessment;
+
+  /// No description provided for @pendingAssessmentNotification.
+  ///
+  /// In es, this message translates to:
+  /// **'Tienes una evaluación pendiente.'**
+  String get pendingAssessmentNotification;
+
+  /// No description provided for @assessmentCompletedNotification.
+  ///
+  /// In es, this message translates to:
+  /// **'La evaluación fue completada.'**
+  String get assessmentCompletedNotification;
+
+  /// No description provided for @newVacancyNotification.
+  ///
+  /// In es, this message translates to:
+  /// **'Se creó una nueva vacante.'**
+  String get newVacancyNotification;
+
+  /// No description provided for @newActivityNotification.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay nueva actividad en TaleX.'**
+  String get newActivityNotification;
+
+  /// No description provided for @errorNeedSignIn.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitas iniciar sesión.'**
+  String get errorNeedSignIn;
+
+  /// No description provided for @errorNeedAuthEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitas un correo autenticado.'**
+  String get errorNeedAuthEmail;
+
+  /// No description provided for @errorPermissionDenied.
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes permiso para esta operación.'**
+  String get errorPermissionDenied;
+
+  /// No description provided for @errorUnexpected.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo completar la operación. Inténtalo nuevamente.'**
+  String get errorUnexpected;
+
+  /// No description provided for @errorCompanyNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontró la empresa.'**
+  String get errorCompanyNotFound;
+
+  /// No description provided for @errorRespondentExists.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya existe un encuestado con este correo en la vacante.'**
+  String get errorRespondentExists;
+
+  /// No description provided for @errorInviteMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay una invitación para este correo.'**
+  String get errorInviteMissing;
+
+  /// No description provided for @errorInviteUsed.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta invitación ya fue utilizada.'**
+  String get errorInviteUsed;
+
+  /// No description provided for @errorInvalidPin.
+  ///
+  /// In es, this message translates to:
+  /// **'El PIN no es válido.'**
+  String get errorInvalidPin;
+
+  /// No description provided for @errorPinExpired.
+  ///
+  /// In es, this message translates to:
+  /// **'El PIN caducó. Pide una invitación nueva; dura 15 minutos.'**
+  String get errorPinExpired;
+
+  /// No description provided for @errorDocumentMismatch.
+  ///
+  /// In es, this message translates to:
+  /// **'El documento no coincide con la invitación.'**
+  String get errorDocumentMismatch;
+
+  /// No description provided for @errorAssessmentMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay una evaluación asignada.'**
+  String get errorAssessmentMissing;
+
+  /// No description provided for @errorDocumentPasswordTooShort.
+  ///
+  /// In es, this message translates to:
+  /// **'El número de documento debe tener al menos 6 caracteres para usarse como contraseña.'**
+  String get errorDocumentPasswordTooShort;
+
+  /// No description provided for @registerPinHint.
+  ///
+  /// In es, this message translates to:
+  /// **'PIN de 6 dígitos que llegó al correo'**
+  String get registerPinHint;
+
+  /// No description provided for @googlePinTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa el PIN del correo'**
+  String get googlePinTitle;
+
+  /// No description provided for @googlePinSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu cuenta de Google ya está lista. Confirma el PIN de 6 dígitos para vincular la invitación.'**
+  String get googlePinSubtitle;
+
+  /// No description provided for @addCustomOption.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar \"{value}\"'**
+  String addCustomOption(String value);
+
+  /// No description provided for @searchOrAdd.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe para buscar o agregar...'**
+  String get searchOrAdd;
+
+  /// No description provided for @customAreaLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del área'**
+  String get customAreaLabel;
+
+  /// No description provided for @areaOther.
+  ///
+  /// In es, this message translates to:
+  /// **'Otra'**
+  String get areaOther;
+
+  /// No description provided for @dnaValueIntegrity.
+  ///
+  /// In es, this message translates to:
+  /// **'Integridad'**
+  String get dnaValueIntegrity;
+
+  /// No description provided for @dnaValueRespect.
+  ///
+  /// In es, this message translates to:
+  /// **'Respeto'**
+  String get dnaValueRespect;
+
+  /// No description provided for @dnaValueCollaboration.
+  ///
+  /// In es, this message translates to:
+  /// **'Colaboración'**
+  String get dnaValueCollaboration;
+
+  /// No description provided for @dnaValueInnovation.
+  ///
+  /// In es, this message translates to:
+  /// **'Innovación'**
+  String get dnaValueInnovation;
+
+  /// No description provided for @dnaValueExcellence.
+  ///
+  /// In es, this message translates to:
+  /// **'Excelencia'**
+  String get dnaValueExcellence;
+
+  /// No description provided for @dnaValueEmpathy.
+  ///
+  /// In es, this message translates to:
+  /// **'Empatía'**
+  String get dnaValueEmpathy;
+
+  /// No description provided for @dnaCultureClose.
+  ///
+  /// In es, this message translates to:
+  /// **'Cercana y humana'**
+  String get dnaCultureClose;
+
+  /// No description provided for @dnaCultureFormal.
+  ///
+  /// In es, this message translates to:
+  /// **'Formal y estructurada'**
+  String get dnaCultureFormal;
+
+  /// No description provided for @dnaCultureLearning.
+  ///
+  /// In es, this message translates to:
+  /// **'Aprendizaje continuo'**
+  String get dnaCultureLearning;
+
+  /// No description provided for @dnaCultureAgile.
+  ///
+  /// In es, this message translates to:
+  /// **'Ágil'**
+  String get dnaCultureAgile;
+
+  /// No description provided for @dnaCultureAutonomous.
+  ///
+  /// In es, this message translates to:
+  /// **'Autónoma'**
+  String get dnaCultureAutonomous;
+
+  /// No description provided for @dnaStandoutOwnership.
+  ///
+  /// In es, this message translates to:
+  /// **'Sentido de dueño'**
+  String get dnaStandoutOwnership;
+
+  /// No description provided for @dnaStandoutCommunication.
+  ///
+  /// In es, this message translates to:
+  /// **'Comunicación clara'**
+  String get dnaStandoutCommunication;
+
+  /// No description provided for @dnaStandoutAdaptability.
+  ///
+  /// In es, this message translates to:
+  /// **'Adaptabilidad'**
+  String get dnaStandoutAdaptability;
+
+  /// No description provided for @dnaStandoutInitiative.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciativa'**
+  String get dnaStandoutInitiative;
+
+  /// No description provided for @dnaStandoutTeamwork.
+  ///
+  /// In es, this message translates to:
+  /// **'Trabajo en equipo'**
+  String get dnaStandoutTeamwork;
+
+  /// No description provided for @assessmentKindLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta es tu evaluación'**
+  String get assessmentKindLabel;
+
+  /// No description provided for @assessmentKindAffinity.
+  ///
+  /// In es, this message translates to:
+  /// **'Afinidad'**
+  String get assessmentKindAffinity;
+
+  /// No description provided for @assessmentKindFit.
+  ///
+  /// In es, this message translates to:
+  /// **'Fit'**
+  String get assessmentKindFit;
+
+  /// No description provided for @sentByCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Te la envió'**
+  String get sentByCompany;
+
+  /// No description provided for @respondentQuestionCount.
+  ///
+  /// In es, this message translates to:
+  /// **'En total son {count} preguntas.'**
+  String respondentQuestionCount(int count);
+
+  /// No description provided for @assessmentFinishedTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Muy bien, acabaste'**
+  String get assessmentFinishedTitle;
+
+  /// No description provided for @downloadPdf.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargar informe PDF'**
+  String get downloadPdf;
+
+  /// No description provided for @candidateResultTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Informe de resultados'**
+  String get candidateResultTitle;
+
+  /// No description provided for @backToResults.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver'**
+  String get backToResults;
+
+  /// No description provided for @candidatesSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Personas invitadas a evaluar afinidad con tus vacantes.'**
+  String get candidatesSubtitle;
+
+  /// No description provided for @candidateProcessStatus.
+  ///
+  /// In es, this message translates to:
+  /// **'Estado del proceso'**
+  String get candidateProcessStatus;
+
+  /// No description provided for @respondentInviteHint.
+  ///
+  /// In es, this message translates to:
+  /// **'La persona recibirá un PIN de 6 dígitos al correo. Caduca a los 15 minutos. Luego se registra con su contraseña o con Google y ese PIN.'**
+  String get respondentInviteHint;
+
+  /// No description provided for @firstAccessCompany.
+  ///
+  /// In es, this message translates to:
+  /// **'Primer acceso'**
+  String get firstAccessCompany;
+
+  /// No description provided for @assessmentSignInHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Si te invitaron a una evaluación, entra por Registrarse con el PIN del correo. Si usas Google, después te pediremos el PIN.'**
+  String get assessmentSignInHint;
+
+  /// No description provided for @respondentInviteSent.
+  ///
+  /// In es, this message translates to:
+  /// **'Invitación lista. El encuestado recibe un PIN por correo.'**
+  String get respondentInviteSent;
+
+  /// No description provided for @assessmentC1.
+  ///
+  /// In es, this message translates to:
+  /// **'Me identifico con la forma de trabajar de esta organización.'**
+  String get assessmentC1;
+
+  /// No description provided for @assessmentC2.
+  ///
+  /// In es, this message translates to:
+  /// **'El ambiente descrito se alinea con cómo me gusta colaborar.'**
+  String get assessmentC2;
+
+  /// No description provided for @assessmentC3.
+  ///
+  /// In es, this message translates to:
+  /// **'La manera de tomar decisiones de la empresa me resulta clara y coherente.'**
+  String get assessmentC3;
+
+  /// No description provided for @assessmentC4.
+  ///
+  /// In es, this message translates to:
+  /// **'Valoro el entorno laboral que describe la organización.'**
+  String get assessmentC4;
+
+  /// No description provided for @assessmentC5.
+  ///
+  /// In es, this message translates to:
+  /// **'Las personas que destacan aquí se parecen a cómo me gusta aportar.'**
+  String get assessmentC5;
+
+  /// No description provided for @assessmentV1.
+  ///
+  /// In es, this message translates to:
+  /// **'El rol descrito se alinea con el tipo de trabajo que quiero realizar.'**
+  String get assessmentV1;
+
+  /// No description provided for @assessmentV2.
+  ///
+  /// In es, this message translates to:
+  /// **'Las responsabilidades de la vacante coinciden con mi forma de contribuir.'**
+  String get assessmentV2;
+
+  /// No description provided for @assessmentV3.
+  ///
+  /// In es, this message translates to:
+  /// **'El entorno de este rol me permitiría desempeñarme con naturalidad.'**
+  String get assessmentV3;
+
+  /// No description provided for @assessmentV4.
+  ///
+  /// In es, this message translates to:
+  /// **'Las características buscadas para el rol coinciden con las mías.'**
+  String get assessmentV4;
+
+  /// No description provided for @assessmentV5.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta vacante representa un contexto en el que me veo aportando de forma sostenida.'**
+  String get assessmentV5;
+
+  /// No description provided for @recoverPasswordTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Recuperar acceso'**
+  String get recoverPasswordTitle;
+
+  /// No description provided for @recoverPasswordSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe el correo de tu cuenta TaleX. Te enviaremos un PIN de 6 dígitos para continuar.'**
+  String get recoverPasswordSubtitle;
+
+  /// No description provided for @recoverContinue.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar PIN'**
+  String get recoverContinue;
+
+  /// No description provided for @recoverPinTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu correo'**
+  String get recoverPinTitle;
+
+  /// No description provided for @recoverPinSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Te enviamos un PIN. Ingrésalo para actualizar tu contraseña.'**
+  String get recoverPinSubtitle;
+
+  /// No description provided for @recoverPinHint.
+  ///
+  /// In es, this message translates to:
+  /// **'6 dígitos · válido 15 minutos. Revisa también spam. Si no pediste este cambio, ignora el mensaje.'**
+  String get recoverPinHint;
+
+  /// No description provided for @recoverPinSent.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviamos un PIN a tu correo.'**
+  String get recoverPinSent;
+
+  /// No description provided for @recoverVerifyPin.
+  ///
+  /// In es, this message translates to:
+  /// **'Verificar PIN'**
+  String get recoverVerifyPin;
+
+  /// No description provided for @recoverResendPin.
+  ///
+  /// In es, this message translates to:
+  /// **'Reenviar PIN'**
+  String get recoverResendPin;
+
+  /// No description provided for @recoverUpdatePassword.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar contraseña'**
+  String get recoverUpdatePassword;
+
+  /// No description provided for @recoverSuccessTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña actualizada'**
+  String get recoverSuccessTitle;
+
+  /// No description provided for @recoverSuccessBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya puedes iniciar sesión en TaleX con tu nueva contraseña.'**
+  String get recoverSuccessBody;
+
+  /// No description provided for @errorResetCooldown.
+  ///
+  /// In es, this message translates to:
+  /// **'Espera un minuto antes de pedir otro PIN.'**
+  String get errorResetCooldown;
+
+  /// No description provided for @errorResetTooManyAttempts.
+  ///
+  /// In es, this message translates to:
+  /// **'Demasiados intentos. Espera un momento e inténtalo de nuevo.'**
+  String get errorResetTooManyAttempts;
+
+  /// No description provided for @dashboardReadyToReview.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} evaluaciones listas para revisar'**
+  String dashboardReadyToReview(int count);
+
+  /// No description provided for @dashboardPendingToStart.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} personas aún no inician la evaluación'**
+  String dashboardPendingToStart(int count);
+
+  /// No description provided for @dashboardStalledAssessments.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} evaluaciones detenidas más de 24 h'**
+  String dashboardStalledAssessments(int count);
+
+  /// No description provided for @dashboardRecentEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay actividad de encuestados en este espacio.'**
+  String get dashboardRecentEmpty;
+
+  /// No description provided for @dashboardAlertsEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay alertas pendientes en este momento.'**
+  String get dashboardAlertsEmpty;
+
+  /// No description provided for @errorAccountNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay una cuenta TaleX con este correo. Si te invitaron, entra por Primer acceso con el PIN.'**
+  String get errorAccountNotFound;
 }
 
 class _AppLocalizationsDelegate

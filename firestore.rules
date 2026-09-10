@@ -14,16 +14,70 @@ service cloud.firestore {
       return signedIn() && request.auth.uid == userId;
     }
 
+    function userData() {
+      return get(userDoc()).data;
+    }
+
     function isSuperAdmin() {
       return signedIn()
         && exists(userDoc())
-        && get(userDoc()).data.role == 'superadmin';
+        && userData().role == 'superadmin';
+    }
+
+    function isCompanyStaff() {
+      return signedIn()
+        && exists(userDoc())
+        && userData().role in [
+          'company_admin',
+          'company_lead',
+          'people_ops',
+          'recruiter',
+          'hiring_manager'
+        ];
+    }
+
+    function isRespondent() {
+      return signedIn()
+        && exists(userDoc())
+        && userData().role == 'respondent';
+    }
+
+    function ownsCandidate(candidateId) {
+      return signedIn()
+        && exists(userDoc())
+        && userData().candidateId == candidateId;
+    }
+
+    function hasMatchingCompanyInvite() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/activation_invites/$(emailKey()))
+        && get(/databases/$(database)/documents/activation_invites/$(emailKey())).data.kind != 'respondent'
+        && request.resource.data.role == get(/databases/$(database)/documents/activation_invites/$(emailKey())).data.role
+        && request.resource.data.companyId == get(/databases/$(database)/documents/activation_invites/$(emailKey())).data.companyId
+        && resource.data.role == 'user';
+    }
+
+    function companyId() {
+      return userData().companyId;
     }
 
     function isListedSuperAdminEmail() {
       return signedIn()
         && exists(/databases/$(database)/documents/config/superadmin)
         && request.auth.token.email in get(/databases/$(database)/documents/config/superadmin).data.emails;
+    }
+
+    function emailKey() {
+      return request.auth.token.email.lower();
+    }
+
+    function hasValidInvite() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/activation_invites/$(emailKey()))
+        && get(/databases/$(database)/documents/activation_invites/$(emailKey())).data.used != true
+        && request.resource.data.activationPinHash == get(/databases/$(database)/documents/activation_invites/$(emailKey())).data.pinHash
+        && request.resource.data.role == get(/databases/$(database)/documents/activation_invites/$(emailKey())).data.role
+        && request.resource.data.companyId == get(/databases/$(database)/documents/activation_invites/$(emailKey())).data.companyId;
     }
 
     match /config/{document} {
@@ -37,23 +91,89 @@ service cloud.firestore {
         && request.resource.data.role == 'user'
         && request.resource.data.isActive == true;
 
-      allow read: if isOwner(userId) || isSuperAdmin();
+      allow read: if isOwner(userId)
+        || isSuperAdmin()
+        || (isCompanyStaff() && resource.data.companyId == companyId());
 
       allow update: if isSuperAdmin()
+        || (isOwner(userId) && hasValidInvite())
+        || (isOwner(userId) && hasMatchingCompanyInvite())
         || (isOwner(userId)
           && request.resource.data.uid == request.auth.uid
           && request.resource.data.role == resource.data.role
-          && request.resource.data.isActive == resource.data.isActive)
-        || (isOwner(userId)
-          && isListedSuperAdminEmail()
-          && request.resource.data.uid == request.auth.uid
-          && request.resource.data.role == 'superadmin');
+          && request.resource.data.isActive == resource.data.isActive);
 
       allow delete: if false;
     }
 
+    match /password_resets/{resetId} {
+      allow read, write: if false;
+    }
+
+    match /activation_invites/{inviteId} {
+      allow create: if isSuperAdmin() || isCompanyStaff();
+      allow read: if isSuperAdmin()
+        || (isCompanyStaff() && resource.data.companyId == companyId())
+        || (signedIn() && inviteId == emailKey());
+      allow update: if isSuperAdmin()
+        || (signedIn() && inviteId == emailKey())
+        || (isCompanyStaff() && resource.data.companyId == companyId());
+    }
+
     match /companies/{id} {
-      allow read, write: if isSuperAdmin();
+      allow read: if isSuperAdmin()
+        || (signedIn() && exists(userDoc()) && companyId() == id);
+      allow create: if isSuperAdmin();
+      allow update: if isSuperAdmin()
+        || (isCompanyStaff()
+          && userData().role in ['company_admin', 'company_lead']
+          && companyId() == id
+          && request.resource.data.status == resource.data.status
+          && request.resource.data.get('archived', false)
+            == resource.data.get('archived', false));
+    }
+
+    match /vacancies/{id} {
+      allow read: if isSuperAdmin()
+        || (resource != null && isCompanyStaff() && resource.data.companyId == companyId())
+        || (resource != null && exists(userDoc()) && companyId() == resource.data.companyId);
+      allow create: if isSuperAdmin()
+        || (isCompanyStaff() && request.resource.data.companyId == companyId());
+      allow update: if isSuperAdmin()
+        || (isCompanyStaff() && resource.data.companyId == companyId());
+    }
+
+    match /candidates/{id} {
+      allow get: if isSuperAdmin()
+        || ownsCandidate(id)
+        || (resource != null && isCompanyStaff() && resource.data.companyId == companyId())
+        || (resource != null
+          && request.auth.token.email != null
+          && resource.data.email == request.auth.token.email.lower());
+      allow list: if isSuperAdmin()
+        || (isCompanyStaff() && resource.data.companyId == companyId())
+        || (signedIn()
+          && request.auth.token.email != null
+          && resource.data.email == request.auth.token.email.lower());
+      allow create: if isSuperAdmin()
+        || (isCompanyStaff() && request.resource.data.companyId == companyId());
+      allow update: if isSuperAdmin()
+        || (isCompanyStaff() && resource.data.companyId == companyId())
+        || ownsCandidate(id);
+    }
+
+    match /evaluations/{id} {
+      allow get: if isSuperAdmin()
+        || ownsCandidate(id)
+        || (resource != null && isCompanyStaff() && resource.data.companyId == companyId());
+      allow list: if isSuperAdmin()
+        || (isCompanyStaff() && resource.data.companyId == companyId());
+      allow create, update: if isSuperAdmin() || ownsCandidate(id);
+    }
+
+    match /activity_events/{id} {
+      allow read: if isSuperAdmin();
+      allow create: if isSuperAdmin() || isCompanyStaff();
     }
 
     match /processes/{id} {
@@ -72,8 +192,12 @@ service cloud.firestore {
       allow read, write: if isSuperAdmin();
     }
 
-    match /activity_events/{id} {
-      allow read, write: if isSuperAdmin();
+    match /dna_catalog/{id} {
+      allow read: if isSuperAdmin() || isCompanyStaff() || isRespondent();
+      allow create: if isSuperAdmin() || isCompanyStaff();
+      allow update: if isSuperAdmin() || isCompanyStaff();
+      allow delete: if isSuperAdmin()
+        || (isCompanyStaff() && resource.data.source == 'company');
     }
 
     match /admin_audit_logs/{id} {

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/constants/app_radii.dart';
+import 'package:talex_platform/core/utils/open_url.dart';
+import 'package:talex_platform/core/utils/website_uri.dart';
 import 'package:talex_platform/features/admin/domain/entities/admin_entities.dart';
 import 'package:talex_platform/l10n/app_localizations.dart';
 import 'package:talex_platform/l10n/l10n.dart';
@@ -44,6 +47,8 @@ class AdminLabels {
     ActivityKind.companyCreated => l10n.newCompany,
     ActivityKind.companyActivated => l10n.companyStatusActive,
     ActivityKind.processCreated => l10n.newProcess,
+    ActivityKind.vacancyCreated => l10n.createVacancy,
+    ActivityKind.respondentInvited => l10n.createRespondent,
     ActivityKind.evaluationStarted => l10n.evaluationStarted,
     ActivityKind.evaluationCompleted => l10n.evaluationCompleted,
     ActivityKind.affinityDetected => l10n.adminAffinity,
@@ -84,32 +89,35 @@ class AdminPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final compact = MediaQuery.sizeOf(context).width < 720;
-    return Wrap(
-      alignment: WrapAlignment.spaceBetween,
-      runSpacing: 16,
-      crossAxisAlignment: WrapCrossAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: AppColors.ink,
-                fontSize: compact ? 32 : 42,
-                height: 1,
-                fontWeight: FontWeight.w700,
-                letterSpacing: -1.4,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              subtitle,
-              style: const TextStyle(color: AppColors.subtitle, fontSize: 16),
-            ),
-          ],
+        Text(
+          title,
+          style: TextStyle(
+            color: AppColors.ink,
+            fontSize: compact ? 32 : 40,
+            height: 1.1,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -1.2,
+          ),
         ),
-        Wrap(spacing: 12, runSpacing: 8, children: actions),
+        const SizedBox(height: 10),
+        Text(
+          subtitle,
+          style: const TextStyle(
+            color: AppColors.subtitle,
+            fontSize: 16,
+            height: 1.4,
+          ),
+        ),
+        if (actions.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Wrap(spacing: 12, runSpacing: 8, children: actions),
+          ),
+        ],
       ],
     );
   }
@@ -123,7 +131,7 @@ class AdminPanel extends StatelessWidget {
     decoration: BoxDecoration(
       color: Colors.white,
       border: Border.all(color: const Color(0xFFC9CBD1)),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: AppRadii.border,
     ),
     child: child,
   );
@@ -193,7 +201,7 @@ class AdminStatusChip extends StatelessWidget {
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
     decoration: BoxDecoration(
       color: const Color(0xFFF0EFFF),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: AppRadii.border,
     ),
     child: Text(
       label,
@@ -330,23 +338,25 @@ class AdminEntityCard extends StatelessWidget {
     required this.subtitle,
     required this.trailing,
     this.onTap,
+    this.action,
   });
   final String title, subtitle, trailing;
   final VoidCallback? onTap;
+  final Widget? action;
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.only(bottom: 12),
     child: Material(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: AppRadii.border,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: AppRadii.border,
         child: Container(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 20),
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFFD1D1D6)),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: AppRadii.border,
           ),
           child: Row(
             children: [
@@ -359,15 +369,16 @@ class AdminEntityCard extends StatelessWidget {
                       style: const TextStyle(
                         color: AppColors.ink,
                         fontWeight: FontWeight.w600,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(subtitle, style: const TextStyle(color: AppColors.subtitle)),
+                    const SizedBox(height: 6),
+                    Text(subtitle, style: const TextStyle(color: AppColors.subtitle, fontSize: 15)),
                   ],
                 ),
               ),
               AdminStatusChip(trailing),
+              ?action,
               if (onTap != null) const Icon(Icons.chevron_right, color: AppColors.accent),
             ],
           ),
@@ -375,4 +386,109 @@ class AdminEntityCard extends StatelessWidget {
       ),
     ),
   );
+}
+
+class CompanyLogoView extends StatelessWidget {
+  const CompanyLogoView({super.key, this.url, this.size = 72});
+  final String? url;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final src = url?.trim() ?? '';
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: const Color(0xFFD1D1D6)),
+        borderRadius: AppRadii.border,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: src.isEmpty
+          ? Icon(Icons.apartment_outlined, color: AppColors.muted, size: size * 0.4)
+          : Image.network(
+              src,
+              fit: BoxFit.contain,
+              errorBuilder: (_, _, _) =>
+                  Icon(Icons.apartment_outlined, color: AppColors.muted, size: size * 0.4),
+            ),
+    );
+  }
+}
+
+class CompanyIdentityCard extends StatelessWidget {
+  const CompanyIdentityCard({super.key, required this.company});
+  final Company company;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final website = websiteUri(company.website);
+    final location = [
+      company.city,
+      company.region,
+      company.country,
+    ].whereType<String>().where((item) => item.trim().isNotEmpty).join(' · ');
+    final description = company.description?.trim() ?? '';
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: const Color(0xFFD1D1D6)),
+        borderRadius: AppRadii.border,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CompanyLogoView(url: company.logoUrl, size: 88),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.companyProfile,
+                  style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  company.name,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.ink,
+                  ),
+                ),
+                if (location.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(location, style: const TextStyle(color: AppColors.subtitle)),
+                ],
+                if (description.isNotEmpty) ...[
+                  const SizedBox(height: 10),
+                  Text(
+                    description,
+                    style: const TextStyle(height: 1.45, color: AppColors.ink),
+                  ),
+                ],
+                if (website != null) ...[
+                  const SizedBox(height: 12),
+                  TextButton.icon(
+                    onPressed: () => openExternalUrl(website.toString()),
+                    icon: const Icon(Icons.open_in_new, size: 18),
+                    label: Text(l10n.visitWebsite),
+                  ),
+                  Text(
+                    website.toString(),
+                    style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

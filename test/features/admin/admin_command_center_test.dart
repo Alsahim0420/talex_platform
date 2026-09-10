@@ -69,4 +69,59 @@ void main() {
       expect(data.metrics.activeCompanies, 1);
     });
   });
+
+  test('archiving hides a company from the default list without deleting it', () async {
+    final source = InMemoryAdminDataSource();
+    final repository = AdminRepositoryImpl(source);
+    await repository.createCompany(
+      name: 'Empresa de prueba',
+      status: CompanyStatus.onboarding,
+    );
+    final created = source.companies.single;
+    await repository.applyCompanyLifecycle(
+      id: created.id,
+      action: CompanyLifecycleAction.archive,
+    );
+    final visible = await repository.getCompanies();
+    visible.fold((failure) => fail(failure.message), (items) {
+      expect(items, isEmpty);
+    });
+    final archived = await repository.getCompanies(archivedOnly: true);
+    archived.fold((failure) => fail(failure.message), (items) {
+      expect(items, hasLength(1));
+      expect(items.single.name, 'Empresa de prueba');
+      expect(items.single.archived, isTrue);
+    });
+    expect(source.companies, hasLength(1));
+    final dashboard = await repository.getDashboard();
+    dashboard.fold((failure) => fail(failure.message), (data) {
+      expect(data.metrics.totalCompanies, 0);
+    });
+  });
+
+  test('superadmin can update a company name and website', () async {
+    final source = InMemoryAdminDataSource();
+    final repository = AdminRepositoryImpl(source);
+    await repository.createCompany(
+      name: 'Empresa de prueba',
+      status: CompanyStatus.onboarding,
+    );
+    final created = source.companies.single;
+    await repository.updateCompany(
+      company: Company(
+        id: created.id,
+        name: 'Empresa editada',
+        status: CompanyStatus.active,
+        createdAt: created.createdAt,
+        website: 'talex.com.co',
+        description: 'Nueva descripción',
+      ),
+    );
+    final detail = await repository.getCompany(created.id);
+    detail.fold((failure) => fail(failure.message), (item) {
+      expect(item.company.name, 'Empresa editada');
+      expect(item.company.website, 'talex.com.co');
+      expect(item.company.status, CompanyStatus.active);
+    });
+  });
 }

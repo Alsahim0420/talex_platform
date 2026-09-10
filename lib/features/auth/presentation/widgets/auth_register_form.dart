@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/constants/app_radii.dart';
 import 'package:talex_platform/features/auth/presentation/widgets/auth_field.dart';
 import 'package:talex_platform/features/auth/presentation/widgets/auth_social_button.dart';
 
@@ -9,8 +10,9 @@ class AuthRegisterForm extends StatelessWidget {
     required this.formKey,
     required this.nameController,
     required this.emailController,
-    required this.companyController,
+    required this.pinController,
     required this.passwordController,
+    required this.confirmPasswordController,
     required this.onSubmit,
     required this.onLogin,
     this.onGoogleSignUp,
@@ -22,9 +24,10 @@ class AuthRegisterForm extends StatelessWidget {
     this.nameHint = 'Jane Doe',
     this.emailLabel = 'Email address',
     this.emailHint = 'jane@company.com',
-    this.companyLabel = 'Company Name',
-    this.companyHint = 'Acme Corp',
+    this.pinLabel = 'Invitation PIN',
+    this.pinHint = '6-digit PIN',
     this.passwordLabel = 'Password',
+    this.confirmPasswordLabel = 'Confirm password',
     this.submitText = 'Sign up',
     this.dividerText = 'Or continue with',
     this.googleSignUpText = 'Sign up with Google',
@@ -33,12 +36,14 @@ class AuthRegisterForm extends StatelessWidget {
     this.requiredError = 'This field is required',
     this.emailError = 'Enter a valid email',
     this.passwordError = 'At least 6 characters',
+    this.passwordMismatchError = 'The passwords do not match.',
   });
   final GlobalKey<FormState> formKey;
   final TextEditingController nameController,
       emailController,
-      companyController,
-      passwordController;
+      pinController,
+      passwordController,
+      confirmPasswordController;
   final VoidCallback onSubmit, onLogin;
   final VoidCallback? onGoogleSignUp;
   final bool isLoading, isGoogleLoading;
@@ -48,9 +53,10 @@ class AuthRegisterForm extends StatelessWidget {
       nameHint,
       emailLabel,
       emailHint,
-      companyLabel,
-      companyHint,
+      pinLabel,
+      pinHint,
       passwordLabel,
+      confirmPasswordLabel,
       submitText,
       dividerText,
       googleSignUpText,
@@ -58,7 +64,8 @@ class AuthRegisterForm extends StatelessWidget {
       loginText,
       requiredError,
       emailError,
-      passwordError;
+      passwordError,
+      passwordMismatchError;
 
   @override
   Widget build(BuildContext context) => Form(
@@ -93,10 +100,12 @@ class AuthRegisterForm extends StatelessWidget {
         ),
         const SizedBox(height: 22),
         _field(
-          companyLabel,
-          companyHint,
-          companyController,
-          validator: _required,
+          pinLabel,
+          pinHint,
+          pinController,
+          keyboardType: TextInputType.number,
+          validator: (value) =>
+              (value?.trim().length ?? 0) != 6 ? pinHint : null,
         ),
         const SizedBox(height: 22),
         _field(
@@ -105,6 +114,15 @@ class AuthRegisterForm extends StatelessWidget {
           passwordController,
           obscureText: true,
           validator: (value) => (value?.length ?? 0) < 6 ? passwordError : null,
+        ),
+        const SizedBox(height: 22),
+        _field(
+          confirmPasswordLabel,
+          '••••••••',
+          confirmPasswordController,
+          obscureText: true,
+          validator: (value) =>
+              value != passwordController.text ? passwordMismatchError : null,
           onSubmitted: (_) => onSubmit(),
         ),
         const SizedBox(height: 32),
@@ -115,9 +133,7 @@ class AuthRegisterForm extends StatelessWidget {
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.primaryButton,
               disabledBackgroundColor: AppColors.primaryButton,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
+              shape: AppRadii.shape,
             ),
             child: isLoading
                 ? const SizedBox.square(

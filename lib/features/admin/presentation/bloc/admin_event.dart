@@ -18,11 +18,16 @@ class AdminDashboardRequested extends AdminEvent {
 }
 
 class AdminCompaniesRequested extends AdminEvent {
-  const AdminCompaniesRequested({this.query = '', this.status});
+  const AdminCompaniesRequested({
+    this.query = '',
+    this.status,
+    this.archivedOnly = false,
+  });
   final String query;
   final CompanyStatus? status;
+  final bool archivedOnly;
   @override
-  List<Object?> get props => [query, status];
+  List<Object?> get props => [query, status, archivedOnly];
 }
 
 class AdminCompanyOpened extends AdminEvent {
@@ -34,6 +39,53 @@ class AdminCompanyOpened extends AdminEvent {
 
 class AdminCompanyClosed extends AdminEvent {
   const AdminCompanyClosed();
+}
+
+class AdminCompanyUpdated extends AdminEvent {
+  const AdminCompanyUpdated({
+    required this.company,
+    this.logoBytes,
+    this.logoContentType,
+  });
+  final Company company;
+  final List<int>? logoBytes;
+  final String? logoContentType;
+  @override
+  List<Object?> get props => [company, logoContentType, logoBytes?.length];
+}
+
+class AdminPersonOpened extends AdminEvent {
+  const AdminPersonOpened(this.person);
+  final PersonEvaluation person;
+  @override
+  List<Object?> get props => [person];
+}
+
+class AdminPersonClosed extends AdminEvent {
+  const AdminPersonClosed();
+}
+
+class AdminPersonUpdated extends AdminEvent {
+  const AdminPersonUpdated({
+    required this.id,
+    required this.displayName,
+    required this.status,
+  });
+  final String id, displayName;
+  final EvaluationStatus status;
+  @override
+  List<Object?> get props => [id, displayName, status];
+}
+
+class AdminProcessOpened extends AdminEvent {
+  const AdminProcessOpened(this.process);
+  final TalentProcess process;
+  @override
+  List<Object?> get props => [process];
+}
+
+class AdminProcessClosed extends AdminEvent {
+  const AdminProcessClosed();
 }
 
 class AdminProcessesRequested extends AdminEvent {
@@ -170,4 +222,15 @@ class AdminUserRoleUpdated extends AdminEvent {
   final String userId, role;
   @override
   List<Object?> get props => [userId, role];
+}
+
+class AdminCompanyLifecycleRequested extends AdminEvent {
+  const AdminCompanyLifecycleRequested({
+    required this.id,
+    required this.action,
+  });
+  final String id;
+  final CompanyLifecycleAction action;
+  @override
+  List<Object?> get props => [id, action];
 }

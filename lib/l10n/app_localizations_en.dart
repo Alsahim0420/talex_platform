@@ -108,10 +108,16 @@ class AppLocalizationsEn extends AppLocalizations {
       '“TaleX transformed our selection process and helped our team make better decisions.”';
 
   @override
-  String get testimonialName => 'Sarah Jenkins';
+  String get testimonialName => 'Gabriel Ramirez';
 
   @override
-  String get testimonialRole => 'VP of Engineering, Nexus Dynamics';
+  String get testimonialRole => 'CEO, TaleX';
+
+  @override
+  String get testimonialNameSecondary => 'Pablo Melo';
+
+  @override
+  String get testimonialRoleSecondary => 'CTO, TaleX';
 
   @override
   String welcomeUser(String name) {
@@ -363,6 +369,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timezone => 'Time zone';
 
   @override
+  String get timezoneBogota => 'Bogotá (UTC-5)';
+
+  @override
   String get notificationsTitle => 'Notifications';
 
   @override
@@ -600,6 +609,62 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filterAll => 'All';
 
   @override
+  String get filterArchived => 'Archived';
+
+  @override
+  String get companyActions => 'Company actions';
+
+  @override
+  String get disableCompany => 'Disable';
+
+  @override
+  String get enableCompany => 'Re-enable';
+
+  @override
+  String get archiveCompany => 'Hide from list';
+
+  @override
+  String get restoreCompany => 'Restore to list';
+
+  @override
+  String get disableCompanyTitle => 'Disable company';
+
+  @override
+  String get disableCompanyBody =>
+      'The company will stop operating in TaleX. Data is kept. Confirm?';
+
+  @override
+  String get enableCompanyTitle => 'Re-enable company';
+
+  @override
+  String get enableCompanyBody =>
+      'The company will be active again and its team will be able to sign in. Confirm?';
+
+  @override
+  String get archiveCompanyTitle => 'Hide from list';
+
+  @override
+  String get archiveCompanyBody =>
+      'Nothing is deleted. The company leaves the main list and moves to Archived. Confirm?';
+
+  @override
+  String get restoreCompanyTitle => 'Restore company';
+
+  @override
+  String get restoreCompanyBody =>
+      'The company will show up in the main list again. Confirm?';
+
+  @override
+  String get confirmAction => 'Confirm';
+
+  @override
+  String get noArchivedCompanies => 'There are no archived companies.';
+
+  @override
+  String get errorCompanyDisabled =>
+      'This company is disabled. A SuperAdmin can re-enable it.';
+
+  @override
   String get lastActivity => 'Last activity';
 
   @override
@@ -610,6 +675,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backToCompanies => 'Back to companies';
+
+  @override
+  String get backToPeople => 'Back to people';
+
+  @override
+  String get backToProcesses => 'Back to processes';
+
+  @override
+  String get presentedPeople => 'Already completed';
+
+  @override
+  String get pendingPeople => 'Pending';
+
+  @override
+  String get visitWebsite => 'Visit website';
+
+  @override
+  String get editCompany => 'Edit company';
 
   @override
   String get companyOverview => 'Overview';
@@ -756,4 +839,953 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get activityByDay => 'Activity by day';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get languageDescription =>
+      'Choose the interface language. The change applies immediately.';
+
+  @override
+  String get spanish => 'Español';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get vacancy => 'Vacancy';
+
+  @override
+  String get createVacancy => 'Create vacancy';
+
+  @override
+  String get createRespondent => 'Create respondent';
+
+  @override
+  String get activationPin => 'Activation PIN';
+
+  @override
+  String pinGenerated(String pin) {
+    return 'Company created. First-access PIN: $pin.';
+  }
+
+  @override
+  String invitePinReady(String pin) {
+    return 'First-access PIN: $pin.';
+  }
+
+  @override
+  String get nit => 'Tax ID';
+
+  @override
+  String get sector => 'Sector';
+
+  @override
+  String get city => 'City';
+
+  @override
+  String get website => 'Website';
+
+  @override
+  String get logoUrl => 'Logo URL';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get companyDna => 'Company DNA';
+
+  @override
+  String get companyValues => 'Values';
+
+  @override
+  String get companyCulture => 'Culture';
+
+  @override
+  String get standoutPeople => 'What stands out about your people?';
+
+  @override
+  String get skipCompanyDna =>
+      'Skip company DNA for now. The organization can complete it later.';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get department => 'Department';
+
+  @override
+  String get divisionState => 'State';
+
+  @override
+  String get divisionCommunity => 'Autonomous community';
+
+  @override
+  String get divisionRegion => 'State / region';
+
+  @override
+  String get cityMunicipality => 'City / municipality';
+
+  @override
+  String get searchLocation => 'Type to search...';
+
+  @override
+  String get searchCountry => 'Search country...';
+
+  @override
+  String get searchDivision => 'Search division...';
+
+  @override
+  String get searchCity => 'Search city...';
+
+  @override
+  String get locationLoadError => 'We could not load locations. Try again.';
+
+  @override
+  String get locationNoResults => 'No results for that search.';
+
+  @override
+  String get locationSelectCountryFirst => 'Select a country first';
+
+  @override
+  String get provisionStepCompany => 'Company';
+
+  @override
+  String get provisionStepDna => 'DNA';
+
+  @override
+  String get provisionStepInvite => 'Invite';
+
+  @override
+  String get pasteLogoUrl => 'Paste logo URL';
+
+  @override
+  String get selectLogoFile => 'Select file';
+
+  @override
+  String get logoPreview => 'Logo preview';
+
+  @override
+  String get sectorFinance => 'Finance';
+
+  @override
+  String get sectorHealth => 'Healthcare';
+
+  @override
+  String get sectorEducation => 'Education';
+
+  @override
+  String get sectorManufacturing => 'Manufacturing';
+
+  @override
+  String get sectorRetail => 'Retail';
+
+  @override
+  String get sectorServices => 'Services';
+
+  @override
+  String get sectorConstruction => 'Construction';
+
+  @override
+  String get sectorEnergy => 'Energy';
+
+  @override
+  String get sectorAgribusiness => 'Agribusiness';
+
+  @override
+  String get sectorGovernment => 'Government';
+
+  @override
+  String get sectorOther => 'Other';
+
+  @override
+  String get size1to10 => '1–10 employees';
+
+  @override
+  String get size11to50 => '11–50 employees';
+
+  @override
+  String get size201to500 => '201–500 employees';
+
+  @override
+  String get size500plus => 'More than 500 employees';
+
+  @override
+  String get emailSent => 'The invitation email was sent.';
+
+  @override
+  String get errorEmailNotConfigured =>
+      'The company was created, but SMTP is not configured yet. The PIN is shown on screen.';
+
+  @override
+  String get errorEmailSendFailed =>
+      'The company was created, but the email could not be sent. Check spam or SMTP settings. The PIN is shown on screen.';
+
+  @override
+  String get completeCompanyDnaTitle => 'Complete the company DNA';
+
+  @override
+  String get completeCompanyDnaSubtitle =>
+      'Before entering the workspace, record the values, culture, and what stands out about the people.';
+
+  @override
+  String get reviewCompanyDnaTitle => 'Verify the company DNA';
+
+  @override
+  String get reviewCompanyDnaSubtitle =>
+      'Check that these details describe the organization well. If something is off, correct it before continuing.';
+
+  @override
+  String get confirmCompanyDna => 'Confirm and continue';
+
+  @override
+  String get dnaRequired =>
+      'Fill in values, culture, and what stands out about the people.';
+
+  @override
+  String get soughtCharacteristics => 'Sought characteristics';
+
+  @override
+  String get firstName => 'First name';
+
+  @override
+  String get lastName => 'Last name';
+
+  @override
+  String get activateAccount => 'Activate account';
+
+  @override
+  String get activateSubtitle =>
+      'Use the invited email and the 6-digit PIN sent to that inbox. The PIN expires after 15 minutes.';
+
+  @override
+  String get activatePinHint =>
+      '6 digits · valid for 15 minutes. Use the PIN from the latest email, not from an earlier test.';
+
+  @override
+  String get mustChangePasswordTitle => 'Create your password';
+
+  @override
+  String get mustChangePasswordSubtitle =>
+      'This is the password you will use from now on to sign in to TaleX.';
+
+  @override
+  String get createPassword => 'New password';
+
+  @override
+  String get confirmPassword => 'Confirm password';
+
+  @override
+  String get passwordsDoNotMatch => 'The passwords do not match.';
+
+  @override
+  String get documentNumber => 'Document number';
+
+  @override
+  String get activeVacancies => 'Active vacancies';
+
+  @override
+  String get closedVacancies => 'Closed vacancies';
+
+  @override
+  String get pendingAssessments => 'Pending assessments';
+
+  @override
+  String get completedAssessments => 'Completed assessments';
+
+  @override
+  String get noVacancies => 'You don\'t have any vacancies yet.';
+
+  @override
+  String get noCandidates => 'There are no respondents in this process yet.';
+
+  @override
+  String get noTeamMembers => 'There is no one on the team yet.';
+
+  @override
+  String get affinityWithCompany => 'Affinity with the company';
+
+  @override
+  String get affinityWithVacancy => 'Affinity with the vacancy';
+
+  @override
+  String get likertStronglyDisagree => 'Strongly disagree';
+
+  @override
+  String get likertDisagree => 'Disagree';
+
+  @override
+  String get likertNeutral => 'Neither agree nor disagree';
+
+  @override
+  String get likertAgree => 'Agree';
+
+  @override
+  String get likertStronglyAgree => 'Strongly agree';
+
+  @override
+  String questionProgress(int current, int total) {
+    return 'Question $current of $total';
+  }
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get goBack => 'Back';
+
+  @override
+  String get finish => 'Finish';
+
+  @override
+  String get basicResult => 'Basic result';
+
+  @override
+  String get fullResultLocked =>
+      'The full result will be available when access is enabled.';
+
+  @override
+  String get compare => 'Compare';
+
+  @override
+  String get characteristic => 'Characteristic';
+
+  @override
+  String get team => 'Team';
+
+  @override
+  String get inviteRecruiter => 'Invite to the team';
+
+  @override
+  String get inviteTeamSubtitle =>
+      'The person will receive a 6-digit PIN by email. It expires after 15 minutes.';
+
+  @override
+  String get teamRole => 'Role in the company';
+
+  @override
+  String get teamRoleCompanyAdmin => 'Company administration';
+
+  @override
+  String get teamRoleCompanyLead => 'Leadership';
+
+  @override
+  String get teamRolePeopleOps => 'People';
+
+  @override
+  String get teamRoleRecruiter => 'Recruiting';
+
+  @override
+  String get teamRoleHiringManager => 'Hiring manager';
+
+  @override
+  String get teamRoleHint =>
+      'Leadership and administration can complete the company DNA and invite the rest of the team. Recruiting and hiring managers work on vacancies and candidates.';
+
+  @override
+  String get vacanciesSubtitle =>
+      'Create vacancies and add context for the process. Vacancy location does not change the company profile.';
+
+  @override
+  String get teamSubtitle => 'People with TaleX access in your company.';
+
+  @override
+  String get workModeOnsite => 'On-site';
+
+  @override
+  String get workModeRemote => 'Remote';
+
+  @override
+  String get workModeHybrid => 'Hybrid';
+
+  @override
+  String get workModeHint =>
+      'If remote, city is optional. If on-site or hybrid, start from the company location and change it only for this vacancy.';
+
+  @override
+  String get vacancyCityOptional => 'Reference city (optional)';
+
+  @override
+  String get seniorityHint =>
+      'Expected experience for the role. It is not used in affinity scoring.';
+
+  @override
+  String get seniorityJunior => 'Entry-level';
+
+  @override
+  String get seniorityMid => 'Intermediate';
+
+  @override
+  String get senioritySenior => 'Experienced';
+
+  @override
+  String get seniorityLead => 'Leadership';
+
+  @override
+  String get contractIndefinite => 'Open-ended';
+
+  @override
+  String get contractFixed => 'Fixed term';
+
+  @override
+  String get contractServices => 'Independent contractor';
+
+  @override
+  String get contractInternship => 'Internship';
+
+  @override
+  String get contractTemporary => 'Temporary';
+
+  @override
+  String get areaPeople => 'People and culture';
+
+  @override
+  String get areaFinanceOps => 'Finance';
+
+  @override
+  String get areaOperations => 'Operations';
+
+  @override
+  String get areaCommercial => 'Sales';
+
+  @override
+  String get areaCustomer => 'Customer care';
+
+  @override
+  String get areaAdmin => 'Administration';
+
+  @override
+  String get areaEngineering => 'Engineering';
+
+  @override
+  String get areaProduct => 'Product';
+
+  @override
+  String get areaData => 'Data and analytics';
+
+  @override
+  String get areaSupport => 'Support';
+
+  @override
+  String get areaRisk => 'Risk and compliance';
+
+  @override
+  String get areaAccounting => 'Accounting';
+
+  @override
+  String get areaClinical => 'Clinical';
+
+  @override
+  String get areaCare => 'Care';
+
+  @override
+  String get areaAcademic => 'Academic';
+
+  @override
+  String get areaTraining => 'Training';
+
+  @override
+  String get areaProduction => 'Production';
+
+  @override
+  String get areaQuality => 'Quality';
+
+  @override
+  String get areaMaintenance => 'Maintenance';
+
+  @override
+  String get areaStore => 'Store';
+
+  @override
+  String get areaLogistics => 'Logistics';
+
+  @override
+  String get areaProjects => 'Projects';
+
+  @override
+  String get areaField => 'Field';
+
+  @override
+  String get areaPublicService => 'Public service';
+
+  @override
+  String get vacancyAreaHint =>
+      'Areas follow the company sector. Pick the closest match for the role.';
+
+  @override
+  String get invitationUsed => 'Activated';
+
+  @override
+  String get invitationPending => 'Invitation pending';
+
+  @override
+  String get statusInReview => 'In review';
+
+  @override
+  String get statusShortlisted => 'Shortlisted';
+
+  @override
+  String get statusInterview => 'Interview';
+
+  @override
+  String get statusFinalist => 'Finalist';
+
+  @override
+  String get statusHired => 'Hired';
+
+  @override
+  String get statusRejected => 'Not selected';
+
+  @override
+  String get vacancyName => 'Vacancy name';
+
+  @override
+  String get vacancyArea => 'Area';
+
+  @override
+  String get workMode => 'Work mode';
+
+  @override
+  String get contractType => 'Contract type';
+
+  @override
+  String get seniority => 'Seniority';
+
+  @override
+  String get roleProfile => 'Role profile';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get companyProfile => 'Company profile';
+
+  @override
+  String get vacancyInsights => 'Vacancy reading';
+
+  @override
+  String get vacancyInsightsEmpty =>
+      'There is not enough information yet to show a reading for this vacancy.';
+
+  @override
+  String vacancyInsightsCounts(int invited, int started, int completed) {
+    return '$invited invited · $started in progress · $completed completed the assessment.';
+  }
+
+  @override
+  String get dnaSelectSeveral =>
+      'You can choose several options. If you add one that was not in the list, you can also remove it.';
+
+  @override
+  String get removeCustomOption => 'Remove this option';
+
+  @override
+  String get results => 'Results';
+
+  @override
+  String get resultsSubtitle =>
+      'Affinity reading for people who already completed an assessment. Detail will appear here when the methodology fills the profile.';
+
+  @override
+  String get compareHint =>
+      'The checkbox on the left lets you pick two or more people and use Compare. It does not change process status.';
+
+  @override
+  String get affinityCompany => 'Company';
+
+  @override
+  String get affinityVacancy => 'Vacancy';
+
+  @override
+  String get affinityCompanyHighHint =>
+      'There is a strong match with the culture and way of working described by the company. Mock copy: the real reading of evaluated dimensions will appear here later.';
+
+  @override
+  String get affinityCompanyMediumHint =>
+      'There is a partial match with the company DNA. Mock copy: later this will say which dimensions align.';
+
+  @override
+  String get affinityCompanyLowHint =>
+      'There is a lower match with the culture described by the company. Mock copy: the real profile will explain the distance.';
+
+  @override
+  String get affinityVacancyHighHint =>
+      'This person\'s profile is close to what the vacancy is looking for. Mock copy: matching role traits will appear here later.';
+
+  @override
+  String get affinityVacancyMediumHint =>
+      'There is a mid-level match with the vacancy profile. Mock copy: the real profile will show which parts of the role fit better.';
+
+  @override
+  String get affinityVacancyLowHint =>
+      'There is a lower match with the profile sought for this vacancy. Mock copy: this is not a judgment of the person, only of fit for this role.';
+
+  @override
+  String get affinityUnknownHint =>
+      'There is no complete assessment yet, so affinity is not classified.';
+
+  @override
+  String get affinityMockNote =>
+      'This explanation is a placeholder. The final reading will come from TaleX methodology.';
+
+  @override
+  String get continueAction => 'Continue';
+
+  @override
+  String respondentHello(String name) {
+    return 'Hi, $name';
+  }
+
+  @override
+  String get respondentHomeTitle => 'Your affinity assessment';
+
+  @override
+  String get respondentHomeSubtitle =>
+      'TaleX does not decide who gets hired. It measures how close you are to the profile the company described for this vacancy.';
+
+  @override
+  String get respondentDuration =>
+      'Set aside about 40 minutes in a quiet place. You can go at your own pace.';
+
+  @override
+  String get respondentLikertHint =>
+      'Every question is agree or disagree. There are no right or wrong answers.';
+
+  @override
+  String get startAssessment => 'Start assessment';
+
+  @override
+  String get assignedVacancy => 'Assigned vacancy';
+
+  @override
+  String get viewFullSummary => 'View orientative summary';
+
+  @override
+  String get hideFullSummary => 'Hide summary';
+
+  @override
+  String get fullSummaryTitle => 'Orientative summary';
+
+  @override
+  String get fullSummaryIntro =>
+      'This screen is a mock of the reading. The dimensions below are examples until TaleX delivers the real detail.';
+
+  @override
+  String get dimensionCommunication => 'Communication';
+
+  @override
+  String get dimensionAdaptability => 'Adaptability';
+
+  @override
+  String get dimensionCollaboration => 'Collaboration';
+
+  @override
+  String get dimensionInitiative => 'Initiative';
+
+  @override
+  String get veryHigh => 'Very high';
+
+  @override
+  String get resultThanks =>
+      'Thank you for completing the assessment. The company will be able to see your affinity with its culture and with this vacancy.';
+
+  @override
+  String get newAssessment => 'New assessment';
+
+  @override
+  String get pendingAssessmentNotification => 'You have a pending assessment.';
+
+  @override
+  String get assessmentCompletedNotification => 'The assessment was completed.';
+
+  @override
+  String get newVacancyNotification => 'A new vacancy was created.';
+
+  @override
+  String get newActivityNotification => 'There is new activity in TaleX.';
+
+  @override
+  String get errorNeedSignIn => 'You need to sign in.';
+
+  @override
+  String get errorNeedAuthEmail => 'You need an authenticated email.';
+
+  @override
+  String get errorPermissionDenied =>
+      'You don\'t have permission for this operation.';
+
+  @override
+  String get errorUnexpected =>
+      'The operation could not be completed. Please try again.';
+
+  @override
+  String get errorCompanyNotFound => 'The company was not found.';
+
+  @override
+  String get errorRespondentExists =>
+      'A respondent with this email already exists for this vacancy.';
+
+  @override
+  String get errorInviteMissing => 'There is no invitation for this email.';
+
+  @override
+  String get errorInviteUsed => 'This invitation has already been used.';
+
+  @override
+  String get errorInvalidPin => 'The PIN is not valid.';
+
+  @override
+  String get errorPinExpired =>
+      'The PIN expired. Ask for a new invitation; it lasts 15 minutes.';
+
+  @override
+  String get errorDocumentMismatch =>
+      'The document does not match the invitation.';
+
+  @override
+  String get errorAssessmentMissing => 'There is no assessment assigned.';
+
+  @override
+  String get errorDocumentPasswordTooShort =>
+      'The document number must have at least 6 characters to be used as the password.';
+
+  @override
+  String get registerPinHint => '6-digit PIN from the email';
+
+  @override
+  String get googlePinTitle => 'Enter the PIN from your email';
+
+  @override
+  String get googlePinSubtitle =>
+      'Your Google account is ready. Confirm the 6-digit PIN to link the invitation.';
+
+  @override
+  String addCustomOption(String value) {
+    return 'Add \"$value\"';
+  }
+
+  @override
+  String get searchOrAdd => 'Type to search or add...';
+
+  @override
+  String get customAreaLabel => 'Area name';
+
+  @override
+  String get areaOther => 'Other';
+
+  @override
+  String get dnaValueIntegrity => 'Integrity';
+
+  @override
+  String get dnaValueRespect => 'Respect';
+
+  @override
+  String get dnaValueCollaboration => 'Collaboration';
+
+  @override
+  String get dnaValueInnovation => 'Innovation';
+
+  @override
+  String get dnaValueExcellence => 'Excellence';
+
+  @override
+  String get dnaValueEmpathy => 'Empathy';
+
+  @override
+  String get dnaCultureClose => 'Close and human';
+
+  @override
+  String get dnaCultureFormal => 'Formal and structured';
+
+  @override
+  String get dnaCultureLearning => 'Continuous learning';
+
+  @override
+  String get dnaCultureAgile => 'Agile';
+
+  @override
+  String get dnaCultureAutonomous => 'Autonomous';
+
+  @override
+  String get dnaStandoutOwnership => 'Ownership';
+
+  @override
+  String get dnaStandoutCommunication => 'Clear communication';
+
+  @override
+  String get dnaStandoutAdaptability => 'Adaptability';
+
+  @override
+  String get dnaStandoutInitiative => 'Initiative';
+
+  @override
+  String get dnaStandoutTeamwork => 'Teamwork';
+
+  @override
+  String get assessmentKindLabel => 'This is your assessment';
+
+  @override
+  String get assessmentKindAffinity => 'Affinity';
+
+  @override
+  String get assessmentKindFit => 'Fit';
+
+  @override
+  String get sentByCompany => 'Sent by';
+
+  @override
+  String respondentQuestionCount(int count) {
+    return 'There are $count questions in total.';
+  }
+
+  @override
+  String get assessmentFinishedTitle => 'Well done, you finished';
+
+  @override
+  String get downloadPdf => 'Download PDF report';
+
+  @override
+  String get candidateResultTitle => 'Results report';
+
+  @override
+  String get backToResults => 'Back';
+
+  @override
+  String get candidatesSubtitle =>
+      'People invited to assess affinity with your vacancies.';
+
+  @override
+  String get candidateProcessStatus => 'Process status';
+
+  @override
+  String get respondentInviteHint =>
+      'The person will receive a 6-digit PIN by email. It expires after 15 minutes. Then they register with their password or Google and that PIN.';
+
+  @override
+  String get firstAccessCompany => 'First access';
+
+  @override
+  String get assessmentSignInHint =>
+      'If you were invited to an assessment, create your account and enter the PIN from the email. If you use Google, you will enter the PIN next.';
+
+  @override
+  String get respondentInviteSent =>
+      'Invitation ready. The respondent receives a PIN by email.';
+
+  @override
+  String get assessmentC1 => 'I identify with the way this organization works.';
+
+  @override
+  String get assessmentC2 =>
+      'The described environment matches how I like to collaborate.';
+
+  @override
+  String get assessmentC3 =>
+      'The company\'s way of making decisions feels clear and coherent to me.';
+
+  @override
+  String get assessmentC4 =>
+      'I value the workplace described by the organization.';
+
+  @override
+  String get assessmentC5 =>
+      'The people who stand out here resemble how I like to contribute.';
+
+  @override
+  String get assessmentV1 =>
+      'The described role aligns with the kind of work I want to do.';
+
+  @override
+  String get assessmentV2 =>
+      'The vacancy responsibilities match how I like to contribute.';
+
+  @override
+  String get assessmentV3 =>
+      'The environment of this role would allow me to perform naturally.';
+
+  @override
+  String get assessmentV4 =>
+      'The characteristics sought for the role match mine.';
+
+  @override
+  String get assessmentV5 =>
+      'This vacancy is a context where I see myself contributing over time.';
+
+  @override
+  String get recoverPasswordTitle => 'Recover access';
+
+  @override
+  String get recoverPasswordSubtitle =>
+      'Enter the email of your TaleX account. We will send a 6-digit PIN so you can continue.';
+
+  @override
+  String get recoverContinue => 'Send PIN';
+
+  @override
+  String get recoverPinTitle => 'Check your email';
+
+  @override
+  String get recoverPinSubtitle =>
+      'We sent you a PIN. Enter it to update your password.';
+
+  @override
+  String get recoverPinHint =>
+      '6 digits · valid for 15 minutes. Check spam too. If you did not request this, ignore the message.';
+
+  @override
+  String get recoverPinSent => 'We sent a PIN to your email.';
+
+  @override
+  String get recoverVerifyPin => 'Verify PIN';
+
+  @override
+  String get recoverResendPin => 'Resend PIN';
+
+  @override
+  String get recoverUpdatePassword => 'Update password';
+
+  @override
+  String get recoverSuccessTitle => 'Password updated';
+
+  @override
+  String get recoverSuccessBody =>
+      'You can now sign in to TaleX with your new password.';
+
+  @override
+  String get errorResetCooldown =>
+      'Wait a minute before requesting another PIN.';
+
+  @override
+  String get errorResetTooManyAttempts =>
+      'Too many attempts. Wait a moment and try again.';
+
+  @override
+  String dashboardReadyToReview(int count) {
+    return '$count assessments ready to review';
+  }
+
+  @override
+  String dashboardPendingToStart(int count) {
+    return '$count people have not started the assessment yet';
+  }
+
+  @override
+  String dashboardStalledAssessments(int count) {
+    return '$count assessments stalled for more than 24 h';
+  }
+
+  @override
+  String get dashboardRecentEmpty =>
+      'There is no respondent activity in this workspace yet.';
+
+  @override
+  String get dashboardAlertsEmpty => 'There are no pending alerts right now.';
+
+  @override
+  String get errorAccountNotFound =>
+      'There is no TaleX account with this email. If you were invited, use First access with the PIN.';
 }
