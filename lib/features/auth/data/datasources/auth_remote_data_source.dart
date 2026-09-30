@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:talex_platform/core/auth/user_role.dart';
 import 'package:talex_platform/core/error/exceptions.dart';
 import 'package:talex_platform/features/auth/data/datasources/google_popup_monitor.dart';
 import 'package:talex_platform/features/auth/data/models/auth_user_model.dart';
@@ -20,6 +21,7 @@ abstract interface class AuthRemoteDataSource {
     String? companyName,
   });
   Future<void> signOut();
+  Future<void> discardCurrentUser();
   Future<void> sendPasswordResetEmail(String email);
 }
 
@@ -87,15 +89,112 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
     _ => 'No se pudo completar la operación. Inténtalo nuevamente.',
   };
 
-  AuthUserModel _mapUser(User? user) {
+  Future<AuthUserModel> _hydrate(User? user) async {
     if (user == null) {
       throw const ServerException('No se pudo obtener el usuario autenticado.');
+    }
+    Map<String, dynamic>? data;
+    try {
+      final snapshot = await _firestore.collection('users').doc(user.uid).get();
+      data = snapshot.data();
+      await _maybeElevateSuperAdmin(user, data);
+      await _linkCompanyInvite(user);
+      final refreshed = await _firestore.collection('users').doc(user.uid).get();
+      data = refreshed.data() ?? data;
+    } on FirebaseException {
+      data = null;
     }
     return AuthUserModel(
       id: user.uid,
       email: user.email ?? '',
-      displayName: user.displayName,
+      displayName: (data?['displayName'] as String?) ?? user.displayName,
+      companyName: data?['companyName'] as String?,
+      role: UserRoleX.parse(data?['role']),
+      companyId: data?['companyId'] as String?,
+      documentNumber: data?['documentNumber'] as String?,
+      mustChangePassword: data?['mustChangePassword'] == true,
+      mustReviewCompanyDna: data?['mustReviewCompanyDna'] == true,
     );
+  }
+
+  Future<void> _maybeElevateSuperAdmin(
+    User user,
+    Map<String, dynamic>? data,
+  ) async {
+    if (UserRoleX.parse(data?['role']) == UserRole.superadmin) return;
+    var listed = false;
+    try {
+      final config = await _firestore.collection('config').doc('superadmin').get();
+      final emails = (config.data()?['emails'] as List<dynamic>? ?? const [])
+          .map((item) => item.toString().trim().toLowerCase())
+          .toSet();
+      listed = emails.contains(user.email?.trim().toLowerCase());
+    } on FirebaseException {
+      listed = false;
+    }
+    if (!listed && !SuperAdminConfig.matches(user.email)) return;
+    if (!listed && !kDebugMode) return;
+    try {
+      await _firestore.collection('users').doc(user.uid).set({
+        'role': UserRole.superadmin.value,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    } on FirebaseException {
+      // La elevación exige config/superadmin.emails o un rol ya asignado.
+    }
+  }
+
+  Future<void> _linkCompanyInvite(User user) async {
+    final email = user.email?.trim().toLowerCase();
+    if (email == null || !email.contains('@')) return;
+    final userRef = _firestore.collection('users').doc(user.uid);
+    Map<String, dynamic>? data;
+    try {
+      data = (await userRef.get()).data();
+    } on FirebaseException {
+      return;
+    }
+    final current = UserRoleX.parse(data?['role']);
+    if (current == UserRole.superadmin || current == UserRole.respondent) {
+      return;
+    }
+    if (current.isCompanyStaffRole && (data?['companyId'] as String?)?.isNotEmpty == true) {
+      return;
+    }
+    DocumentSnapshot<Map<String, dynamic>> invite;
+    try {
+      invite = await _firestore.collection('activation_invites').doc(email).get();
+    } on FirebaseException {
+      return;
+    }
+    if (!invite.exists) return;
+    final payload = invite.data() ?? const <String, dynamic>{};
+    if (payload['kind'] == 'respondent') return;
+    final companyId = payload['companyId'] as String?;
+    final role = UserRoleX.parse(payload['role']);
+    if (companyId == null || companyId.isEmpty || !role.isCompanyStaffRole) {
+      return;
+    }
+    try {
+      final linked = <String, Object?>{
+        'uid': user.uid,
+        'email': email,
+        'role': role.value,
+        'companyId': companyId,
+        'displayName': [
+          payload['firstName'],
+          payload['lastName'],
+        ].whereType<String>().join(' ').trim(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+      if (data?['mustReviewCompanyDna'] == null &&
+          (role == UserRole.companyAdmin || role == UserRole.companyLead)) {
+        linked['mustReviewCompanyDna'] = true;
+      }
+      await userRef.set(linked, SetOptions(merge: true));
+    } on FirebaseException {
+      // Sin permiso se deja el perfil como está; el usuario puede registrarse con el PIN.
+    }
   }
 
   Future<void> _saveUserDocument(
@@ -121,7 +220,6 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       'emailVerified': user.emailVerified,
       'isAnonymous': user.isAnonymous,
       'isActive': true,
-      'role': 'user',
       'providers': providers,
       'primaryProvider':
           credential.credential?.providerId ??
@@ -136,6 +234,10 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       data['companyName'] = companyName.trim().isEmpty
           ? null
           : companyName.trim();
+    }
+    final existing = await _firestore.collection('users').doc(user.uid).get();
+    if (!existing.exists) {
+      data['role'] = UserRole.user.value;
     }
     await _firestore
         .collection('users')
@@ -178,7 +280,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
   @override
   Future<AuthUserModel?> getCurrentUser() async {
     final user = _firebaseAuth.currentUser;
-    return user == null ? null : _mapUser(user);
+    return user == null ? null : _hydrate(user);
   }
 
   @override
@@ -191,7 +293,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       password: password,
     );
     await _saveUserDocumentWithRetry(credential);
-    return _mapUser(credential.user);
+    return _hydrate(credential.user);
   });
 
   @override
@@ -205,7 +307,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
           () => _firebaseAuth.signInWithPopup(provider),
         );
         await _saveUserDocumentWithRetry(credential);
-        return _mapUser(credential.user);
+        return _hydrate(credential.user);
       }
 
       await (_googleInitialization ??= _googleSignIn.initialize());
@@ -218,7 +320,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
         credential,
       );
       await _saveUserDocumentWithRetry(userCredential);
-      return _mapUser(userCredential.user);
+      return _hydrate(userCredential.user);
     } on FirebaseAuthException catch (error) {
       if (error.code == 'popup-closed-by-user' ||
           error.code == 'cancelled-popup-request') {
@@ -278,13 +380,18 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       displayName: displayName?.trim(),
       companyName: companyName?.trim(),
     );
-    return _mapUser(_firebaseAuth.currentUser);
+    return _hydrate(_firebaseAuth.currentUser);
   });
 
   @override
   Future<void> signOut() => _handleFirebaseErrors(() async {
     await _firebaseAuth.signOut();
     if (!kIsWeb) await _googleSignIn.signOut();
+  });
+
+  @override
+  Future<void> discardCurrentUser() => _handleFirebaseErrors(() async {
+    await _firebaseAuth.currentUser?.delete();
   });
 
   @override
@@ -306,7 +413,13 @@ final class InMemoryAuthRemoteDataSource implements AuthRemoteDataSource {
     required String password,
   }) async {
     _validate(email, password);
-    return _currentUser = AuthUserModel(id: email, email: email);
+    return _currentUser = AuthUserModel(
+      id: email,
+      email: email,
+      role: SuperAdminConfig.matches(email)
+          ? UserRole.superadmin
+          : UserRole.user,
+    );
   }
 
   @override
@@ -327,11 +440,17 @@ final class InMemoryAuthRemoteDataSource implements AuthRemoteDataSource {
       email: email,
       displayName: displayName,
       companyName: companyName,
+      role: SuperAdminConfig.matches(email)
+          ? UserRole.superadmin
+          : UserRole.user,
     );
   }
 
   @override
   Future<void> signOut() async => _currentUser = null;
+
+  @override
+  Future<void> discardCurrentUser() async => _currentUser = null;
 
   @override
   Future<void> sendPasswordResetEmail(String email) async {

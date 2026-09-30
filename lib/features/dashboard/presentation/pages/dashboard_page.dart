@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/widgets/language_selector.dart';
 import 'package:talex_platform/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:talex_platform/features/dashboard/presentation/widgets/dashboard_widgets.dart';
 import 'package:talex_platform/l10n/l10n.dart';
@@ -77,14 +78,15 @@ class _DashboardPageState extends State<DashboardPage> {
             Expanded(
               child: Column(
                 children: [
-                  DashboardTopBar(
-                    searchHint: context.l10n.searchHint,
-                    signOutLabel: context.l10n.signOut,
-                    showMenu: !desktop,
-                    onMenu: () => _scaffoldKey.currentState?.openDrawer(),
-                    onSignOut: () => context.read<AuthBloc>().add(
-                      const AuthSignOutRequested(),
-                    ),
+                    DashboardTopBar(
+                      searchHint: context.l10n.searchHint,
+                      signOutLabel: context.l10n.signOut,
+                      showMenu: !desktop,
+                      onMenu: () => _scaffoldKey.currentState?.openDrawer(),
+                      onSignOut: () => context.read<AuthBloc>().add(
+                        const AuthSignOutRequested(),
+                      ),
+                      trailing: const LanguageSelector(compact: true),
                   ),
                   Expanded(
                     child: switch (_selectedIndex) {
@@ -155,8 +157,8 @@ class _DashboardContent extends StatelessWidget {
         viewAll: context.l10n.viewAll,
         candidates: [
           CandidateMatch(
-            'SJ',
-            'Sarah Jenkins',
+            'GR',
+            'Gabriel Ramirez',
             context.l10n.logicalReasoningAssessment,
             context.l10n.statusCompleted,
           ),
@@ -253,7 +255,7 @@ class _DashboardContent extends StatelessWidget {
               children: metrics
                   .map(
                     (card) =>
-                        SizedBox(width: cardWidth, height: 166, child: card),
+                        SizedBox(width: cardWidth, child: card),
                   )
                   .toList(),
             ),

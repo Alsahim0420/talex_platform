@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/constants/app_radii.dart';
 import 'package:talex_platform/core/di/injection.dart';
 import 'package:talex_platform/core/services/notification_service.dart';
 import 'package:talex_platform/features/invitations/domain/entities/invitation.dart';
@@ -113,7 +114,7 @@ class _EmptyInvitations extends StatelessWidget {
     decoration: BoxDecoration(
       color: Colors.white,
       border: Border.all(color: AppColors.softBorder),
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: AppRadii.border,
     ),
     child: Column(
       children: [
@@ -169,7 +170,7 @@ class _InvitationCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: const Color(0xFFD1D1D6)),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: AppRadii.border,
       ),
       child: Wrap(
         runSpacing: 16,
@@ -240,7 +241,7 @@ class _InvitationCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: const Color(0xFFF0EFFF),
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: AppRadii.border,
             ),
             child: Text(
               _status(context),
