@@ -16,5 +16,6 @@ abstract interface class AuthRepository {
     String? companyName,
   });
   Future<Either<Failure, Unit>> signOut();
+  Future<Either<Failure, Unit>> discardCurrentUser();
   Future<Either<Failure, Unit>> sendPasswordResetEmail(String email);
 }

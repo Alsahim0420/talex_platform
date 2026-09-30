@@ -57,6 +57,12 @@ final class AuthRepositoryImpl implements AuthRepository {
     await _source.signOut();
     return unit;
   });
+
+  @override
+  Future<Either<Failure, Unit>> discardCurrentUser() => _guard(() async {
+    await _source.discardCurrentUser();
+    return unit;
+  });
   @override
   Future<Either<Failure, Unit>> sendPasswordResetEmail(String email) =>
       _guard(() async {

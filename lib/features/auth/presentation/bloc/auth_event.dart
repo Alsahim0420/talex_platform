@@ -19,9 +19,10 @@ final class AuthSignInRequested extends AuthEvent {
 }
 
 final class AuthGoogleSignInRequested extends AuthEvent {
-  const AuthGoogleSignInRequested();
+  const AuthGoogleSignInRequested({this.awaitInvitePin = false});
+  final bool awaitInvitePin;
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [awaitInvitePin];
 }
 
 final class AuthSignUpRequested extends AuthEvent {
@@ -29,14 +30,21 @@ final class AuthSignUpRequested extends AuthEvent {
     required this.email,
     required this.password,
     this.displayName,
-    this.companyName,
+    this.pin,
   });
   final String email;
   final String password;
   final String? displayName;
-  final String? companyName;
+  final String? pin;
   @override
-  List<Object?> get props => [email, password, displayName, companyName];
+  List<Object?> get props => [email, password, displayName, pin];
+}
+
+final class AuthInvitePinSubmitted extends AuthEvent {
+  const AuthInvitePinSubmitted(this.pin);
+  final String pin;
+  @override
+  List<Object> get props => [pin];
 }
 
 final class AuthSignOutRequested extends AuthEvent {

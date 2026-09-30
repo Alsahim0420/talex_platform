@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
+import 'package:talex_platform/core/constants/app_radii.dart';
 import 'package:talex_platform/features/invitations/presentation/bloc/invitation_bloc.dart';
 import 'package:talex_platform/l10n/l10n.dart';
 
@@ -52,7 +53,7 @@ class _CreateInvitationDialogState extends State<CreateInvitationDialog> {
     final assessments = _assessments(context);
     return Dialog(
       insetPadding: const EdgeInsets.all(20),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: AppRadii.shape,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 560),
         child: SingleChildScrollView(

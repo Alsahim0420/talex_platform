@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
 import 'package:talex_platform/core/di/injection.dart';
 import 'package:talex_platform/core/services/notification_service.dart';
+import 'package:talex_platform/core/widgets/language_selector.dart';
 import 'package:talex_platform/features/settings/presentation/widgets/settings_widgets.dart';
 import 'package:talex_platform/l10n/l10n.dart';
 
@@ -45,10 +46,10 @@ class _SettingsViewState extends State<SettingsView> {
           items: [context.l10n.employeesRange],
           onChanged: (_) {},
         ),
-        const SettingsDropdown(
-          label: 'Time zone',
-          value: 'America/Bogota (GMT-5)',
-          items: ['America/Bogota (GMT-5)'],
+        SettingsDropdown(
+          label: context.l10n.timezone,
+          value: context.l10n.timezoneBogota,
+          items: [context.l10n.timezoneBogota],
           onChanged: _noop,
         ),
       ];
@@ -100,6 +101,16 @@ class _SettingsViewState extends State<SettingsView> {
                   ],
                 ),
                 const SizedBox(height: 32),
+                SettingsSection(
+                  title: context.l10n.language,
+                  description: context.l10n.languageDescription,
+                  icon: Icons.language,
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: LanguageSelector(),
+                  ),
+                ),
+                const SizedBox(height: 24),
                 SettingsSection(
                   title: context.l10n.organizationProfile,
                   description: context.l10n.organizationDescription,
