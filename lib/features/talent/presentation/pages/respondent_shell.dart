@@ -60,6 +60,7 @@ class RespondentSurveyView extends StatefulWidget {
 
 class _RespondentSurveyViewState extends State<RespondentSurveyView> {
   var _started = false;
+  var _finishing = false;
   var _index = 0;
   final _picks = <String, int>{};
 
@@ -73,7 +74,10 @@ class _RespondentSurveyViewState extends State<RespondentSurveyView> {
       l10n.likertAgree,
       l10n.likertStronglyAgree,
     ];
-    return BlocBuilder<TalentBloc, TalentState>(
+    return BlocConsumer<TalentBloc, TalentState>(
+      listenWhen: (previous, current) =>
+          _finishing && current.failure != null,
+      listener: (context, state) => setState(() => _finishing = false),
       builder: (context, state) {
         if (state.status == TalentViewStatus.failure &&
             state.respondentSession == null) {
@@ -214,17 +218,29 @@ class _RespondentSurveyViewState extends State<RespondentSurveyView> {
                     const Spacer(),
                     if (_index == ids.length - 1)
                       FilledButton(
-                        onPressed: complete
-                            ? () => context.read<TalentBloc>().add(
-                                TalentEvaluationCompleted(
-                                  session.candidate.id,
-                                  locale: Localizations.localeOf(
-                                    context,
-                                  ).languageCode,
+                        onPressed: complete && !_finishing
+                            ? () {
+                                setState(() => _finishing = true);
+                                context.read<TalentBloc>().add(
+                                  TalentEvaluationCompleted(
+                                    session.candidate.id,
+                                    locale: Localizations.localeOf(
+                                      context,
+                                    ).languageCode,
+                                  ),
+                                );
+                              }
+                            : null,
+                        child: _finishing
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
                                 ),
                               )
-                            : null,
-                        child: Text(l10n.finish),
+                            : Text(l10n.finish),
                       )
                     else
                       FilledButton(

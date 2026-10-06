@@ -215,15 +215,11 @@ class TalentVacanciesView extends StatelessWidget {
             AdminEmptyState(message: l10n.noVacancies)
           else
             ...state.snapshot.vacancies.map((item) {
-              final parts = [
-                if (item.area != null && item.area!.isNotEmpty)
-                  vacancyAreaLabel(l10n, item.area),
-                if (item.workMode != null && item.workMode!.isNotEmpty)
-                  vacancyWorkModeLabel(l10n, item.workMode),
-                if (item.seniority != null && item.seniority!.isNotEmpty)
-                  vacancySeniorityLabel(l10n, item.seniority),
-                if (item.city != null && item.city!.isNotEmpty) item.city,
-              ];
+              // Simplificado: Solo mostramos el área si fue seleccionada
+              final areaLabel = (item.area != null && item.area!.isNotEmpty)
+                  ? vacancyAreaLabel(l10n, item.area)
+                  : null;
+                  
               final related = state.snapshot.candidates
                   .where((candidate) => candidate.vacancyId == item.id)
                   .toList();
@@ -260,10 +256,10 @@ class TalentVacanciesView extends StatelessWidget {
                             ),
                           ],
                         ),
-                        if (parts.isNotEmpty) ...[
+                        if (areaLabel != null) ...[
                           const SizedBox(height: 6),
                           Text(
-                            parts.join(' · '),
+                            areaLabel,
                             style: const TextStyle(color: AppColors.subtitle),
                           ),
                         ],

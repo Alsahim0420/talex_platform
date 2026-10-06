@@ -30,10 +30,22 @@ service cloud.firestore {
         && userData().role in [
           'company_admin',
           'company_lead',
+          'ceo',
           'people_ops',
+          'hr',
           'recruiter',
           'hiring_manager'
         ];
+    }
+
+    function candidatePath(candidateId) {
+      return /databases/$(database)/documents/candidates/$(candidateId);
+    }
+
+    function staffOwnsCandidate(candidateId) {
+      return isCompanyStaff()
+        && exists(candidatePath(candidateId))
+        && get(candidatePath(candidateId)).data.companyId == companyId();
     }
 
     function isRespondent() {
@@ -118,6 +130,8 @@ service cloud.firestore {
       allow update: if isSuperAdmin()
         || (signedIn() && inviteId == emailKey())
         || (isCompanyStaff() && resource.data.companyId == companyId());
+      allow delete: if isSuperAdmin()
+        || (isCompanyStaff() && resource.data.companyId == companyId());
     }
 
     match /companies/{id} {
@@ -160,15 +174,18 @@ service cloud.firestore {
       allow update: if isSuperAdmin()
         || (isCompanyStaff() && resource.data.companyId == companyId())
         || ownsCandidate(id);
+      allow delete: if isSuperAdmin()
+        || (isCompanyStaff() && resource.data.companyId == companyId());
     }
 
     match /evaluations/{id} {
       allow get: if isSuperAdmin()
         || ownsCandidate(id)
-        || (resource != null && isCompanyStaff() && resource.data.companyId == companyId());
+        || staffOwnsCandidate(id);
       allow list: if isSuperAdmin()
         || (isCompanyStaff() && resource.data.companyId == companyId());
       allow create, update: if isSuperAdmin() || ownsCandidate(id);
+      allow delete: if isSuperAdmin() || staffOwnsCandidate(id);
     }
 
     match /activity_events/{id} {

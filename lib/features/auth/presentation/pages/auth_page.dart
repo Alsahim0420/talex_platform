@@ -11,6 +11,7 @@ import 'package:talex_platform/core/widgets/language_selector.dart';
 import 'package:talex_platform/features/auth/presentation/pages/recover_access_page.dart';
 import 'package:talex_platform/features/auth/presentation/pages/register_page.dart';
 import 'package:talex_platform/features/auth/presentation/widgets/auth_widgets.dart';
+import 'package:talex_platform/features/talent/presentation/talent_error_message.dart';
 import 'package:talex_platform/l10n/l10n.dart';
 
 class AuthPage extends StatefulWidget {
@@ -55,23 +56,24 @@ class _AuthPageState extends State<AuthPage> {
     backgroundColor: AppColors.background,
     body: BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
+        if (state.status == AuthStatus.passwordResetSent) {
+          getIt<NotificationService>().success(context.l10n.resetEmailSent);
+          return;
+        }
+        final raw = state.failure?.message;
+        final mapped = raw != null && raw.startsWith('error')
+            ? talentErrorMessage(context.l10n, raw)
+            : raw;
         if (state.status == AuthStatus.googleFailure) {
           getIt<NotificationService>().error(
-            state.failure?.message ?? context.l10n.googleSignInError,
+            mapped == null || mapped.isEmpty
+                ? context.l10n.googleSignInError
+                : mapped,
           );
           return;
         }
-        final message =
-            state.failure?.message ??
-            (state.status == AuthStatus.passwordResetSent
-                ? context.l10n.resetEmailSent
-                : null);
-        if (message != null) {
-          final notifications = getIt<NotificationService>();
-          state.status == AuthStatus.passwordResetSent
-              ? notifications.success(message)
-              : notifications.error(message);
-        }
+        if (mapped == null || mapped.isEmpty) return;
+        getIt<NotificationService>().error(mapped);
       },
       child: SafeArea(
         child: LayoutBuilder(

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 abstract final class PinHasher {
   static String hash(String pin, String email) {
@@ -11,9 +12,21 @@ abstract final class PinHasher {
     return hash.toRadixString(16).padLeft(8, '0');
   }
 
-  static String generatePin() {
-    final now = DateTime.now().microsecondsSinceEpoch;
-    return (100000 + (now % 900000)).toString();
+  static String generatePin([Random? random]) {
+    final source = random ?? Random.secure();
+    while (true) {
+      final pin = List.generate(6, (_) => source.nextInt(10)).join();
+      if (_isWeak(pin)) continue;
+      return pin;
+    }
+  }
+
+  static bool _isWeak(String pin) {
+    if (pin.startsWith('0')) return true;
+    if (pin.split('').toSet().length < 3) return true;
+    const ascending = '0123456789012345';
+    const descending = '9876543210987654';
+    return ascending.contains(pin) || descending.contains(pin);
   }
 }
 

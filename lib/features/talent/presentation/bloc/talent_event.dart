@@ -121,6 +121,25 @@ class TalentCandidateClosed extends TalentEvent {
   const TalentCandidateClosed();
 }
 
+class TalentCandidateUpdated extends TalentEvent {
+  const TalentCandidateUpdated({
+    required this.candidateId,
+    required this.displayName,
+    required this.documentNumber,
+    required this.vacancyId,
+  });
+  final String candidateId, displayName, documentNumber, vacancyId;
+  @override
+  List<Object?> get props => [candidateId, displayName, documentNumber, vacancyId];
+}
+
+class TalentCandidateDeleted extends TalentEvent {
+  const TalentCandidateDeleted(this.candidateId);
+  final String candidateId;
+  @override
+  List<Object?> get props => [candidateId];
+}
+
 class TalentPasswordChanged extends TalentEvent {
   const TalentPasswordChanged(this.password);
   final String password;

@@ -1536,6 +1536,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorInviteUsed => 'This invitation has already been used.';
 
   @override
+  String get errorInviteInvalid => 'This invitation link is not valid.';
+
+  @override
+  String get errorInviteExpired =>
+      'This invitation link expired. Ask for a new invitation.';
+
+  @override
   String get errorInvalidPin => 'The PIN is not valid.';
 
   @override
@@ -1652,6 +1659,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get candidateResultTitle => 'Results report';
 
   @override
+  String get editCandidate => 'Edit candidate';
+
+  @override
+  String get deleteCandidate => 'Delete candidate';
+
+  @override
+  String deleteCandidateConfirm(String name) {
+    return 'Delete $name? Their answers will be removed and their invitation link will stop working. This cannot be undone.';
+  }
+
+  @override
+  String get deleteAction => 'Delete';
+
+  @override
+  String get candidateUpdated => 'Candidate updated.';
+
+  @override
+  String get candidateDeleted => 'Candidate deleted.';
+
+  @override
   String get backToResults => 'Back';
 
   @override
@@ -1663,18 +1690,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get respondentInviteHint =>
-      'The person will receive a 6-digit PIN by email. It expires after 15 minutes. Then they register with their password or Google and that PIN.';
+      'The person will receive an email with a link to take the assessment right away. When they finish, you will see the status and result here.';
 
   @override
   String get firstAccessCompany => 'First access';
 
   @override
   String get assessmentSignInHint =>
-      'If you were invited to an assessment, create your account and enter the PIN from the email. If you use Google, you will enter the PIN next.';
+      'If you were invited to an assessment, use the link in the email to start. You do not need to register with a PIN.';
 
   @override
   String get respondentInviteSent =>
-      'Invitation ready. The respondent receives a PIN by email.';
+      'Invitation ready. The candidate receives an email link to take the assessment.';
 
   @override
   String get assessmentC1 => 'I identify with the way this organization works.';

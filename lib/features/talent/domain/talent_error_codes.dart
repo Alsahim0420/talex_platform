@@ -19,4 +19,6 @@ abstract final class TalentErrorCodes {
   static const resetTooManyAttempts = 'errorResetTooManyAttempts';
   static const passwordTooShort = 'errorPasswordTooShort';
   static const accountNotFound = 'errorAccountNotFound';
+  static const inviteInvalid = 'errorInviteInvalid';
+  static const inviteExpired = 'errorInviteExpired';
 }

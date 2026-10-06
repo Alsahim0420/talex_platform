@@ -57,6 +57,7 @@ class _CompanyShellState extends State<CompanyShell> {
       listenWhen: (previous, current) =>
           previous.generatedPin != current.generatedPin ||
           previous.respondentInvited != current.respondentInvited ||
+          previous.candidateNotice != current.candidateNotice ||
           previous.failure != current.failure,
       listener: (context, state) {
         final notifications = getIt<NotificationService>();
@@ -68,6 +69,10 @@ class _CompanyShellState extends State<CompanyShell> {
           notifications.success(
             context.l10n.invitePinReady(state.generatedPin!),
           );
+        } else if (state.candidateNotice == TalentCandidateNotice.updated) {
+          notifications.success(context.l10n.candidateUpdated);
+        } else if (state.candidateNotice == TalentCandidateNotice.deleted) {
+          notifications.success(context.l10n.candidateDeleted);
         } else if (state.respondentInvited) {
           notifications.success(context.l10n.respondentInviteSent);
         }

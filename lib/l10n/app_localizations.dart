@@ -2990,6 +2990,18 @@ abstract class AppLocalizations {
   /// **'Esta invitación ya fue utilizada.'**
   String get errorInviteUsed;
 
+  /// No description provided for @errorInviteInvalid.
+  ///
+  /// In es, this message translates to:
+  /// **'El enlace de invitación no es válido.'**
+  String get errorInviteInvalid;
+
+  /// No description provided for @errorInviteExpired.
+  ///
+  /// In es, this message translates to:
+  /// **'El enlace caducó. Pide una invitación nueva.'**
+  String get errorInviteExpired;
+
   /// No description provided for @errorInvalidPin.
   ///
   /// In es, this message translates to:
@@ -3206,6 +3218,42 @@ abstract class AppLocalizations {
   /// **'Informe de resultados'**
   String get candidateResultTitle;
 
+  /// No description provided for @editCandidate.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar candidato'**
+  String get editCandidate;
+
+  /// No description provided for @deleteCandidate.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar candidato'**
+  String get deleteCandidate;
+
+  /// No description provided for @deleteCandidateConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar a {name}? Se borrarán sus respuestas y su enlace de invitación dejará de funcionar. Esta acción no se puede deshacer.'**
+  String deleteCandidateConfirm(String name);
+
+  /// No description provided for @deleteAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get deleteAction;
+
+  /// No description provided for @candidateUpdated.
+  ///
+  /// In es, this message translates to:
+  /// **'Candidato actualizado.'**
+  String get candidateUpdated;
+
+  /// No description provided for @candidateDeleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Candidato eliminado.'**
+  String get candidateDeleted;
+
   /// No description provided for @backToResults.
   ///
   /// In es, this message translates to:
@@ -3227,7 +3275,7 @@ abstract class AppLocalizations {
   /// No description provided for @respondentInviteHint.
   ///
   /// In es, this message translates to:
-  /// **'La persona recibirá un PIN de 6 dígitos al correo. Caduca a los 15 minutos. Luego se registra con su contraseña o con Google y ese PIN.'**
+  /// **'La persona recibirá un correo con un enlace para presentar la prueba de inmediato. Cuando la complete, verás el estado y el resultado aquí.'**
   String get respondentInviteHint;
 
   /// No description provided for @firstAccessCompany.
@@ -3239,13 +3287,13 @@ abstract class AppLocalizations {
   /// No description provided for @assessmentSignInHint.
   ///
   /// In es, this message translates to:
-  /// **'Si te invitaron a una evaluación, entra por Registrarse con el PIN del correo. Si usas Google, después te pediremos el PIN.'**
+  /// **'Si te invitaron a una evaluación, usa el enlace del correo para comenzar la prueba. No necesitas registrarte con un PIN.'**
   String get assessmentSignInHint;
 
   /// No description provided for @respondentInviteSent.
   ///
   /// In es, this message translates to:
-  /// **'Invitación lista. El encuestado recibe un PIN por correo.'**
+  /// **'Invitación lista. El candidato recibe un enlace por correo para presentar la prueba.'**
   String get respondentInviteSent;
 
   /// No description provided for @assessmentC1.

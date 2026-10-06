@@ -132,7 +132,17 @@ class TalentCandidate extends Equatable {
   final AssessmentKind? assessmentKind;
   final DateTime updatedAt;
   @override
-  List<Object?> get props => [id, email, processStatus, companyAffinity, vacancyAffinity];
+  List<Object?> get props => [
+    id,
+    email,
+    displayName,
+    documentNumber,
+    vacancyId,
+    vacancyName,
+    processStatus,
+    companyAffinity,
+    vacancyAffinity,
+  ];
 }
 
 class TeamMember extends Equatable {

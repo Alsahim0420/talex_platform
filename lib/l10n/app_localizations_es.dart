@@ -1538,6 +1538,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get errorInviteUsed => 'Esta invitación ya fue utilizada.';
 
   @override
+  String get errorInviteInvalid => 'El enlace de invitación no es válido.';
+
+  @override
+  String get errorInviteExpired =>
+      'El enlace caducó. Pide una invitación nueva.';
+
+  @override
   String get errorInvalidPin => 'El PIN no es válido.';
 
   @override
@@ -1654,6 +1661,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get candidateResultTitle => 'Informe de resultados';
 
   @override
+  String get editCandidate => 'Editar candidato';
+
+  @override
+  String get deleteCandidate => 'Eliminar candidato';
+
+  @override
+  String deleteCandidateConfirm(String name) {
+    return '¿Eliminar a $name? Se borrarán sus respuestas y su enlace de invitación dejará de funcionar. Esta acción no se puede deshacer.';
+  }
+
+  @override
+  String get deleteAction => 'Eliminar';
+
+  @override
+  String get candidateUpdated => 'Candidato actualizado.';
+
+  @override
+  String get candidateDeleted => 'Candidato eliminado.';
+
+  @override
   String get backToResults => 'Volver';
 
   @override
@@ -1665,18 +1692,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get respondentInviteHint =>
-      'La persona recibirá un PIN de 6 dígitos al correo. Caduca a los 15 minutos. Luego se registra con su contraseña o con Google y ese PIN.';
+      'La persona recibirá un correo con un enlace para presentar la prueba de inmediato. Cuando la complete, verás el estado y el resultado aquí.';
 
   @override
   String get firstAccessCompany => 'Primer acceso';
 
   @override
   String get assessmentSignInHint =>
-      'Si te invitaron a una evaluación, entra por Registrarse con el PIN del correo. Si usas Google, después te pediremos el PIN.';
+      'Si te invitaron a una evaluación, usa el enlace del correo para comenzar la prueba. No necesitas registrarte con un PIN.';
 
   @override
   String get respondentInviteSent =>
-      'Invitación lista. El encuestado recibe un PIN por correo.';
+      'Invitación lista. El candidato recibe un enlace por correo para presentar la prueba.';
 
   @override
   String get assessmentC1 =>

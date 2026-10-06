@@ -12,6 +12,7 @@ import 'package:talex_platform/features/talent/domain/entities/talent_entities.d
 import 'package:talex_platform/features/talent/presentation/bloc/talent_bloc.dart';
 import 'package:talex_platform/features/talent/presentation/company_options.dart';
 import 'package:talex_platform/features/talent/presentation/pages/talent_views.dart';
+import 'package:talex_platform/features/talent/presentation/widgets/talent_dialogs.dart';
 import 'package:talex_platform/l10n/l10n.dart';
 
 class TalentCandidateResultView extends StatelessWidget {
@@ -64,6 +65,19 @@ class TalentCandidateResultView extends StatelessWidget {
                   : candidate.email,
               subtitle: l10n.candidateResultTitle,
               actions: [
+                OutlinedButton.icon(
+                  onPressed: () => showEditCandidateDialog(context, candidate),
+                  icon: const Icon(Icons.edit_outlined),
+                  label: Text(l10n.editCandidate),
+                ),
+                OutlinedButton.icon(
+                  onPressed: () => showDeleteCandidateDialog(context, candidate),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.red.shade700,
+                  ),
+                  icon: const Icon(Icons.delete_outline),
+                  label: Text(l10n.deleteCandidate),
+                ),
                 FilledButton.icon(
                   onPressed: () async {
                     try {
