@@ -88,14 +88,32 @@ final class AssessmentQuestionDataSource {
 
   Future<void> delete(String code) => _questions.doc(code).delete();
 
-  Future<void> seedDefaults() {
-    final batch = _firestore.batch();
-    for (final question in AssessmentQuestionDefaults.all) {
-      batch.set(
-        _questions.doc(question.code),
-        _stamped(assessmentQuestionToMap(question)),
-      );
+  // Un batch de Firestore admite 500 escrituras.
+  static const _batchSize = 400;
+
+  Future<void> saveAll(List<AssessmentQuestion> questions) async {
+    for (var start = 0; start < questions.length; start += _batchSize) {
+      final batch = _firestore.batch();
+      for (final question in questions.skip(start).take(_batchSize)) {
+        batch.set(
+          _questions.doc(question.code),
+          _stamped(assessmentQuestionToMap(question)),
+        );
+      }
+      await batch.commit();
     }
-    return batch.commit();
+  }
+
+  Future<void> seedDefaults() => saveAll(AssessmentQuestionDefaults.all);
+
+  Future<void> deleteAll() async {
+    final docs = (await _questions.get()).docs;
+    for (var start = 0; start < docs.length; start += _batchSize) {
+      final batch = _firestore.batch();
+      for (final doc in docs.skip(start).take(_batchSize)) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+    }
   }
 }

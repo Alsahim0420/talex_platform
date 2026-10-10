@@ -1,9 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
 import 'package:talex_platform/core/di/injection.dart';
 import 'package:talex_platform/core/services/notification_service.dart';
 import 'package:talex_platform/features/admin/data/datasources/assessment_question_data_source.dart';
 import 'package:talex_platform/features/admin/domain/entities/assessment_question.dart';
+import 'package:talex_platform/features/admin/domain/services/assessment_question_csv.dart';
 import 'package:talex_platform/features/admin/domain/services/assessment_question_defaults.dart';
 import 'package:talex_platform/features/admin/presentation/widgets/admin_question_dialogs.dart';
 import 'package:talex_platform/features/admin/presentation/widgets/admin_widgets.dart';
@@ -22,21 +24,34 @@ class _AdminQuestionsViewState extends State<AdminQuestionsView> {
   AssessmentFront? _front;
   var _query = '';
   var _busy = false;
+  String? _progress;
 
+  // [progress] muestra un bloqueo con ese texto mientras dura la operación;
+  // se usa en las cargas y borrados masivos.
   Future<void> _run(
     Future<void> Function() action, {
     bool notify = true,
+    String? progress,
+    String? success,
   }) async {
     final l10n = context.l10n;
     final notifications = getIt<NotificationService>();
-    setState(() => _busy = true);
+    setState(() {
+      _busy = true;
+      _progress = progress;
+    });
     try {
       await action();
-      if (notify) notifications.success(l10n.adminSaved);
+      if (notify) notifications.success(success ?? l10n.adminSaved);
     } on Exception {
       notifications.error(l10n.adminQuestionsError);
     } finally {
-      if (mounted) setState(() => _busy = false);
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _progress = null;
+        });
+      }
     }
   }
 
@@ -57,6 +72,51 @@ class _AdminQuestionsViewState extends State<AdminQuestionsView> {
     if (!await confirmAssessmentQuestionDelete(context, question)) return;
     if (!mounted) return;
     await _run(() => _source.delete(question.code));
+  }
+
+  Future<void> _importCsv(List<AssessmentQuestion> all) async {
+    final l10n = context.l10n;
+    final notifications = getIt<NotificationService>();
+    final picked = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: const ['csv'],
+      withData: true,
+    );
+    if (picked == null || !mounted) return;
+    final List<AssessmentQuestion> questions;
+    try {
+      final bytes = picked.files.single.bytes;
+      if (bytes == null) {
+        throw const AssessmentCsvException(AssessmentCsvError.unreadable);
+      }
+      questions = AssessmentQuestionCsv.parseBytes(bytes);
+    } on AssessmentCsvException catch (error) {
+      notifications.error(assessmentCsvErrorMessage(l10n, error));
+      return;
+    }
+    final existing = {for (final question in all) question.code};
+    final confirmed = await confirmAssessmentQuestionsImport(
+      context,
+      total: questions.length,
+      replaced: questions.where((item) => existing.contains(item.code)).length,
+    );
+    if (!confirmed || !mounted) return;
+    await _run(
+      () => _source.saveAll(questions),
+      progress: l10n.adminQuestionsUploading,
+      success: l10n.adminQuestionsUploaded(questions.length),
+    );
+  }
+
+  Future<void> _deleteAll(int count) async {
+    final l10n = context.l10n;
+    if (!await confirmAssessmentQuestionsDeleteAll(context, count)) return;
+    if (!mounted) return;
+    await _run(
+      _source.deleteAll,
+      progress: l10n.adminQuestionsDeleting,
+      success: l10n.adminQuestionsDeletedAll,
+    );
   }
 
   @override
@@ -94,17 +154,37 @@ class _AdminQuestionsViewState extends State<AdminQuestionsView> {
               ),
               const SizedBox(height: 16),
               Center(
-                child: FilledButton.icon(
-                  onPressed: _busy ? null : () => _run(_source.seedDefaults),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.primaryButton,
-                  ),
-                  icon: const Icon(Icons.cloud_upload_outlined),
-                  label: Text(
-                    l10n.adminQuestionsSeed(
-                      AssessmentQuestionDefaults.all.length,
+                child: Wrap(
+                  spacing: 12,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    FilledButton.icon(
+                      onPressed: _busy ? null : () => _importCsv(all),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primaryButton,
+                      ),
+                      icon: const Icon(Icons.upload_file_outlined),
+                      label: Text(l10n.adminQuestionsImport),
                     ),
-                  ),
+                    OutlinedButton.icon(
+                      onPressed: _busy
+                          ? null
+                          : () => _run(
+                              _source.seedDefaults,
+                              progress: l10n.adminQuestionsUploading,
+                              success: l10n.adminQuestionsUploaded(
+                                AssessmentQuestionDefaults.all.length,
+                              ),
+                            ),
+                      icon: const Icon(Icons.cloud_upload_outlined),
+                      label: Text(
+                        l10n.adminQuestionsSeed(
+                          AssessmentQuestionDefaults.all.length,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -173,7 +253,7 @@ class _AdminQuestionsViewState extends State<AdminQuestionsView> {
             ],
           );
         }
-        return SingleChildScrollView(
+        final page = SingleChildScrollView(
           padding: EdgeInsets.all(compact ? 18 : 40),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -182,6 +262,22 @@ class _AdminQuestionsViewState extends State<AdminQuestionsView> {
                 title: l10n.adminQuestions,
                 subtitle: l10n.adminQuestionsSubtitle,
                 actions: [
+                  if (all.isNotEmpty)
+                    TextButton.icon(
+                      onPressed: _busy ? null : () => _deleteAll(all.length),
+                      style: TextButton.styleFrom(
+                        foregroundColor: const Color(0xFFB42318),
+                      ),
+                      icon: const Icon(Icons.delete_sweep_outlined),
+                      label: Text(l10n.adminQuestionsDeleteAll),
+                    ),
+                  OutlinedButton.icon(
+                    onPressed: snapshot.hasData && !_busy
+                        ? () => _importCsv(all)
+                        : null,
+                    icon: const Icon(Icons.upload_file_outlined),
+                    label: Text(l10n.adminQuestionsImport),
+                  ),
                   OutlinedButton.icon(
                     onPressed: all.isEmpty
                         ? null
@@ -206,9 +302,64 @@ class _AdminQuestionsViewState extends State<AdminQuestionsView> {
             ],
           ),
         );
+        return Stack(
+          children: [
+            page,
+            if (_progress != null)
+              Positioned.fill(child: _ProgressOverlay(message: _progress!)),
+          ],
+        );
       },
     );
   }
+}
+
+class _ProgressOverlay extends StatelessWidget {
+  const _ProgressOverlay({required this.message});
+  final String message;
+
+  @override
+  Widget build(BuildContext context) => AbsorbPointer(
+    child: ColoredBox(
+      color: const Color(0xB3FBF9FA),
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.softBorder),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x1F071326),
+                blurRadius: 24,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2.4),
+              ),
+              const SizedBox(width: 14),
+              Text(
+                message,
+                style: const TextStyle(
+                  color: AppColors.ink,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }
 
 class _Filters extends StatelessWidget {

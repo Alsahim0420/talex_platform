@@ -646,5 +646,21 @@
   "adminRoleSuperadminHelp": "Full access to the TaleX admin panel.",
   "adminRoleUser": "User",
   "adminRoleUserHelp": "Standard access, without the admin panel.",
-  "adminRoleChange": "Change role"
+  "adminRoleChange": "Change role",
+  "adminQuestionsImport": "Import CSV",
+  "adminQuestionsImportTitle": "Import questions",
+  "adminQuestionsImportBody": "The file has {total} questions: {created} new and {replaced} replacing existing ones with the same code.",
+  "adminQuestionsImportAction": "Import",
+  "adminQuestionsCsvUnreadable": "The file could not be read. It must be a CSV.",
+  "adminQuestionsCsvEmpty": "The file has no questions.",
+  "adminQuestionsCsvMissingColumns": "The CSV is missing required columns: {columns}.",
+  "adminQuestionsCsvInvalidRow": "Row {row}: the code or statement A is missing.",
+  "adminQuestionsCsvDuplicate": "Row {row}: code {code} is repeated in the file.",
+  "adminQuestionsDeleteAll": "Delete all",
+  "adminQuestionsDeleteAllTitle": "Delete all questions",
+  "adminQuestionsDeleteAllBody": "All {count} questions will be deleted from Firebase. This action cannot be undone.",
+  "adminQuestionsUploading": "Loading questions…",
+  "adminQuestionsDeleting": "Deleting questions…",
+  "adminQuestionsUploaded": "{count} questions loaded into TaleX.",
+  "adminQuestionsDeletedAll": "All questions were deleted."
 }

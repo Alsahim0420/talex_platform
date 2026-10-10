@@ -3835,6 +3835,102 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cambiar rol'**
   String get adminRoleChange;
+
+  /// No description provided for @adminQuestionsImport.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar CSV'**
+  String get adminQuestionsImport;
+
+  /// No description provided for @adminQuestionsImportTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar preguntas'**
+  String get adminQuestionsImportTitle;
+
+  /// No description provided for @adminQuestionsImportBody.
+  ///
+  /// In es, this message translates to:
+  /// **'El archivo trae {total} preguntas: {created} nuevas y {replaced} que reemplazan a las que ya existen con el mismo código.'**
+  String adminQuestionsImportBody(int total, int created, int replaced);
+
+  /// No description provided for @adminQuestionsImportAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar'**
+  String get adminQuestionsImportAction;
+
+  /// No description provided for @adminQuestionsCsvUnreadable.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo leer el archivo. Debe ser un CSV.'**
+  String get adminQuestionsCsvUnreadable;
+
+  /// No description provided for @adminQuestionsCsvEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'El archivo no tiene preguntas.'**
+  String get adminQuestionsCsvEmpty;
+
+  /// No description provided for @adminQuestionsCsvMissingColumns.
+  ///
+  /// In es, this message translates to:
+  /// **'Faltan columnas obligatorias en el CSV: {columns}.'**
+  String adminQuestionsCsvMissingColumns(String columns);
+
+  /// No description provided for @adminQuestionsCsvInvalidRow.
+  ///
+  /// In es, this message translates to:
+  /// **'Fila {row}: falta el código o el enunciado A.'**
+  String adminQuestionsCsvInvalidRow(int row);
+
+  /// No description provided for @adminQuestionsCsvDuplicate.
+  ///
+  /// In es, this message translates to:
+  /// **'Fila {row}: el código {code} está repetido en el archivo.'**
+  String adminQuestionsCsvDuplicate(int row, String code);
+
+  /// No description provided for @adminQuestionsDeleteAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar todas'**
+  String get adminQuestionsDeleteAll;
+
+  /// No description provided for @adminQuestionsDeleteAllTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar todas las preguntas'**
+  String get adminQuestionsDeleteAllTitle;
+
+  /// No description provided for @adminQuestionsDeleteAllBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Se eliminarán las {count} preguntas de Firebase. Esta acción no se puede deshacer.'**
+  String adminQuestionsDeleteAllBody(int count);
+
+  /// No description provided for @adminQuestionsUploading.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargando preguntas…'**
+  String get adminQuestionsUploading;
+
+  /// No description provided for @adminQuestionsDeleting.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminando preguntas…'**
+  String get adminQuestionsDeleting;
+
+  /// No description provided for @adminQuestionsUploaded.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} preguntas cargadas en TaleX.'**
+  String adminQuestionsUploaded(int count);
+
+  /// No description provided for @adminQuestionsDeletedAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Se eliminaron todas las preguntas.'**
+  String get adminQuestionsDeletedAll;
 }
 
 class _AppLocalizationsDelegate

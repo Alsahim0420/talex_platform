@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:talex_platform/core/constants/app_colors.dart';
 import 'package:talex_platform/core/constants/app_radii.dart';
 import 'package:talex_platform/features/admin/domain/entities/assessment_question.dart';
+import 'package:talex_platform/features/admin/domain/services/assessment_question_csv.dart';
 import 'package:talex_platform/features/admin/domain/services/assessment_question_defaults.dart';
 import 'package:talex_platform/l10n/app_localizations.dart';
 import 'package:talex_platform/l10n/l10n.dart';
@@ -80,6 +81,84 @@ Future<bool> confirmAssessmentQuestionDelete(
   );
   return confirmed == true;
 }
+
+Future<bool> _confirm(
+  BuildContext context, {
+  required String title,
+  required String body,
+  required String action,
+  bool destructive = false,
+}) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      shape: AppRadii.shape,
+      title: Text(title),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 420),
+        child: Text(body),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(dialogContext).pop(false),
+          child: Text(dialogContext.l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(dialogContext).pop(true),
+          style: FilledButton.styleFrom(
+            backgroundColor: destructive
+                ? const Color(0xFFB42318)
+                : AppColors.primaryButton,
+          ),
+          child: Text(action),
+        ),
+      ],
+    ),
+  );
+  return confirmed == true;
+}
+
+Future<bool> confirmAssessmentQuestionsDeleteAll(
+  BuildContext context,
+  int count,
+) => _confirm(
+  context,
+  title: context.l10n.adminQuestionsDeleteAllTitle,
+  body: context.l10n.adminQuestionsDeleteAllBody(count),
+  action: context.l10n.adminQuestionsDeleteAll,
+  destructive: true,
+);
+
+Future<bool> confirmAssessmentQuestionsImport(
+  BuildContext context, {
+  required int total,
+  required int replaced,
+}) => _confirm(
+  context,
+  title: context.l10n.adminQuestionsImportTitle,
+  body: context.l10n.adminQuestionsImportBody(
+    total,
+    total - replaced,
+    replaced,
+  ),
+  action: context.l10n.adminQuestionsImportAction,
+);
+
+String assessmentCsvErrorMessage(
+  AppLocalizations l10n,
+  AssessmentCsvException error,
+) => switch (error.error) {
+  AssessmentCsvError.unreadable => l10n.adminQuestionsCsvUnreadable,
+  AssessmentCsvError.empty => l10n.adminQuestionsCsvEmpty,
+  AssessmentCsvError.missingColumns => l10n.adminQuestionsCsvMissingColumns(
+    error.detail,
+  ),
+  AssessmentCsvError.invalidRow => l10n.adminQuestionsCsvInvalidRow(error.row),
+  AssessmentCsvError.duplicate => l10n.adminQuestionsCsvDuplicate(
+    error.row,
+    error.detail,
+  ),
+};
 
 class _QuestionEditorDialog extends StatefulWidget {
   const _QuestionEditorDialog({required this.existing, this.question});

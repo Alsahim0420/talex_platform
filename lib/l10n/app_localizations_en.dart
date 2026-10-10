@@ -2006,4 +2006,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminRoleChange => 'Change role';
+
+  @override
+  String get adminQuestionsImport => 'Import CSV';
+
+  @override
+  String get adminQuestionsImportTitle => 'Import questions';
+
+  @override
+  String adminQuestionsImportBody(int total, int created, int replaced) {
+    return 'The file has $total questions: $created new and $replaced replacing existing ones with the same code.';
+  }
+
+  @override
+  String get adminQuestionsImportAction => 'Import';
+
+  @override
+  String get adminQuestionsCsvUnreadable =>
+      'The file could not be read. It must be a CSV.';
+
+  @override
+  String get adminQuestionsCsvEmpty => 'The file has no questions.';
+
+  @override
+  String adminQuestionsCsvMissingColumns(String columns) {
+    return 'The CSV is missing required columns: $columns.';
+  }
+
+  @override
+  String adminQuestionsCsvInvalidRow(int row) {
+    return 'Row $row: the code or statement A is missing.';
+  }
+
+  @override
+  String adminQuestionsCsvDuplicate(int row, String code) {
+    return 'Row $row: code $code is repeated in the file.';
+  }
+
+  @override
+  String get adminQuestionsDeleteAll => 'Delete all';
+
+  @override
+  String get adminQuestionsDeleteAllTitle => 'Delete all questions';
+
+  @override
+  String adminQuestionsDeleteAllBody(int count) {
+    return 'All $count questions will be deleted from Firebase. This action cannot be undone.';
+  }
+
+  @override
+  String get adminQuestionsUploading => 'Loading questions…';
+
+  @override
+  String get adminQuestionsDeleting => 'Deleting questions…';
+
+  @override
+  String adminQuestionsUploaded(int count) {
+    return '$count questions loaded into TaleX.';
+  }
+
+  @override
+  String get adminQuestionsDeletedAll => 'All questions were deleted.';
 }
