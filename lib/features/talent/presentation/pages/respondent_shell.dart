@@ -39,9 +39,8 @@ class RespondentShell extends StatelessWidget {
           actions: [
             const LanguageSelector(compact: true),
             TextButton(
-              onPressed: () => context.read<AuthBloc>().add(
-                const AuthSignOutRequested(),
-              ),
+              onPressed: () =>
+                  context.read<AuthBloc>().add(const AuthSignOutRequested()),
               child: Text(context.l10n.signOut),
             ),
           ],
@@ -66,13 +65,6 @@ class _RespondentSurveyViewState extends State<RespondentSurveyView> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final options = [
-      l10n.likertStronglyDisagree,
-      l10n.likertDisagree,
-      l10n.likertNeutral,
-      l10n.likertAgree,
-      l10n.likertStronglyAgree,
-    ];
     return BlocBuilder<TalentBloc, TalentState>(
       builder: (context, state) {
         if (state.status == TalentViewStatus.failure &&
@@ -120,12 +112,26 @@ class _RespondentSurveyViewState extends State<RespondentSurveyView> {
         }
         final ids = AssessmentCatalog.allIds;
         final questionId = ids[_index.clamp(0, ids.length - 1)];
+        final item = AssessmentCatalog.byId(questionId)!;
         final selected = _picks[questionId] ?? session.answers[questionId];
         final complete = ids.every(
           (id) => (_picks[id] ?? session.answers[id]) != null,
         );
+        final labels = assessmentScaleLabels(l10n, item.format);
+        final languageCode = l10n.localeName;
+        void pick(int value) {
+          setState(() => _picks[questionId] = value);
+          context.read<TalentBloc>().add(
+            TalentAnswerSaved(
+              candidateId: session.candidate.id,
+              questionId: questionId,
+              value: value,
+            ),
+          );
+        }
+
         return ContentWidth(
-          maxWidth: 760,
+          maxWidth: 820,
           child: Padding(
             padding: const EdgeInsets.all(32),
             child: Column(
@@ -139,67 +145,97 @@ class _RespondentSurveyViewState extends State<RespondentSurveyView> {
                 const SizedBox(height: 12),
                 LinearProgressIndicator(value: (_index + 1) / ids.length),
                 const SizedBox(height: 24),
-                Text(
-                  assessmentQuestionLabel(l10n, questionId),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.ink,
-                  ),
-                ),
-                const SizedBox(height: 24),
                 Expanded(
-                  child: ListView.separated(
-                    itemCount: options.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 8),
-                    itemBuilder: (context, optionIndex) {
-                      final value = optionIndex + 1;
-                      final active = selected == value;
-                      return Material(
-                        color: active
-                            ? const Color(0xFFF0F6FF)
-                            : Colors.white,
-                        borderRadius: AppRadii.border,
-                        child: InkWell(
-                          borderRadius: AppRadii.border,
-                          onTap: () {
-                            setState(() => _picks[questionId] = value);
-                            context.read<TalentBloc>().add(
-                              TalentAnswerSaved(
-                                candidateId: session.candidate.id,
-                                questionId: questionId,
-                                value: value,
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 14,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: AppRadii.border,
-                              border: Border.all(
-                                color: active
-                                    ? AppColors.primaryButton
-                                    : const Color(0xFFD1D1D6),
-                              ),
-                            ),
-                            child: Text(
-                              options[optionIndex],
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: active
-                                    ? FontWeight.w600
-                                    : FontWeight.w400,
-                                color: AppColors.ink,
-                              ),
-                            ),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          assessmentInstruction(l10n, item),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            height: 1.35,
+                            color: AppColors.ink,
                           ),
                         ),
-                      );
-                    },
+                        const SizedBox(height: 24),
+                        if (item.isPair)
+                          IntrinsicHeight(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  child: _StatementCard(
+                                    caption: l10n.assessmentStatementA,
+                                    text: item.statementA.of(languageCode),
+                                    leaning: selected != null && selected < 3,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: _StatementCard(
+                                    caption: l10n.assessmentStatementB,
+                                    text: item.statementB!.of(languageCode),
+                                    leaning: selected != null && selected > 3,
+                                    alignEnd: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          _StatementCard(
+                            text: item.statementA.of(languageCode),
+                            centered: true,
+                          ),
+                        const SizedBox(height: 20),
+                        _SegmentedScale(
+                          selected: selected,
+                          labels: labels,
+                          onSelected: pick,
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Text(
+                              item.isPair ? 'A' : labels.first,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.subtitle,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              item.isPair ? 'B' : labels.last,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.subtitle,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          selected == null
+                              ? (item.isPair
+                                    ? l10n.assessmentPairScaleHint
+                                    : '')
+                              : labels[selected - 1],
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: selected == null ? 14 : 16,
+                            fontWeight: selected == null
+                                ? FontWeight.w400
+                                : FontWeight.w600,
+                            color: selected == null
+                                ? AppColors.muted
+                                : AppColors.primaryButton,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -240,6 +276,133 @@ class _RespondentSurveyViewState extends State<RespondentSurveyView> {
           ),
         );
       },
+    );
+  }
+}
+
+class _StatementCard extends StatelessWidget {
+  const _StatementCard({
+    required this.text,
+    this.caption,
+    this.leaning = false,
+    this.alignEnd = false,
+    this.centered = false,
+  });
+  final String text;
+  final String? caption;
+  final bool leaning, alignEnd, centered;
+
+  @override
+  Widget build(BuildContext context) {
+    final align = centered
+        ? TextAlign.center
+        : (alignEnd ? TextAlign.end : TextAlign.start);
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 150),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: leaning ? AppColors.fieldFill : Colors.white,
+        borderRadius: AppRadii.border,
+        border: Border.all(
+          color: leaning ? AppColors.primaryButton : const Color(0xFFD1D1D6),
+          width: leaning ? 1.5 : 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: centered
+            ? CrossAxisAlignment.center
+            : (alignEnd ? CrossAxisAlignment.end : CrossAxisAlignment.start),
+        children: [
+          if (caption != null) ...[
+            Text(
+              caption!,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.4,
+                color: AppColors.muted,
+              ),
+            ),
+            const SizedBox(height: 8),
+          ],
+          Text(
+            text,
+            textAlign: align,
+            style: const TextStyle(
+              fontSize: 17,
+              height: 1.4,
+              color: AppColors.ink,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Rectángulo dividido en tantos recuadros como etiquetas; el valor es 1..n.
+class _SegmentedScale extends StatelessWidget {
+  const _SegmentedScale({
+    required this.selected,
+    required this.labels,
+    required this.onSelected,
+  });
+  final int? selected;
+  final List<String> labels;
+  final ValueChanged<int> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    const borderColor = Color(0xFFD1D1D6);
+    return ClipRRect(
+      borderRadius: AppRadii.border,
+      child: Container(
+        height: 64,
+        decoration: BoxDecoration(
+          borderRadius: AppRadii.border,
+          border: Border.all(color: borderColor),
+        ),
+        child: Row(
+          children: [
+            for (var i = 0; i < labels.length; i++)
+              Expanded(
+                child: Semantics(
+                  button: true,
+                  selected: selected == i + 1,
+                  label: labels[i],
+                  child: Tooltip(
+                    message: labels[i],
+                    child: Material(
+                      color: selected == i + 1
+                          ? AppColors.primaryButton
+                          : Colors.white,
+                      child: InkWell(
+                        onTap: () => onSelected(i + 1),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: i == 0
+                                ? null
+                                : const Border(
+                                    left: BorderSide(color: borderColor),
+                                  ),
+                          ),
+                          child: selected == i + 1
+                              ? const Center(
+                                  child: Icon(
+                                    Icons.check_rounded,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : null,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

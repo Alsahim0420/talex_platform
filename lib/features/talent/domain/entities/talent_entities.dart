@@ -1,4 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:talex_platform/features/talent/domain/services/assessment_catalog.dart';
+
+export 'package:talex_platform/features/talent/domain/services/assessment_catalog.dart';
 
 enum AffinityLevel { high, medium, low, unknown }
 
@@ -28,12 +31,6 @@ AffinityLevel affinityLevelFromAverage(double? average) {
   if (average >= 4) return AffinityLevel.high;
   if (average >= 3) return AffinityLevel.medium;
   return AffinityLevel.low;
-}
-
-abstract final class AssessmentCatalog {
-  static const companyQuestionIds = ['c1', 'c2', 'c3', 'c4', 'c5'];
-  static const vacancyQuestionIds = ['v1', 'v2', 'v3', 'v4', 'v5'];
-  static List<String> get allIds => [...companyQuestionIds, ...vacancyQuestionIds];
 }
 
 class CompanyProfile extends Equatable {

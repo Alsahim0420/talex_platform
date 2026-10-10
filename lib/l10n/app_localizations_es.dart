@@ -1455,7 +1455,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get respondentLikertHint =>
-      'Todas las preguntas son de acuerdo o desacuerdo. No hay respuestas correctas o incorrectas.';
+      'En la mayoría de preguntas verás dos frases, una a cada lado. Elige el recuadro que quede más cerca de la que mejor te describe. No hay respuestas correctas o incorrectas.';
 
   @override
   String get startAssessment => 'Iniciar evaluación';
@@ -1679,46 +1679,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Invitación lista. El encuestado recibe un PIN por correo.';
 
   @override
-  String get assessmentC1 =>
-      'Me identifico con la forma de trabajar de esta organización.';
-
-  @override
-  String get assessmentC2 =>
-      'El ambiente descrito se alinea con cómo me gusta colaborar.';
-
-  @override
-  String get assessmentC3 =>
-      'La manera de tomar decisiones de la empresa me resulta clara y coherente.';
-
-  @override
-  String get assessmentC4 =>
-      'Valoro el entorno laboral que describe la organización.';
-
-  @override
-  String get assessmentC5 =>
-      'Las personas que destacan aquí se parecen a cómo me gusta aportar.';
-
-  @override
-  String get assessmentV1 =>
-      'El rol descrito se alinea con el tipo de trabajo que quiero realizar.';
-
-  @override
-  String get assessmentV2 =>
-      'Las responsabilidades de la vacante coinciden con mi forma de contribuir.';
-
-  @override
-  String get assessmentV3 =>
-      'El entorno de este rol me permitiría desempeñarme con naturalidad.';
-
-  @override
-  String get assessmentV4 =>
-      'Las características buscadas para el rol coinciden con las mías.';
-
-  @override
-  String get assessmentV5 =>
-      'Esta vacante representa un contexto en el que me veo aportando de forma sostenida.';
-
-  @override
   String get recoverPasswordTitle => 'Recuperar acceso';
 
   @override
@@ -1791,4 +1751,56 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get errorAccountNotFound =>
       'No hay una cuenta TaleX con este correo. Si te invitaron, entra por Primer acceso con el PIN.';
+
+  @override
+  String get assessmentPairInstruction =>
+      '¿Cuál de las dos frases lo describe mejor a usted?';
+
+  @override
+  String get assessmentNeedInstruction =>
+      'Si tuviera que elegir, ¿cuál de las dos es más importante para usted en un empleo?';
+
+  @override
+  String get assessmentExperienceInstruction =>
+      'Pensando en sus trabajos o proyectos de los últimos tres años, ¿con qué frecuencia le ha ocurrido lo siguiente?';
+
+  @override
+  String get assessmentPairScaleHint =>
+      'Toque el recuadro que quede más cerca de la frase con la que se identifica.';
+
+  @override
+  String get assessmentStatementA => 'Frase A';
+
+  @override
+  String get assessmentStatementB => 'Frase B';
+
+  @override
+  String get pairScale1 => 'Claramente la A';
+
+  @override
+  String get pairScale2 => 'Más la A que la B';
+
+  @override
+  String get pairScale3 => 'Ambas por igual';
+
+  @override
+  String get pairScale4 => 'Más la B que la A';
+
+  @override
+  String get pairScale5 => 'Claramente la B';
+
+  @override
+  String get frequencyScale1 => 'Nunca';
+
+  @override
+  String get frequencyScale2 => 'Rara vez';
+
+  @override
+  String get frequencyScale3 => 'Algunas veces';
+
+  @override
+  String get frequencyScale4 => 'Con frecuencia';
+
+  @override
+  String get frequencyScale5 => 'Siempre';
 }

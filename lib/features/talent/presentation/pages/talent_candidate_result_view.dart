@@ -167,7 +167,7 @@ class TalentCandidateResultView extends StatelessWidget {
                         Text(
                           report.answers[id] == null
                               ? l10n.noData
-                              : likertLabel(l10n, report.answers[id]!),
+                              : assessmentAnswerLabel(l10n, id, report.answers[id]!),
                         ),
                       ],
                     ),

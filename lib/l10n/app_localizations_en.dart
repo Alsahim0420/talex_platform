@@ -1453,7 +1453,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get respondentLikertHint =>
-      'Every question is agree or disagree. There are no right or wrong answers.';
+      'Most questions show two statements, one on each side. Pick the box closest to the one that describes you best. There are no right or wrong answers.';
 
   @override
   String get startAssessment => 'Start assessment';
@@ -1677,45 +1677,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Invitation ready. The respondent receives a PIN by email.';
 
   @override
-  String get assessmentC1 => 'I identify with the way this organization works.';
-
-  @override
-  String get assessmentC2 =>
-      'The described environment matches how I like to collaborate.';
-
-  @override
-  String get assessmentC3 =>
-      'The company\'s way of making decisions feels clear and coherent to me.';
-
-  @override
-  String get assessmentC4 =>
-      'I value the workplace described by the organization.';
-
-  @override
-  String get assessmentC5 =>
-      'The people who stand out here resemble how I like to contribute.';
-
-  @override
-  String get assessmentV1 =>
-      'The described role aligns with the kind of work I want to do.';
-
-  @override
-  String get assessmentV2 =>
-      'The vacancy responsibilities match how I like to contribute.';
-
-  @override
-  String get assessmentV3 =>
-      'The environment of this role would allow me to perform naturally.';
-
-  @override
-  String get assessmentV4 =>
-      'The characteristics sought for the role match mine.';
-
-  @override
-  String get assessmentV5 =>
-      'This vacancy is a context where I see myself contributing over time.';
-
-  @override
   String get recoverPasswordTitle => 'Recover access';
 
   @override
@@ -1788,4 +1749,56 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get errorAccountNotFound =>
       'There is no TaleX account with this email. If you were invited, use First access with the PIN.';
+
+  @override
+  String get assessmentPairInstruction =>
+      'Which of the two statements describes you better?';
+
+  @override
+  String get assessmentNeedInstruction =>
+      'If you had to choose, which of the two matters more to you in a job?';
+
+  @override
+  String get assessmentExperienceInstruction =>
+      'Thinking about your jobs or projects over the last three years, how often has the following happened to you?';
+
+  @override
+  String get assessmentPairScaleHint =>
+      'Tap the box closest to the statement you identify with.';
+
+  @override
+  String get assessmentStatementA => 'Statement A';
+
+  @override
+  String get assessmentStatementB => 'Statement B';
+
+  @override
+  String get pairScale1 => 'Clearly A';
+
+  @override
+  String get pairScale2 => 'More A than B';
+
+  @override
+  String get pairScale3 => 'Both equally';
+
+  @override
+  String get pairScale4 => 'More B than A';
+
+  @override
+  String get pairScale5 => 'Clearly B';
+
+  @override
+  String get frequencyScale1 => 'Never';
+
+  @override
+  String get frequencyScale2 => 'Rarely';
+
+  @override
+  String get frequencyScale3 => 'Sometimes';
+
+  @override
+  String get frequencyScale4 => 'Often';
+
+  @override
+  String get frequencyScale5 => 'Always';
 }
