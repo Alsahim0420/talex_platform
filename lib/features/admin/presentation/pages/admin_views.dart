@@ -1206,22 +1206,158 @@ class AdminSettingsView extends StatelessWidget {
                     subtitle: Text(
                       '${user.email} · ${user.companyName ?? context.l10n.noData}',
                     ),
-                    trailing: OutlinedButton(
-                      onPressed: () => context.read<AdminBloc>().add(
-                        AdminUserRoleUpdated(
-                          userId: user.id,
-                          role: user.role == 'superadmin'
-                              ? 'user'
-                              : 'superadmin',
-                        ),
+                    trailing: _RoleSelector(
+                      role: user.role,
+                      onChanged: (role) => context.read<AdminBloc>().add(
+                        AdminUserRoleUpdated(userId: user.id, role: role),
                       ),
-                      child: Text(user.role),
                     ),
                   ),
                 ),
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _RoleSelector extends StatelessWidget {
+  const _RoleSelector({required this.role, required this.onChanged});
+  final String role;
+  final ValueChanged<String> onChanged;
+
+  static const _superadmin = 'superadmin';
+  static const _user = 'user';
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final elevated = role == _superadmin;
+    final options = [
+      (
+        _superadmin,
+        Icons.shield_outlined,
+        l10n.adminRoleSuperadmin,
+        l10n.adminRoleSuperadminHelp,
+      ),
+      (_user, Icons.person_outline, l10n.adminRoleUser, l10n.adminRoleUserHelp),
+    ];
+    final current = options.where((item) => item.$1 == role).firstOrNull;
+    return PopupMenuButton<String>(
+      tooltip: l10n.adminRoleChange,
+      position: PopupMenuPosition.under,
+      offset: const Offset(0, 6),
+      elevation: 10,
+      shadowColor: const Color(0x33071326),
+      color: Colors.white,
+      surfaceTintColor: Colors.transparent,
+      padding: EdgeInsets.zero,
+      menuPadding: const EdgeInsets.all(6),
+      constraints: const BoxConstraints(minWidth: 300, maxWidth: 320),
+      shape: RoundedRectangleBorder(
+        borderRadius: AppRadii.border,
+        side: const BorderSide(color: AppColors.softBorder),
+      ),
+      onSelected: (value) {
+        if (value != role) onChanged(value);
+      },
+      itemBuilder: (context) => [
+        for (final (value, icon, title, help) in options)
+          PopupMenuItem(
+            value: value,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            child: Row(
+              children: [
+                Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: value == role
+                        ? AppColors.fieldFill
+                        : const Color(0xFFF4F4F6),
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                  child: Icon(
+                    icon,
+                    size: 18,
+                    color: value == role
+                        ? AppColors.dashboardAccent
+                        : AppColors.subtitle,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          color: AppColors.ink,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        help,
+                        style: const TextStyle(
+                          color: AppColors.muted,
+                          fontSize: 12.5,
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.check,
+                  size: 18,
+                  color: value == role
+                      ? AppColors.dashboardAccent
+                      : Colors.transparent,
+                ),
+              ],
+            ),
+          ),
+      ],
+      child: Container(
+        height: 36,
+        padding: const EdgeInsets.only(left: 10, right: 6),
+        decoration: BoxDecoration(
+          color: elevated ? AppColors.fieldFill : Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: elevated ? AppColors.fieldBorder : AppColors.softBorder,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              current?.$2 ?? Icons.badge_outlined,
+              size: 16,
+              color: elevated ? AppColors.dashboardAccent : AppColors.subtitle,
+            ),
+            const SizedBox(width: 7),
+            Text(
+              current?.$3 ?? role,
+              style: TextStyle(
+                color: elevated ? AppColors.dashboardAccent : AppColors.ink,
+                fontSize: 13.5,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(
+              Icons.keyboard_arrow_down_rounded,
+              size: 18,
+              color: AppColors.muted,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1995,4 +1995,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get frequencyScale5 => 'Siempre';
+
+  @override
+  String get adminRoleSuperadmin => 'Superadmin';
+
+  @override
+  String get adminRoleSuperadminHelp => 'Acceso total al panel de TaleX.';
+
+  @override
+  String get adminRoleUser => 'Usuario';
+
+  @override
+  String get adminRoleUserHelp =>
+      'Acceso estándar, sin panel de administración.';
+
+  @override
+  String get adminRoleChange => 'Cambiar rol';
 }

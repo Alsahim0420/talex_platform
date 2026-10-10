@@ -641,5 +641,10 @@
   "frequencyScale2": "Rarely",
   "frequencyScale3": "Sometimes",
   "frequencyScale4": "Often",
-  "frequencyScale5": "Always"
+  "frequencyScale5": "Always",
+  "adminRoleSuperadmin": "Superadmin",
+  "adminRoleSuperadminHelp": "Full access to the TaleX admin panel.",
+  "adminRoleUser": "User",
+  "adminRoleUserHelp": "Standard access, without the admin panel.",
+  "adminRoleChange": "Change role"
 }

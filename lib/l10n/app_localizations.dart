@@ -3805,6 +3805,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Siempre'**
   String get frequencyScale5;
+
+  /// No description provided for @adminRoleSuperadmin.
+  ///
+  /// In es, this message translates to:
+  /// **'Superadmin'**
+  String get adminRoleSuperadmin;
+
+  /// No description provided for @adminRoleSuperadminHelp.
+  ///
+  /// In es, this message translates to:
+  /// **'Acceso total al panel de TaleX.'**
+  String get adminRoleSuperadminHelp;
+
+  /// No description provided for @adminRoleUser.
+  ///
+  /// In es, this message translates to:
+  /// **'Usuario'**
+  String get adminRoleUser;
+
+  /// No description provided for @adminRoleUserHelp.
+  ///
+  /// In es, this message translates to:
+  /// **'Acceso estándar, sin panel de administración.'**
+  String get adminRoleUserHelp;
+
+  /// No description provided for @adminRoleChange.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar rol'**
+  String get adminRoleChange;
 }
 
 class _AppLocalizationsDelegate
