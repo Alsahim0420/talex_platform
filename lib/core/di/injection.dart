@@ -9,6 +9,7 @@ import 'package:talex_platform/core/locale/locale_cubit.dart';
 import 'package:talex_platform/core/location/location_catalog.dart';
 import 'package:talex_platform/core/services/notification_service.dart';
 import 'package:talex_platform/features/admin/data/datasources/admin_data_source.dart';
+import 'package:talex_platform/features/admin/data/datasources/assessment_question_data_source.dart';
 import 'package:talex_platform/features/admin/data/repositories/admin_repository_impl.dart';
 import 'package:talex_platform/features/admin/domain/repositories/admin_repository.dart';
 import 'package:talex_platform/features/admin/presentation/bloc/admin_bloc.dart';
@@ -83,6 +84,7 @@ void configureAdminDependencies() {
     ..registerLazySingleton<AdminDataSource>(
       () => FirebaseAdminDataSource(getIt(), getIt()),
     )
+    ..registerLazySingleton(() => AssessmentQuestionDataSource(getIt()))
     ..registerLazySingleton<AdminRepository>(
       () => AdminRepositoryImpl(getIt()),
     )

@@ -3475,6 +3475,300 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No hay una cuenta TaleX con este correo. Si te invitaron, entra por Primer acceso con el PIN.'**
   String get errorAccountNotFound;
+
+  /// No description provided for @adminQuestions.
+  ///
+  /// In es, this message translates to:
+  /// **'Preguntas'**
+  String get adminQuestions;
+
+  /// No description provided for @adminQuestionsSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Banco de preguntas de la encuesta en sus tres frentes. Cada cambio se guarda en Firebase.'**
+  String get adminQuestionsSubtitle;
+
+  /// No description provided for @adminQuestionsNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva pregunta'**
+  String get adminQuestionsNew;
+
+  /// No description provided for @adminQuestionsEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar pregunta'**
+  String get adminQuestionsEdit;
+
+  /// No description provided for @adminQuestionsPreview.
+  ///
+  /// In es, this message translates to:
+  /// **'Vista previa'**
+  String get adminQuestionsPreview;
+
+  /// No description provided for @adminQuestionsPreviewTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Vista previa de la encuesta'**
+  String get adminQuestionsPreviewTitle;
+
+  /// No description provided for @adminQuestionsPreviewNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Simulación: las respuestas no se guardan.'**
+  String get adminQuestionsPreviewNote;
+
+  /// No description provided for @adminQuestionsPreviewEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay preguntas activas para mostrar.'**
+  String get adminQuestionsPreviewEmpty;
+
+  /// No description provided for @adminQuestionsEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay preguntas en Firebase.'**
+  String get adminQuestionsEmpty;
+
+  /// No description provided for @adminQuestionsSeed.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargar las {count} preguntas base'**
+  String adminQuestionsSeed(int count);
+
+  /// No description provided for @adminQuestionsNoResults.
+  ///
+  /// In es, this message translates to:
+  /// **'Ninguna pregunta coincide con el filtro.'**
+  String get adminQuestionsNoResults;
+
+  /// No description provided for @adminQuestionsSearch.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar por código, dimensión o enunciado...'**
+  String get adminQuestionsSearch;
+
+  /// No description provided for @adminQuestionsAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Todas'**
+  String get adminQuestionsAll;
+
+  /// No description provided for @adminQuestionsSummary.
+  ///
+  /// In es, this message translates to:
+  /// **'{active} activas de {total}'**
+  String adminQuestionsSummary(int active, int total);
+
+  /// No description provided for @adminQuestionsFrontValues.
+  ///
+  /// In es, this message translates to:
+  /// **'1 · Valores'**
+  String get adminQuestionsFrontValues;
+
+  /// No description provided for @adminQuestionsFrontNeeds.
+  ///
+  /// In es, this message translates to:
+  /// **'2 · Necesidades'**
+  String get adminQuestionsFrontNeeds;
+
+  /// No description provided for @adminQuestionsFrontCapabilities.
+  ///
+  /// In es, this message translates to:
+  /// **'3 · Capacidades'**
+  String get adminQuestionsFrontCapabilities;
+
+  /// No description provided for @adminQuestionsFormatPair.
+  ///
+  /// In es, this message translates to:
+  /// **'Par de enunciados'**
+  String get adminQuestionsFormatPair;
+
+  /// No description provided for @adminQuestionsFormatExperience.
+  ///
+  /// In es, this message translates to:
+  /// **'Enunciado de experiencia'**
+  String get adminQuestionsFormatExperience;
+
+  /// No description provided for @adminQuestionsCode.
+  ///
+  /// In es, this message translates to:
+  /// **'Código'**
+  String get adminQuestionsCode;
+
+  /// No description provided for @adminQuestionsFront.
+  ///
+  /// In es, this message translates to:
+  /// **'Frente'**
+  String get adminQuestionsFront;
+
+  /// No description provided for @adminQuestionsFormat.
+  ///
+  /// In es, this message translates to:
+  /// **'Formato'**
+  String get adminQuestionsFormat;
+
+  /// No description provided for @adminQuestionsDimension.
+  ///
+  /// In es, this message translates to:
+  /// **'Dimensión'**
+  String get adminQuestionsDimension;
+
+  /// No description provided for @adminQuestionsDimensionA.
+  ///
+  /// In es, this message translates to:
+  /// **'Dimensión A'**
+  String get adminQuestionsDimensionA;
+
+  /// No description provided for @adminQuestionsDimensionB.
+  ///
+  /// In es, this message translates to:
+  /// **'Dimensión B'**
+  String get adminQuestionsDimensionB;
+
+  /// No description provided for @adminQuestionsInstruction.
+  ///
+  /// In es, this message translates to:
+  /// **'Instrucción'**
+  String get adminQuestionsInstruction;
+
+  /// No description provided for @adminQuestionsStatement.
+  ///
+  /// In es, this message translates to:
+  /// **'Enunciado'**
+  String get adminQuestionsStatement;
+
+  /// No description provided for @adminQuestionsStatementA.
+  ///
+  /// In es, this message translates to:
+  /// **'Enunciado A'**
+  String get adminQuestionsStatementA;
+
+  /// No description provided for @adminQuestionsStatementB.
+  ///
+  /// In es, this message translates to:
+  /// **'Enunciado B'**
+  String get adminQuestionsStatementB;
+
+  /// No description provided for @adminQuestionsOption.
+  ///
+  /// In es, this message translates to:
+  /// **'Opción {number}'**
+  String adminQuestionsOption(int number);
+
+  /// No description provided for @adminQuestionsTimeLimit.
+  ///
+  /// In es, this message translates to:
+  /// **'Tiempo límite (segundos)'**
+  String get adminQuestionsTimeLimit;
+
+  /// No description provided for @adminQuestionsTimeLimitHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Vacío = sin límite'**
+  String get adminQuestionsTimeLimitHint;
+
+  /// No description provided for @adminQuestionsNoLimit.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin límite'**
+  String get adminQuestionsNoLimit;
+
+  /// No description provided for @adminQuestionsSeconds.
+  ///
+  /// In es, this message translates to:
+  /// **'{seconds} s'**
+  String adminQuestionsSeconds(int seconds);
+
+  /// No description provided for @adminQuestionsActive.
+  ///
+  /// In es, this message translates to:
+  /// **'Activa'**
+  String get adminQuestionsActive;
+
+  /// No description provided for @adminQuestionsInactive.
+  ///
+  /// In es, this message translates to:
+  /// **'Inactiva'**
+  String get adminQuestionsInactive;
+
+  /// No description provided for @adminQuestionsRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Este campo es obligatorio.'**
+  String get adminQuestionsRequired;
+
+  /// No description provided for @adminQuestionsCodeTaken.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya existe una pregunta con este código.'**
+  String get adminQuestionsCodeTaken;
+
+  /// No description provided for @adminQuestionsInvalidTime.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe un número entero mayor que cero.'**
+  String get adminQuestionsInvalidTime;
+
+  /// No description provided for @adminQuestionsDeleteTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar pregunta'**
+  String get adminQuestionsDeleteTitle;
+
+  /// No description provided for @adminQuestionsDeleteBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Se eliminará {code} de Firebase. Esta acción no se puede deshacer.'**
+  String adminQuestionsDeleteBody(String code);
+
+  /// No description provided for @adminQuestionsDelete.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar'**
+  String get adminQuestionsDelete;
+
+  /// No description provided for @adminQuestionsMoveUp.
+  ///
+  /// In es, this message translates to:
+  /// **'Subir'**
+  String get adminQuestionsMoveUp;
+
+  /// No description provided for @adminQuestionsMoveDown.
+  ///
+  /// In es, this message translates to:
+  /// **'Bajar'**
+  String get adminQuestionsMoveDown;
+
+  /// No description provided for @adminQuestionsError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo completar la operación en Firebase.'**
+  String get adminQuestionsError;
+
+  /// No description provided for @adminQuestionsRestart.
+  ///
+  /// In es, this message translates to:
+  /// **'Reiniciar'**
+  String get adminQuestionsRestart;
+
+  /// No description provided for @adminQuestionsDeviceMobile.
+  ///
+  /// In es, this message translates to:
+  /// **'Móvil'**
+  String get adminQuestionsDeviceMobile;
+
+  /// No description provided for @adminQuestionsDeviceDesktop.
+  ///
+  /// In es, this message translates to:
+  /// **'Escritorio'**
+  String get adminQuestionsDeviceDesktop;
+
+  /// No description provided for @adminQuestionsTimeUp.
+  ///
+  /// In es, this message translates to:
+  /// **'Tiempo agotado'**
+  String get adminQuestionsTimeUp;
 }
 
 class _AppLocalizationsDelegate

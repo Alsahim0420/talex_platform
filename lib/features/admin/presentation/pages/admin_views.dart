@@ -4,6 +4,7 @@ import 'package:talex_platform/core/constants/app_colors.dart';
 import 'package:talex_platform/core/constants/app_radii.dart';
 import 'package:talex_platform/features/admin/domain/entities/admin_entities.dart';
 import 'package:talex_platform/features/admin/presentation/bloc/admin_bloc.dart';
+import 'package:talex_platform/features/admin/presentation/pages/admin_questions_view.dart';
 import 'package:talex_platform/features/admin/presentation/widgets/admin_dialogs.dart';
 import 'package:talex_platform/features/admin/presentation/widgets/provision_company_dialog.dart';
 import 'package:talex_platform/features/admin/presentation/widgets/admin_widgets.dart';
@@ -18,6 +19,9 @@ class AdminSectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AdminBloc, AdminState>(
       builder: (context, state) {
+        if (state.section == AdminSection.questions) {
+          return const AdminQuestionsView();
+        }
         if (state.status == AdminViewStatus.initial ||
             (state.status == AdminViewStatus.loading &&
                 state.companies.isEmpty &&
@@ -31,8 +35,9 @@ class AdminSectionView extends StatelessWidget {
             padding: const EdgeInsets.all(32),
             child: AdminErrorState(
               message: state.failure?.message ?? context.l10n.noInformationYet,
-              onRetry: () =>
-                  context.read<AdminBloc>().add(AdminSectionSelected(state.section)),
+              onRetry: () => context.read<AdminBloc>().add(
+                AdminSectionSelected(state.section),
+              ),
             ),
           );
         }
@@ -47,7 +52,9 @@ class AdminSectionView extends StatelessWidget {
                 ? AdminProcessDetailView(
                     process: state.selectedProcess!,
                     people: state.people
-                        .where((item) => item.processId == state.selectedProcess!.id)
+                        .where(
+                          (item) => item.processId == state.selectedProcess!.id,
+                        )
                         .toList(),
                   )
                 : AdminProcessesView(state: state),
@@ -61,6 +68,7 @@ class AdminSectionView extends StatelessWidget {
           AdminSection.analytics => AdminAnalyticsView(state: state),
           AdminSection.alerts => AdminAlertsView(state: state),
           AdminSection.xebec => AdminXebecView(state: state),
+          AdminSection.questions => const AdminQuestionsView(),
           AdminSection.settings => AdminSettingsView(state: state),
         };
       },
@@ -165,9 +173,7 @@ class AdminDashboardView extends StatelessWidget {
                 spacing: 24,
                 runSpacing: 24,
                 children: cards
-                    .map(
-                      (card) => SizedBox(width: width, child: card),
-                    )
+                    .map((card) => SizedBox(width: width, child: card))
                     .toList(),
               );
             },
@@ -184,7 +190,9 @@ class AdminDashboardView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: AdminFunnelView(funnel: state.funnel ?? const AdminFunnel()),
+                  child: AdminFunnelView(
+                    funnel: state.funnel ?? const AdminFunnel(),
+                  ),
                 ),
                 const SizedBox(width: 24),
                 Expanded(
@@ -236,33 +244,35 @@ class _ActivityPanel extends StatelessWidget {
               ),
             )
           else
-            ...state.activity.take(12).map(
-              (item) => ListTile(
-                leading: Icon(
-                  switch (item.kind) {
-                    ActivityKind.vacancyCreated => Icons.work_outline,
-                    ActivityKind.respondentInvited => Icons.person_add_alt_1_outlined,
-                    ActivityKind.evaluationCompleted => Icons.task_alt_outlined,
-                    ActivityKind.evaluationStarted => Icons.play_circle_outline,
-                    ActivityKind.companyCreated => Icons.apartment_outlined,
-                    _ => Icons.timeline_outlined,
-                  },
-                  color: AppColors.dashboardAccent,
+            ...state.activity
+                .take(12)
+                .map(
+                  (item) => ListTile(
+                    leading: Icon(switch (item.kind) {
+                      ActivityKind.vacancyCreated => Icons.work_outline,
+                      ActivityKind.respondentInvited =>
+                        Icons.person_add_alt_1_outlined,
+                      ActivityKind.evaluationCompleted =>
+                        Icons.task_alt_outlined,
+                      ActivityKind.evaluationStarted =>
+                        Icons.play_circle_outline,
+                      ActivityKind.companyCreated => Icons.apartment_outlined,
+                      _ => Icons.timeline_outlined,
+                    }, color: AppColors.dashboardAccent),
+                    title: Text(item.entityName),
+                    subtitle: Text(
+                      [
+                        labels.activity(item.kind),
+                        if (item.context != null && item.context!.isNotEmpty)
+                          item.context,
+                        labels.date(item.createdAt),
+                      ].join(' · '),
+                    ),
+                    trailing: item.statusLabel == null
+                        ? null
+                        : AdminStatusChip(item.statusLabel!),
+                  ),
                 ),
-                title: Text(item.entityName),
-                subtitle: Text(
-                  [
-                    labels.activity(item.kind),
-                    if (item.context != null && item.context!.isNotEmpty)
-                      item.context,
-                    labels.date(item.createdAt),
-                  ].join(' · '),
-                ),
-                trailing: item.statusLabel == null
-                    ? null
-                    : AdminStatusChip(item.statusLabel!),
-              ),
-            ),
         ],
       ),
     );
@@ -349,7 +359,8 @@ class AdminCompaniesView extends StatelessWidget {
               ...CompanyStatus.values.map(
                 (status) => _FilterChip(
                   label: labels.companyStatus(status),
-                  selected: state.companyStatus == status && !state.archivedOnly,
+                  selected:
+                      state.companyStatus == status && !state.archivedOnly,
                   onTap: () => context.read<AdminBloc>().add(
                     AdminCompaniesRequested(query: state.query, status: status),
                   ),
@@ -382,8 +393,9 @@ class AdminCompaniesView extends StatelessWidget {
                     '${context.l10n.lastActivity}: ${labels.date(company.lastActivityAt ?? company.createdAt)}',
                 trailing: labels.companyStatus(company.status),
                 action: _CompanyOverflowMenu(company),
-                onTap: () =>
-                    context.read<AdminBloc>().add(AdminCompanyOpened(company.id)),
+                onTap: () => context.read<AdminBloc>().add(
+                  AdminCompanyOpened(company.id),
+                ),
               ),
             )
           else
@@ -395,11 +407,26 @@ class AdminCompaniesView extends StatelessWidget {
                   columns: [
                     DataColumn(label: Text(context.l10n.adminCompanies)),
                     DataColumn(label: Text(context.l10n.statusLabel)),
-                    DataColumn(label: Text(context.l10n.adminProcesses), numeric: true),
-                    DataColumn(label: Text(context.l10n.funnelInvited), numeric: true),
-                    DataColumn(label: Text(context.l10n.funnelStarted), numeric: true),
-                    DataColumn(label: Text(context.l10n.funnelCompleted), numeric: true),
-                    DataColumn(label: Text(context.l10n.kpiAffinities), numeric: true),
+                    DataColumn(
+                      label: Text(context.l10n.adminProcesses),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Text(context.l10n.funnelInvited),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Text(context.l10n.funnelStarted),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Text(context.l10n.funnelCompleted),
+                      numeric: true,
+                    ),
+                    DataColumn(
+                      label: Text(context.l10n.kpiAffinities),
+                      numeric: true,
+                    ),
                     DataColumn(label: Text(context.l10n.lastActivity)),
                     DataColumn(label: Text(context.l10n.companyActions)),
                   ],
@@ -491,8 +518,14 @@ class AdminCompanyDetailView extends StatelessWidget {
             children: [
               _Stat(context.l10n.adminProcesses, '${company.activeProcesses}'),
               _Stat(context.l10n.funnelInvited, '${company.invitedPeople}'),
-              _Stat(context.l10n.funnelCompleted, '${company.completedEvaluations}'),
-              _Stat(context.l10n.kpiAffinities, '${company.affinitiesDetected}'),
+              _Stat(
+                context.l10n.funnelCompleted,
+                '${company.completedEvaluations}',
+              ),
+              _Stat(
+                context.l10n.kpiAffinities,
+                '${company.affinitiesDetected}',
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -503,7 +536,9 @@ class AdminCompanyDetailView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${context.l10n.plan}: ${company.plan ?? context.l10n.noData}'),
+                Text(
+                  '${context.l10n.plan}: ${company.plan ?? context.l10n.noData}',
+                ),
                 const SizedBox(height: 8),
                 Text(
                   '${context.l10n.estimatedValue}: ${company.contractValue == null ? context.l10n.noData : labels.money(company.contractValue!)}',
@@ -717,7 +752,8 @@ class AdminPeopleView extends StatelessWidget {
                 title: item.displayName,
                 subtitle: '${item.companyName} · ${item.processName}',
                 trailing: labels.evaluation(item.status),
-                onTap: () => context.read<AdminBloc>().add(AdminPersonOpened(item)),
+                onTap: () =>
+                    context.read<AdminBloc>().add(AdminPersonOpened(item)),
               ),
             ),
         ],
@@ -870,13 +906,19 @@ class AdminSalesView extends StatelessWidget {
             spacing: 16,
             runSpacing: 16,
             children: [
-              _Stat(context.l10n.salesPeriod, labels.money(summary.periodTotal)),
+              _Stat(
+                context.l10n.salesPeriod,
+                labels.money(summary.periodTotal),
+              ),
               _Stat(
                 context.l10n.salesCumulative,
                 labels.money(summary.cumulativeTotal),
               ),
               _Stat(context.l10n.newCustomers, '${summary.newCustomers}'),
-              _Stat(context.l10n.averageTicket, labels.money(summary.averageTicket)),
+              _Stat(
+                context.l10n.averageTicket,
+                labels.money(summary.averageTicket),
+              ),
               _Stat(context.l10n.kpiMrr, labels.money(summary.mrr)),
               _Stat(
                 context.l10n.growth,
@@ -922,10 +964,22 @@ class AdminAnalyticsView extends StatelessWidget {
             spacing: 16,
             runSpacing: 16,
             children: [
-              _Stat(context.l10n.kpiTotalCompanies, '${analytics.newCompanies}'),
-              _Stat(context.l10n.kpiActiveCompanies, '${analytics.activeCompanies}'),
-              _Stat(context.l10n.kpiEvaluatedPeople, '${analytics.evaluatedPeople}'),
-              _Stat(context.l10n.funnelStarted, '${analytics.startedEvaluations}'),
+              _Stat(
+                context.l10n.kpiTotalCompanies,
+                '${analytics.newCompanies}',
+              ),
+              _Stat(
+                context.l10n.kpiActiveCompanies,
+                '${analytics.activeCompanies}',
+              ),
+              _Stat(
+                context.l10n.kpiEvaluatedPeople,
+                '${analytics.evaluatedPeople}',
+              ),
+              _Stat(
+                context.l10n.funnelStarted,
+                '${analytics.startedEvaluations}',
+              ),
               _Stat(
                 context.l10n.funnelCompleted,
                 '${analytics.completedEvaluations}',
@@ -934,8 +988,14 @@ class AdminAnalyticsView extends StatelessWidget {
                 context.l10n.completionRate,
                 '${(analytics.completionRate * 100).toStringAsFixed(0)}%',
               ),
-              _Stat(context.l10n.kpiAffinities, '${analytics.affinitiesDetected}'),
-              _Stat(context.l10n.funnelProcesses, '${analytics.processesCreated}'),
+              _Stat(
+                context.l10n.kpiAffinities,
+                '${analytics.affinitiesDetected}',
+              ),
+              _Stat(
+                context.l10n.funnelProcesses,
+                '${analytics.processesCreated}',
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -988,7 +1048,9 @@ class AdminAlertsView extends StatelessWidget {
                 child: AdminPanel(
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(20),
-                    title: Text('${item.title} · ${labels.alertType(item.type)}'),
+                    title: Text(
+                      '${item.title} · ${labels.alertType(item.type)}',
+                    ),
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 8),
                       child: Text(
@@ -1075,7 +1137,9 @@ class _AdminXebecViewState extends State<AdminXebecView> {
                           ),
                           onSubmitted: (value) {
                             if (value.trim().isEmpty) return;
-                            context.read<AdminBloc>().add(AdminXebecAsked(value.trim()));
+                            context.read<AdminBloc>().add(
+                              AdminXebecAsked(value.trim()),
+                            );
                             _controller.clear();
                           },
                         ),
@@ -1146,7 +1210,9 @@ class AdminSettingsView extends StatelessWidget {
                       onPressed: () => context.read<AdminBloc>().add(
                         AdminUserRoleUpdated(
                           userId: user.id,
-                          role: user.role == 'superadmin' ? 'user' : 'superadmin',
+                          role: user.role == 'superadmin'
+                              ? 'user'
+                              : 'superadmin',
                         ),
                       ),
                       child: Text(user.role),
@@ -1202,11 +1268,8 @@ class _CompanyOverflowMenu extends StatelessWidget {
     final l10n = context.l10n;
     return PopupMenuButton<CompanyLifecycleAction>(
       tooltip: l10n.companyActions,
-      onSelected: (action) => showCompanyLifecycleDialog(
-        context,
-        company: company,
-        action: action,
-      ),
+      onSelected: (action) =>
+          showCompanyLifecycleDialog(context, company: company, action: action),
       itemBuilder: (context) => [
         if (!company.archived && !company.isDisabled)
           PopupMenuItem(
@@ -1386,10 +1449,7 @@ class AdminProcessDetailView extends StatelessWidget {
             label: Text(context.l10n.backToProcesses),
           ),
           const SizedBox(height: 8),
-          AdminPageHeader(
-            title: process.name,
-            subtitle: process.companyName,
-          ),
+          AdminPageHeader(title: process.name, subtitle: process.companyName),
           const SizedBox(height: 20),
           Wrap(
             spacing: 16,
@@ -1422,7 +1482,8 @@ class AdminProcessDetailView extends StatelessWidget {
               (item) => AdminEntityCard(
                 title: item.displayName,
                 subtitle: labels.evaluation(item.status),
-                trailing: item.affinityScore?.toStringAsFixed(0) ??
+                trailing:
+                    item.affinityScore?.toStringAsFixed(0) ??
                     context.l10n.noData,
                 onTap: () {
                   final bloc = context.read<AdminBloc>();

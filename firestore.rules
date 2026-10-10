@@ -217,6 +217,11 @@ service cloud.firestore {
         || (isCompanyStaff() && resource.data.source == 'company');
     }
 
+    match /assessment_questions/{id} {
+      allow read: if isSuperAdmin() || isCompanyStaff() || isRespondent();
+      allow write: if isSuperAdmin();
+    }
+
     match /admin_audit_logs/{id} {
       allow read, create: if isSuperAdmin();
       allow update, delete: if false;

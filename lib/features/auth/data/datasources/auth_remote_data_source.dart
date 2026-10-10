@@ -100,7 +100,10 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
       data = snapshot.data();
       await _maybeElevateSuperAdmin(user, data);
       await _linkCompanyInvite(user);
-      final refreshed = await _firestore.collection('users').doc(user.uid).get();
+      final refreshed = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .get();
       data = refreshed.data() ?? data;
     } on FirebaseException {
       data = null;
@@ -125,7 +128,10 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
     if (UserRoleX.parse(data?['role']) == UserRole.superadmin) return;
     var listed = false;
     try {
-      final config = await _firestore.collection('config').doc('superadmin').get();
+      final config = await _firestore
+          .collection('config')
+          .doc('superadmin')
+          .get();
       final emails = (config.data()?['emails'] as List<dynamic>? ?? const [])
           .map((item) => item.toString().trim().toLowerCase())
           .toSet();
@@ -159,12 +165,16 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
     if (current == UserRole.superadmin || current == UserRole.respondent) {
       return;
     }
-    if (current.isCompanyStaffRole && (data?['companyId'] as String?)?.isNotEmpty == true) {
+    if (current.isCompanyStaffRole &&
+        (data?['companyId'] as String?)?.isNotEmpty == true) {
       return;
     }
     DocumentSnapshot<Map<String, dynamic>> invite;
     try {
-      invite = await _firestore.collection('activation_invites').doc(email).get();
+      invite = await _firestore
+          .collection('activation_invites')
+          .doc(email)
+          .get();
     } on FirebaseException {
       return;
     }
@@ -300,9 +310,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
   @override
   Future<AuthUserModel> signInWithCustomToken(String token) =>
       _handleFirebaseErrors(() async {
-        final credential = await _firebaseAuth.signInWithCustomToken(
-          token,
-        );
+        final credential = await _firebaseAuth.signInWithCustomToken(token);
 
         return _hydrate(credential.user);
       });
@@ -318,7 +326,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
           () => _firebaseAuth.signInWithPopup(provider),
         );
         await _saveUserDocumentWithRetry(credential);
-        return _hydrate(credential.user);
+        return await _hydrate(credential.user);
       }
 
       await (_googleInitialization ??= _googleSignIn.initialize());
@@ -331,7 +339,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
         credential,
       );
       await _saveUserDocumentWithRetry(userCredential);
-      return _hydrate(userCredential.user);
+      return await _hydrate(userCredential.user);
     } on FirebaseAuthException catch (error) {
       if (error.code == 'popup-closed-by-user' ||
           error.code == 'cancelled-popup-request') {
@@ -436,9 +444,7 @@ final class InMemoryAuthRemoteDataSource implements AuthRemoteDataSource {
   @override
   Future<AuthUserModel> signInWithCustomToken(String token) async {
     if (token.trim().isEmpty) {
-      throw const ServerException(
-        'El enlace de invitación no es válido.',
-      );
+      throw const ServerException('El enlace de invitación no es válido.');
     }
 
     return _currentUser = AuthUserModel(

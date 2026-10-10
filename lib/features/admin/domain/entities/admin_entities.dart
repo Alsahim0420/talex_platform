@@ -42,6 +42,7 @@ enum AdminSection {
   analytics,
   alerts,
   xebec,
+  questions,
   settings,
 }
 

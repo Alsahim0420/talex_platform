@@ -1818,4 +1818,169 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get errorAccountNotFound =>
       'No hay una cuenta TaleX con este correo. Si te invitaron, entra por Primer acceso con el PIN.';
+
+  @override
+  String get adminQuestions => 'Preguntas';
+
+  @override
+  String get adminQuestionsSubtitle =>
+      'Banco de preguntas de la encuesta en sus tres frentes. Cada cambio se guarda en Firebase.';
+
+  @override
+  String get adminQuestionsNew => 'Nueva pregunta';
+
+  @override
+  String get adminQuestionsEdit => 'Editar pregunta';
+
+  @override
+  String get adminQuestionsPreview => 'Vista previa';
+
+  @override
+  String get adminQuestionsPreviewTitle => 'Vista previa de la encuesta';
+
+  @override
+  String get adminQuestionsPreviewNote =>
+      'Simulación: las respuestas no se guardan.';
+
+  @override
+  String get adminQuestionsPreviewEmpty =>
+      'No hay preguntas activas para mostrar.';
+
+  @override
+  String get adminQuestionsEmpty => 'Todavía no hay preguntas en Firebase.';
+
+  @override
+  String adminQuestionsSeed(int count) {
+    return 'Cargar las $count preguntas base';
+  }
+
+  @override
+  String get adminQuestionsNoResults =>
+      'Ninguna pregunta coincide con el filtro.';
+
+  @override
+  String get adminQuestionsSearch =>
+      'Buscar por código, dimensión o enunciado...';
+
+  @override
+  String get adminQuestionsAll => 'Todas';
+
+  @override
+  String adminQuestionsSummary(int active, int total) {
+    return '$active activas de $total';
+  }
+
+  @override
+  String get adminQuestionsFrontValues => '1 · Valores';
+
+  @override
+  String get adminQuestionsFrontNeeds => '2 · Necesidades';
+
+  @override
+  String get adminQuestionsFrontCapabilities => '3 · Capacidades';
+
+  @override
+  String get adminQuestionsFormatPair => 'Par de enunciados';
+
+  @override
+  String get adminQuestionsFormatExperience => 'Enunciado de experiencia';
+
+  @override
+  String get adminQuestionsCode => 'Código';
+
+  @override
+  String get adminQuestionsFront => 'Frente';
+
+  @override
+  String get adminQuestionsFormat => 'Formato';
+
+  @override
+  String get adminQuestionsDimension => 'Dimensión';
+
+  @override
+  String get adminQuestionsDimensionA => 'Dimensión A';
+
+  @override
+  String get adminQuestionsDimensionB => 'Dimensión B';
+
+  @override
+  String get adminQuestionsInstruction => 'Instrucción';
+
+  @override
+  String get adminQuestionsStatement => 'Enunciado';
+
+  @override
+  String get adminQuestionsStatementA => 'Enunciado A';
+
+  @override
+  String get adminQuestionsStatementB => 'Enunciado B';
+
+  @override
+  String adminQuestionsOption(int number) {
+    return 'Opción $number';
+  }
+
+  @override
+  String get adminQuestionsTimeLimit => 'Tiempo límite (segundos)';
+
+  @override
+  String get adminQuestionsTimeLimitHint => 'Vacío = sin límite';
+
+  @override
+  String get adminQuestionsNoLimit => 'Sin límite';
+
+  @override
+  String adminQuestionsSeconds(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String get adminQuestionsActive => 'Activa';
+
+  @override
+  String get adminQuestionsInactive => 'Inactiva';
+
+  @override
+  String get adminQuestionsRequired => 'Este campo es obligatorio.';
+
+  @override
+  String get adminQuestionsCodeTaken =>
+      'Ya existe una pregunta con este código.';
+
+  @override
+  String get adminQuestionsInvalidTime =>
+      'Escribe un número entero mayor que cero.';
+
+  @override
+  String get adminQuestionsDeleteTitle => 'Eliminar pregunta';
+
+  @override
+  String adminQuestionsDeleteBody(String code) {
+    return 'Se eliminará $code de Firebase. Esta acción no se puede deshacer.';
+  }
+
+  @override
+  String get adminQuestionsDelete => 'Eliminar';
+
+  @override
+  String get adminQuestionsMoveUp => 'Subir';
+
+  @override
+  String get adminQuestionsMoveDown => 'Bajar';
+
+  @override
+  String get adminQuestionsError =>
+      'No se pudo completar la operación en Firebase.';
+
+  @override
+  String get adminQuestionsRestart => 'Reiniciar';
+
+  @override
+  String get adminQuestionsDeviceMobile => 'Móvil';
+
+  @override
+  String get adminQuestionsDeviceDesktop => 'Escritorio';
+
+  @override
+  String get adminQuestionsTimeUp => 'Tiempo agotado';
 }
