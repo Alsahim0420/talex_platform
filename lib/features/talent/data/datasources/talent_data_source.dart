@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +11,8 @@ import 'package:talex_platform/features/talent/domain/entities/talent_entities.d
 import 'package:talex_platform/features/talent/domain/services/dna_catalog.dart';
 import 'package:talex_platform/features/talent/domain/services/pin_hasher.dart';
 import 'package:talex_platform/features/talent/domain/talent_error_codes.dart';
+import 'package:crypto/crypto.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 abstract interface class TalentDataSource {
   Future<TalentSnapshot> loadCompany(String companyId);
@@ -30,7 +34,7 @@ abstract interface class TalentDataSource {
     String? logoContentType,
   });
   Future<void> activateWithPin({required String pin});
-  Future<void> tryCompleteRespondentInvite({required String password});
+  Future<String> redeemRespondentInvite({required String token});
   Future<String> inviteRecruiter({
     required String companyId,
     required String email,
@@ -42,6 +46,13 @@ abstract interface class TalentDataSource {
     required String candidateId,
     required CandidateProcessStatus status,
   });
+  Future<void> updateCandidate({
+    required String candidateId,
+    required String displayName,
+    required String documentNumber,
+    required String vacancyId,
+  });
+  Future<void> deleteCandidate(String candidateId);
   Future<RespondentSession> loadRespondentSession();
   Future<void> saveAnswer({
     required String candidateId,
@@ -63,10 +74,30 @@ abstract interface class TalentDataSource {
 }
 
 final class FirebaseTalentDataSource implements TalentDataSource {
-  FirebaseTalentDataSource(this._auth, this._firestore, this._storage);
+  FirebaseTalentDataSource(
+    this._auth,
+    this._firestore,
+    this._storage,
+    this._functions,
+  );
+
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
   final FirebaseStorage _storage;
+  final FirebaseFunctions _functions;
+
+  String _generateInviteToken() {
+    final random = Random.secure();
+    final bytes = List<int>.generate(
+      32,
+      (_) => random.nextInt(256),
+    );
+    return base64UrlEncode(bytes).replaceAll('=', '');
+  }
+
+  String _hashInviteToken(String token) {
+    return sha256.convert(utf8.encode(token)).toString();
+  }
 
   CollectionReference<Map<String, dynamic>> get _companies =>
       _firestore.collection('companies');
@@ -82,6 +113,58 @@ final class FirebaseTalentDataSource implements TalentDataSource {
       _firestore.collection('users');
   CollectionReference<Map<String, dynamic>> get _dnaCatalog =>
       _firestore.collection('dna_catalog');
+
+  @override
+  Future<String> redeemRespondentInvite({
+    required String token,
+  }) async {
+    final callable = _functions.httpsCallable(
+      'redeemRespondentInvite',
+      options: HttpsCallableOptions(
+        timeout: const Duration(seconds: 30),
+      ),
+    );
+
+    try {
+      final result = await callable.call({
+        'token': token.trim(),
+      });
+
+      final data = Map<String, dynamic>.from(
+        result.data as Map,
+      );
+
+      final customToken = data['customToken'] as String?;
+
+      if (customToken == null || customToken.isEmpty) {
+        throw const ServerException(
+          TalentErrorCodes.inviteInvalid,
+        );
+      }
+
+      return customToken;
+    } on FirebaseFunctionsException catch (error) {
+      switch (error.code) {
+        case 'not-found':
+          throw const ServerException(
+            TalentErrorCodes.inviteInvalid,
+          );
+
+        case 'failed-precondition':
+          throw ServerException(
+            error.message ?? TalentErrorCodes.inviteInvalid,
+          );
+
+        case 'invalid-argument':
+          throw const ServerException(
+            TalentErrorCodes.inviteInvalid,
+          );
+
+        default:
+          rethrow;
+      }
+    }
+  }
 
   String get _uid {
     final uid = _auth.currentUser?.uid;
@@ -348,6 +431,39 @@ final class FirebaseTalentDataSource implements TalentDataSource {
     return secret;
   }
 
+    Future<String> _writeRespondentInvite({
+    required String email,
+    required String companyId,
+    required String vacancyId,
+    String? firstName,
+    String? lastName,
+    String? documentNumber,
+    String? candidateId,
+  }) async {
+    final token = _generateInviteToken();
+    final tokenHash = _hashInviteToken(token);
+
+    await _invites.doc(email.trim().toLowerCase()).set({
+      'email': email.trim().toLowerCase(),
+      'companyId': companyId,
+      'vacancyId': vacancyId,
+      'kind': InviteKind.respondent.name,
+      'role': UserRole.respondent.value,
+      'tokenHash': tokenHash,
+      'tokenExpiresAt': Timestamp.fromDate(
+        DateTime.now().add(const Duration(days: 14)),
+      ),
+      'firstName': firstName,
+      'lastName': lastName,
+      'documentNumber': documentNumber,
+      'candidateId': candidateId,
+      'used': false,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    return token;
+  }
+
   @override
   Future<TalentSnapshot> loadCompany(String companyId) => _guard(() async {
     final profileDoc = await _companies.doc(companyId).get();
@@ -483,11 +599,10 @@ final class FirebaseTalentDataSource implements TalentDataSource {
         .limit(1)
         .get();
     if (existing.docs.isNotEmpty) {
-      return _writeInvite(
+      return _writeRespondentInvite(
         email: email,
         companyId: companyId,
-        kind: InviteKind.respondent,
-        role: UserRole.respondent,
+        vacancyId: vacancyId,
         firstName: displayName?.trim().split(' ').first,
         lastName: displayName != null && displayName.trim().contains(' ')
             ? displayName.trim().split(' ').skip(1).join(' ')
@@ -510,11 +625,10 @@ final class FirebaseTalentDataSource implements TalentDataSource {
       'updatedAt': FieldValue.serverTimestamp(),
       'createdAt': FieldValue.serverTimestamp(),
     });
-    return _writeInvite(
+    return _writeRespondentInvite(
       email: email,
       companyId: companyId,
-      kind: InviteKind.respondent,
-      role: UserRole.respondent,
+      vacancyId: vacancyId,
       firstName: displayName?.trim().split(' ').first,
       lastName: displayName != null && displayName.trim().contains(' ')
           ? displayName.trim().split(' ').skip(1).join(' ')
@@ -597,15 +711,6 @@ final class FirebaseTalentDataSource implements TalentDataSource {
     await _completeInvite(secret: pin, requireMatch: true);
   });
 
-  @override
-  Future<void> tryCompleteRespondentInvite({required String password}) =>
-      _guard(() async {
-        await _completeInvite(
-          secret: password,
-          expectedKind: InviteKind.respondent,
-          requireMatch: false,
-        );
-      });
 
   Future<void> _completeInvite({
     required String secret,
@@ -693,6 +798,65 @@ final class FirebaseTalentDataSource implements TalentDataSource {
   });
 
   @override
+  Future<void> updateCandidate({
+    required String candidateId,
+    required String displayName,
+    required String documentNumber,
+    required String vacancyId,
+  }) => _guard(() async {
+    final candidateRef = _candidates.doc(candidateId);
+    final candidate = await candidateRef.get();
+    final vacancy = _vacancy(await _vacancies.doc(vacancyId).get());
+    final name = displayName.trim();
+    await candidateRef.set({
+      'displayName': name,
+      'documentNumber': documentNumber.trim(),
+      'vacancyId': vacancyId,
+      'vacancyName': vacancy.name,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+    final email = (candidate.data()?['email'] as String?)?.trim().toLowerCase();
+    if (email == null || email.isEmpty) return;
+    final inviteRef = _invites.doc(email);
+    final invite = await _readInvite(inviteRef);
+    if (invite?['candidateId'] != candidateId) return;
+    final parts = name.split(' ');
+    await inviteRef.set({
+      'firstName': parts.first,
+      'lastName': parts.length > 1 ? parts.skip(1).join(' ') : null,
+      'documentNumber': documentNumber.trim(),
+      'vacancyId': vacancyId,
+    }, SetOptions(merge: true));
+  });
+
+  @override
+  Future<void> deleteCandidate(String candidateId) => _guard(() async {
+    final candidateRef = _candidates.doc(candidateId);
+    final candidate = await candidateRef.get();
+    if (!candidate.exists) return;
+    final email = (candidate.data()?['email'] as String?)?.trim().toLowerCase();
+    await _evaluations.doc(candidateId).delete();
+    if (email != null && email.isNotEmpty) {
+      final inviteRef = _invites.doc(email);
+      final invite = await _readInvite(inviteRef);
+      if (invite?['candidateId'] == candidateId) {
+        await inviteRef.delete();
+      }
+    }
+    await candidateRef.delete();
+  });
+
+  Future<Map<String, dynamic>?> _readInvite(
+    DocumentReference<Map<String, dynamic>> ref,
+  ) async {
+    try {
+      return (await ref.get()).data();
+    } on FirebaseException {
+      return null;
+    }
+  }
+
+  @override
   Future<RespondentSession> loadRespondentSession() => _guard(() async {
     final user = await _users.doc(_uid).get();
     var candidateId = user.data()?['candidateId'] as String?;
@@ -775,6 +939,7 @@ final class FirebaseTalentDataSource implements TalentDataSource {
       });
     } else {
       await ref.update({
+        'companyId': candidate.data()?['companyId'],
         'answers.$questionId': value,
         'updatedAt': FieldValue.serverTimestamp(),
         'respondentId': _uid,
@@ -810,7 +975,9 @@ final class FirebaseTalentDataSource implements TalentDataSource {
           'vacancyAffinity': vacancyLevel.name,
           'updatedAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
+        final completedCandidate = await _candidates.doc(candidateId).get();
         await _evaluations.doc(candidateId).set({
+          'companyId': completedCandidate.data()?['companyId'],
           'completed': true,
           'completedAt': FieldValue.serverTimestamp(),
         }, SetOptions(merge: true));
@@ -845,12 +1012,14 @@ final class FirebaseTalentDataSource implements TalentDataSource {
     required String candidateId,
     required AssessmentKind kind,
   }) => _guard(() async {
+    final candidate = await _candidates.doc(candidateId).get();
     await _candidates.doc(candidateId).set({
       'assessmentKind': kind.name,
       'updatedAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
     await _evaluations.doc(candidateId).set({
       'candidateId': candidateId,
+      'companyId': candidate.data()?['companyId'],
       'assessmentKind': kind.name,
       'updatedAt': FieldValue.serverTimestamp(),
       'respondentId': _uid,

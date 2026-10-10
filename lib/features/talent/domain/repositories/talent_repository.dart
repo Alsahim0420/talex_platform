@@ -25,8 +25,8 @@ abstract interface class TalentRepository {
     String? logoContentType,
   });
   Future<Either<Failure, Unit>> activateWithPin({required String pin});
-  Future<Either<Failure, Unit>> tryCompleteRespondentInvite({
-    required String password,
+  Future<Either<Failure, String>> redeemRespondentInvite({
+    required String token,
   });
   Future<Either<Failure, String>> inviteRecruiter({
     required String companyId,
@@ -39,6 +39,13 @@ abstract interface class TalentRepository {
     required String candidateId,
     required CandidateProcessStatus status,
   });
+  Future<Either<Failure, Unit>> updateCandidate({
+    required String candidateId,
+    required String displayName,
+    required String documentNumber,
+    required String vacancyId,
+  });
+  Future<Either<Failure, Unit>> deleteCandidate(String candidateId);
   Future<Either<Failure, RespondentSession>> loadRespondentSession();
   Future<Either<Failure, Unit>> saveAnswer({
     required String candidateId,

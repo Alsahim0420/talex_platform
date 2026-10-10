@@ -23,6 +23,7 @@ abstract interface class AuthRemoteDataSource {
   Future<void> signOut();
   Future<void> discardCurrentUser();
   Future<void> sendPasswordResetEmail(String email);
+  Future<AuthUserModel> signInWithCustomToken(String token);
 }
 
 final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
@@ -297,6 +298,16 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
   });
 
   @override
+  Future<AuthUserModel> signInWithCustomToken(String token) =>
+      _handleFirebaseErrors(() async {
+        final credential = await _firebaseAuth.signInWithCustomToken(
+          token,
+        );
+
+        return _hydrate(credential.user);
+      });
+
+  @override
   Future<AuthUserModel> signInWithGoogle() async {
     try {
       if (kIsWeb) {
@@ -419,6 +430,21 @@ final class InMemoryAuthRemoteDataSource implements AuthRemoteDataSource {
       role: SuperAdminConfig.matches(email)
           ? UserRole.superadmin
           : UserRole.user,
+    );
+  }
+
+  @override
+  Future<AuthUserModel> signInWithCustomToken(String token) async {
+    if (token.trim().isEmpty) {
+      throw const ServerException(
+        'El enlace de invitación no es válido.',
+      );
+    }
+
+    return _currentUser = AuthUserModel(
+      id: token,
+      email: '',
+      role: UserRole.respondent,
     );
   }
 

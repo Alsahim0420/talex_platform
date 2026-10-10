@@ -28,6 +28,8 @@ class TalentBloc extends Bloc<TalentEvent, TalentState> {
     on<TalentAssessmentKindSelected>(_onAssessmentKind);
     on<TalentCandidateOpened>(_onCandidateOpened);
     on<TalentCandidateClosed>(_onCandidateClosed);
+    on<TalentCandidateUpdated>(_onCandidateUpdated);
+    on<TalentCandidateDeleted>(_onCandidateDeleted);
     on<TalentDnaOptionDeleted>(_onDnaOptionDeleted);
   }
 
@@ -296,6 +298,55 @@ class TalentBloc extends Bloc<TalentEvent, TalentState> {
     Emitter<TalentState> emit,
   ) async {
     emit(state.copyWith(clearCandidateReport: true));
+  }
+
+  Future<void> _onCandidateUpdated(
+    TalentCandidateUpdated event,
+    Emitter<TalentState> emit,
+  ) async {
+    final result = await _repository.updateCandidate(
+      candidateId: event.candidateId,
+      displayName: event.displayName,
+      documentNumber: event.documentNumber,
+      vacancyId: event.vacancyId,
+    );
+    await result.fold(
+      (failure) async => emit(state.copyWith(failure: failure)),
+      (_) async {
+        final report = await _repository.loadCandidateReport(event.candidateId);
+        report.fold(
+          (failure) => emit(state.copyWith(failure: failure)),
+          (value) => emit(
+            state.copyWith(
+              candidateReport: value,
+              candidateNotice: TalentCandidateNotice.updated,
+              failure: null,
+            ),
+          ),
+        );
+        if (state.companyId != null) add(TalentLoaded(state.companyId!));
+      },
+    );
+  }
+
+  Future<void> _onCandidateDeleted(
+    TalentCandidateDeleted event,
+    Emitter<TalentState> emit,
+  ) async {
+    final result = await _repository.deleteCandidate(event.candidateId);
+    await result.fold(
+      (failure) async => emit(state.copyWith(failure: failure)),
+      (_) async {
+        emit(
+          state.copyWith(
+            clearCandidateReport: true,
+            candidateNotice: TalentCandidateNotice.deleted,
+            failure: null,
+          ),
+        );
+        if (state.companyId != null) add(TalentLoaded(state.companyId!));
+      },
+    );
   }
 
   Future<void> _onDnaOptionDeleted(

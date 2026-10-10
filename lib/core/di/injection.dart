@@ -93,7 +93,7 @@ void configureTalentDependencies() {
   if (getIt.isRegistered<TalentBloc>()) return;
   getIt
     ..registerLazySingleton<TalentDataSource>(
-      () => FirebaseTalentDataSource(getIt(), getIt(), getIt()),
+      () => FirebaseTalentDataSource(getIt(), getIt(), getIt(), getIt()),
     )
     ..registerLazySingleton<TalentRepository>(
       () => TalentRepositoryImpl(getIt(), getIt()),
