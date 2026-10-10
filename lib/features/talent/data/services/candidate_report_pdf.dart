@@ -127,7 +127,7 @@ class CandidateReportPdf {
                   pw.Text(
                     report.answers[id] == null
                         ? l10n.noData
-                        : likertLabel(l10n, report.answers[id]!),
+                        : assessmentAnswerLabel(l10n, id, report.answers[id]!),
                     style: const pw.TextStyle(fontSize: 11),
                   ),
                 ],

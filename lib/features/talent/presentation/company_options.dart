@@ -459,25 +459,45 @@ List<String> dnaStandoutOptions({
   ...extra,
 ]);
 
-String assessmentQuestionLabel(AppLocalizations l10n, String id) => switch (id) {
-  'c1' => l10n.assessmentC1,
-  'c2' => l10n.assessmentC2,
-  'c3' => l10n.assessmentC3,
-  'c4' => l10n.assessmentC4,
-  'c5' => l10n.assessmentC5,
-  'v1' => l10n.assessmentV1,
-  'v2' => l10n.assessmentV2,
-  'v3' => l10n.assessmentV3,
-  'v4' => l10n.assessmentV4,
-  'v5' => l10n.assessmentV5,
-  _ => id,
+String assessmentInstruction(AppLocalizations l10n, AssessmentItem item) =>
+    switch (item.block) {
+      AssessmentBlock.workValues => l10n.assessmentPairInstruction,
+      AssessmentBlock.needs => l10n.assessmentNeedInstruction,
+      AssessmentBlock.capabilities => l10n.assessmentExperienceInstruction,
+    };
+
+List<String> assessmentScaleLabels(
+  AppLocalizations l10n,
+  AssessmentFormat format,
+) => switch (format) {
+  AssessmentFormat.pair => [
+    l10n.pairScale1,
+    l10n.pairScale2,
+    l10n.pairScale3,
+    l10n.pairScale4,
+    l10n.pairScale5,
+  ],
+  AssessmentFormat.experience => [
+    l10n.frequencyScale1,
+    l10n.frequencyScale2,
+    l10n.frequencyScale3,
+    l10n.frequencyScale4,
+    l10n.frequencyScale5,
+  ],
 };
 
-String likertLabel(AppLocalizations l10n, int value) => switch (value) {
-  1 => l10n.likertStronglyDisagree,
-  2 => l10n.likertDisagree,
-  3 => l10n.likertNeutral,
-  4 => l10n.likertAgree,
-  5 => l10n.likertStronglyAgree,
-  _ => '$value',
-};
+/// Enunciado legible de una pregunta; en pares incluye ambas frases.
+String assessmentQuestionLabel(AppLocalizations l10n, String id) {
+  final item = AssessmentCatalog.byId(id);
+  if (item == null) return id;
+  final a = item.statementA.of(l10n.localeName);
+  if (!item.isPair) return a;
+  final b = item.statementB!.of(l10n.localeName);
+  return 'A: $a\nB: $b';
+}
+
+String assessmentAnswerLabel(AppLocalizations l10n, String id, int value) {
+  final item = AssessmentCatalog.byId(id);
+  if (item == null || value < 1 || value > 5) return '$value';
+  return assessmentScaleLabels(l10n, item.format)[value - 1];
+}

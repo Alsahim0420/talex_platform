@@ -2837,7 +2837,7 @@ abstract class AppLocalizations {
   /// No description provided for @respondentLikertHint.
   ///
   /// In es, this message translates to:
-  /// **'Todas las preguntas son de acuerdo o desacuerdo. No hay respuestas correctas o incorrectas.'**
+  /// **'En la mayoría de preguntas verás dos frases, una a cada lado. Elige el recuadro que quede más cerca de la que mejor te describe. No hay respuestas correctas o incorrectas.'**
   String get respondentLikertHint;
 
   /// No description provided for @startAssessment.
@@ -3296,66 +3296,6 @@ abstract class AppLocalizations {
   /// **'Invitación lista. El candidato recibe un enlace por correo para presentar la prueba.'**
   String get respondentInviteSent;
 
-  /// No description provided for @assessmentC1.
-  ///
-  /// In es, this message translates to:
-  /// **'Me identifico con la forma de trabajar de esta organización.'**
-  String get assessmentC1;
-
-  /// No description provided for @assessmentC2.
-  ///
-  /// In es, this message translates to:
-  /// **'El ambiente descrito se alinea con cómo me gusta colaborar.'**
-  String get assessmentC2;
-
-  /// No description provided for @assessmentC3.
-  ///
-  /// In es, this message translates to:
-  /// **'La manera de tomar decisiones de la empresa me resulta clara y coherente.'**
-  String get assessmentC3;
-
-  /// No description provided for @assessmentC4.
-  ///
-  /// In es, this message translates to:
-  /// **'Valoro el entorno laboral que describe la organización.'**
-  String get assessmentC4;
-
-  /// No description provided for @assessmentC5.
-  ///
-  /// In es, this message translates to:
-  /// **'Las personas que destacan aquí se parecen a cómo me gusta aportar.'**
-  String get assessmentC5;
-
-  /// No description provided for @assessmentV1.
-  ///
-  /// In es, this message translates to:
-  /// **'El rol descrito se alinea con el tipo de trabajo que quiero realizar.'**
-  String get assessmentV1;
-
-  /// No description provided for @assessmentV2.
-  ///
-  /// In es, this message translates to:
-  /// **'Las responsabilidades de la vacante coinciden con mi forma de contribuir.'**
-  String get assessmentV2;
-
-  /// No description provided for @assessmentV3.
-  ///
-  /// In es, this message translates to:
-  /// **'El entorno de este rol me permitiría desempeñarme con naturalidad.'**
-  String get assessmentV3;
-
-  /// No description provided for @assessmentV4.
-  ///
-  /// In es, this message translates to:
-  /// **'Las características buscadas para el rol coinciden con las mías.'**
-  String get assessmentV4;
-
-  /// No description provided for @assessmentV5.
-  ///
-  /// In es, this message translates to:
-  /// **'Esta vacante representa un contexto en el que me veo aportando de forma sostenida.'**
-  String get assessmentV5;
-
   /// No description provided for @recoverPasswordTitle.
   ///
   /// In es, this message translates to:
@@ -3769,6 +3709,102 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Tiempo agotado'**
   String get adminQuestionsTimeUp;
+
+  /// No description provided for @assessmentPairInstruction.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cuál de las dos frases lo describe mejor a usted?'**
+  String get assessmentPairInstruction;
+
+  /// No description provided for @assessmentNeedInstruction.
+  ///
+  /// In es, this message translates to:
+  /// **'Si tuviera que elegir, ¿cuál de las dos es más importante para usted en un empleo?'**
+  String get assessmentNeedInstruction;
+
+  /// No description provided for @assessmentExperienceInstruction.
+  ///
+  /// In es, this message translates to:
+  /// **'Pensando en sus trabajos o proyectos de los últimos tres años, ¿con qué frecuencia le ha ocurrido lo siguiente?'**
+  String get assessmentExperienceInstruction;
+
+  /// No description provided for @assessmentPairScaleHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Toque el recuadro que quede más cerca de la frase con la que se identifica.'**
+  String get assessmentPairScaleHint;
+
+  /// No description provided for @assessmentStatementA.
+  ///
+  /// In es, this message translates to:
+  /// **'Frase A'**
+  String get assessmentStatementA;
+
+  /// No description provided for @assessmentStatementB.
+  ///
+  /// In es, this message translates to:
+  /// **'Frase B'**
+  String get assessmentStatementB;
+
+  /// No description provided for @pairScale1.
+  ///
+  /// In es, this message translates to:
+  /// **'Claramente la A'**
+  String get pairScale1;
+
+  /// No description provided for @pairScale2.
+  ///
+  /// In es, this message translates to:
+  /// **'Más la A que la B'**
+  String get pairScale2;
+
+  /// No description provided for @pairScale3.
+  ///
+  /// In es, this message translates to:
+  /// **'Ambas por igual'**
+  String get pairScale3;
+
+  /// No description provided for @pairScale4.
+  ///
+  /// In es, this message translates to:
+  /// **'Más la B que la A'**
+  String get pairScale4;
+
+  /// No description provided for @pairScale5.
+  ///
+  /// In es, this message translates to:
+  /// **'Claramente la B'**
+  String get pairScale5;
+
+  /// No description provided for @frequencyScale1.
+  ///
+  /// In es, this message translates to:
+  /// **'Nunca'**
+  String get frequencyScale1;
+
+  /// No description provided for @frequencyScale2.
+  ///
+  /// In es, this message translates to:
+  /// **'Rara vez'**
+  String get frequencyScale2;
+
+  /// No description provided for @frequencyScale3.
+  ///
+  /// In es, this message translates to:
+  /// **'Algunas veces'**
+  String get frequencyScale3;
+
+  /// No description provided for @frequencyScale4.
+  ///
+  /// In es, this message translates to:
+  /// **'Con frecuencia'**
+  String get frequencyScale4;
+
+  /// No description provided for @frequencyScale5.
+  ///
+  /// In es, this message translates to:
+  /// **'Siempre'**
+  String get frequencyScale5;
 }
 
 class _AppLocalizationsDelegate

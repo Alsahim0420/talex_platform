@@ -956,17 +956,13 @@ final class FirebaseTalentDataSource implements TalentDataSource {
       _guard(() async {
         final evaluation = await _evaluations.doc(candidateId).get();
         final answers = _answers(evaluation.data()?['answers']);
-        double? average(List<String> ids) {
-          final values = ids.map((id) => answers[id]).whereType<int>().toList();
-          if (values.isEmpty) return null;
-          return values.reduce((a, b) => a + b) / values.length;
-        }
-
-        final companyLevel = affinityLevelFromAverage(
-          average(AssessmentCatalog.companyQuestionIds),
-        );
+        // Los pares de valores y necesidades describen preferencias; se
+        // guardan como perfil por dimensión hasta tener el perfil de la
+        // empresa para compararlos. La afinidad con la vacante sale de las
+        // experiencias (capacidades).
+        const companyLevel = AffinityLevel.unknown;
         final vacancyLevel = affinityLevelFromAverage(
-          average(AssessmentCatalog.vacancyQuestionIds),
+          capabilitiesAverage(answers),
         );
         await _candidates.doc(candidateId).set({
           'processStatus': CandidateProcessStatus.completed.name,
@@ -980,6 +976,11 @@ final class FirebaseTalentDataSource implements TalentDataSource {
           'companyId': completedCandidate.data()?['companyId'],
           'completed': true,
           'completedAt': FieldValue.serverTimestamp(),
+          'dimensionScores': {
+            'values': pairDimensionScores(answers, AssessmentBlock.workValues),
+            'needs': pairDimensionScores(answers, AssessmentBlock.needs),
+            'capabilities': capabilitiesAverage(answers),
+          },
         }, SetOptions(merge: true));
         return _candidate(await _candidates.doc(candidateId).get());
       });
