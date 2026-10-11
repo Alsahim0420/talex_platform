@@ -121,6 +121,21 @@ class TalentCandidateClosed extends TalentEvent {
   const TalentCandidateClosed();
 }
 
+class TalentAffinityAnalysisRequested extends TalentEvent {
+  const TalentAffinityAnalysisRequested(this.candidateId);
+  final String candidateId;
+  @override
+  List<Object?> get props => [candidateId];
+}
+
+class TalentAffinityAnalysisPolled extends TalentEvent {
+  const TalentAffinityAnalysisPolled(this.candidateId, this.attempt);
+  final String candidateId;
+  final int attempt;
+  @override
+  List<Object?> get props => [candidateId, attempt];
+}
+
 class TalentCandidateUpdated extends TalentEvent {
   const TalentCandidateUpdated({
     required this.candidateId,

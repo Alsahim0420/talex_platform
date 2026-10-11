@@ -168,7 +168,7 @@ final class TalentRepositoryImpl implements TalentRepository {
   });
 
   @override
-  Future<Either<Failure, Unit>> completeEvaluation(
+  Future<Either<Failure, TalentCandidate>> completeEvaluation(
     String candidateId, {
     String locale = 'es',
   }) => _guard(() async {
@@ -181,13 +181,23 @@ final class TalentRepositoryImpl implements TalentRepository {
       vacancyName: candidate.vacancyName,
     );
     if (mail != null) unawaited(mail);
-    return unit;
+    return candidate;
   });
 
   @override
   Future<Either<Failure, CandidateReport>> loadCandidateReport(
     String candidateId,
   ) => _guard(() => _source.loadCandidateReport(candidateId));
+
+  @override
+  Future<Either<Failure, AffinityAnalysis>> loadAffinityAnalysis(
+    String candidateId,
+  ) => _guard(() => _source.loadAffinityAnalysis(candidateId));
+
+  @override
+  Future<Either<Failure, AffinityAnalysis>> requestAffinityAnalysis(
+    String candidateId,
+  ) => _guard(() => _source.requestAffinityAnalysis(candidateId));
 
   @override
   Future<Either<Failure, Unit>> saveAssessmentKind({
