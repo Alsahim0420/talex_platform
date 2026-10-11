@@ -1389,36 +1389,55 @@ class AppLocalizationsEn extends AppLocalizations {
   String get affinityVacancy => 'Vacancy';
 
   @override
-  String get affinityCompanyHighHint =>
-      'There is a strong match with the culture and way of working described by the company. Mock copy: the real reading of evaluated dimensions will appear here later.';
-
-  @override
-  String get affinityCompanyMediumHint =>
-      'There is a partial match with the company DNA. Mock copy: later this will say which dimensions align.';
-
-  @override
-  String get affinityCompanyLowHint =>
-      'There is a lower match with the culture described by the company. Mock copy: the real profile will explain the distance.';
-
-  @override
-  String get affinityVacancyHighHint =>
-      'This person\'s profile is close to what the vacancy is looking for. Mock copy: matching role traits will appear here later.';
-
-  @override
-  String get affinityVacancyMediumHint =>
-      'There is a mid-level match with the vacancy profile. Mock copy: the real profile will show which parts of the role fit better.';
-
-  @override
-  String get affinityVacancyLowHint =>
-      'There is a lower match with the profile sought for this vacancy. Mock copy: this is not a judgment of the person, only of fit for this role.';
-
-  @override
   String get affinityUnknownHint =>
       'There is no complete assessment yet, so affinity is not classified.';
 
   @override
   String get affinityMockNote =>
-      'This explanation is a placeholder. The final reading will come from TaleX methodology.';
+      'AI-generated analysis based on the answers and the company DNA. It is supporting information: TaleX does not make hiring decisions or rule people out. The final decision belongs to your team.';
+
+  @override
+  String get affinityAnalysisNone =>
+      'This assessment does not have an affinity analysis yet.';
+
+  @override
+  String get affinityAnalysisPending =>
+      'We are analyzing the answers together with the company DNA. This may take a few seconds.';
+
+  @override
+  String get affinityAnalysisFailed =>
+      'We could not complete the affinity analysis right now. You can try again.';
+
+  @override
+  String get affinityAnalysisMissingDna =>
+      'To analyze affinity, complete the company DNA (values, culture or sought characteristics) and analyze again.';
+
+  @override
+  String get affinityAnalysisIncompleteAnswers =>
+      'The assessment does not have enough answers to analyze affinity.';
+
+  @override
+  String get affinityAnalyzeAction => 'Analyze affinity';
+
+  @override
+  String get affinityReanalyzeAction => 'Analyze again';
+
+  @override
+  String get affinityAlignmentsTitle => 'Where there is affinity';
+
+  @override
+  String get affinityDifferencesTitle => 'Aspects with less alignment';
+
+  @override
+  String get affinityTopicsTitle => 'Topics to talk about';
+
+  @override
+  String get affinityDataGapsTitle => 'Missing information';
+
+  @override
+  String affinityScoreValue(int score) {
+    return 'Score $score/100';
+  }
 
   @override
   String get continueAction => 'Continue';

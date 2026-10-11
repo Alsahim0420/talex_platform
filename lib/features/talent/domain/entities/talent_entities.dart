@@ -120,8 +120,10 @@ class TalentCandidate extends Equatable {
     this.vacancyAffinity = AffinityLevel.unknown,
     this.evaluationCompleted = false,
     this.assessmentKind,
+    this.affinityAnalyzed = false,
   });
   final String id, companyId, vacancyId, vacancyName, email, documentNumber;
+  final bool affinityAnalyzed;
   final String? displayName;
   final CandidateProcessStatus processStatus;
   final AffinityLevel companyAffinity, vacancyAffinity;
@@ -229,17 +231,74 @@ class RespondentSession extends Equatable {
   List<Object?> get props => [candidate, answers, company];
 }
 
+enum AffinityAnalysisStatus { none, pending, completed, failed, insufficientData }
+
+class AffinityInsight extends Equatable {
+  const AffinityInsight({required this.aspect, required this.evidence});
+  final String aspect, evidence;
+  @override
+  List<Object?> get props => [aspect, evidence];
+}
+
+/// Explicación de afinidad con la empresa generada en el backend.
+///
+/// Es información de apoyo para el equipo de la empresa; no es una decisión.
+class AffinityAnalysis extends Equatable {
+  const AffinityAnalysis({
+    this.status = AffinityAnalysisStatus.none,
+    this.level = AffinityLevel.unknown,
+    this.score,
+    this.confidence = AffinityLevel.unknown,
+    this.summary = '',
+    this.alignments = const [],
+    this.differences = const [],
+    this.conversationTopics = const [],
+    this.dataGaps = const [],
+    this.errorCode,
+    this.analyzedAt,
+  });
+  final AffinityAnalysisStatus status;
+  final AffinityLevel level, confidence;
+  final int? score;
+  final String summary;
+  final List<AffinityInsight> alignments, differences;
+  final List<String> conversationTopics, dataGaps;
+  final String? errorCode;
+  final DateTime? analyzedAt;
+
+  bool get isPending => status == AffinityAnalysisStatus.pending;
+  bool get hasResult =>
+      status == AffinityAnalysisStatus.completed && summary.isNotEmpty;
+
+  @override
+  List<Object?> get props => [
+    status,
+    level,
+    score,
+    confidence,
+    summary,
+    alignments,
+    differences,
+    conversationTopics,
+    dataGaps,
+    errorCode,
+    analyzedAt,
+  ];
+}
+
 class CandidateReport extends Equatable {
   const CandidateReport({
     required this.candidate,
     this.answers = const {},
     this.company,
     this.vacancy,
+    this.analysis = const AffinityAnalysis(),
   });
   final TalentCandidate candidate;
   final Map<String, int> answers;
   final CompanyProfile? company;
   final Vacancy? vacancy;
+  final AffinityAnalysis analysis;
   @override
-  List<Object?> get props => [candidate, answers, company, vacancy];
+  List<Object?> get props => [candidate, answers, company, vacancy, analysis];
 }

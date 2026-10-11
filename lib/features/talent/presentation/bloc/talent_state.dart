@@ -21,6 +21,7 @@ class TalentState extends Equatable {
     this.affinityFilter,
     this.candidateReport,
     this.candidateNotice,
+    this.analysisRunning = false,
   });
 
   final TalentViewStatus status;
@@ -38,6 +39,7 @@ class TalentState extends Equatable {
   final AffinityLevel? affinityFilter;
   final CandidateReport? candidateReport;
   final TalentCandidateNotice? candidateNotice;
+  final bool analysisRunning;
 
   List<TalentCandidate> get filteredCandidates {
     var items = snapshot.candidates;
@@ -72,6 +74,7 @@ class TalentState extends Equatable {
     CandidateReport? candidateReport,
     bool clearCandidateReport = false,
     TalentCandidateNotice? candidateNotice,
+    bool? analysisRunning,
   }) => TalentState(
     status: status ?? this.status,
     section: section ?? this.section,
@@ -90,6 +93,7 @@ class TalentState extends Equatable {
         ? null
         : (candidateReport ?? this.candidateReport),
     candidateNotice: candidateNotice,
+    analysisRunning: analysisRunning ?? this.analysisRunning,
   );
 
   @override
@@ -109,5 +113,6 @@ class TalentState extends Equatable {
     affinityFilter,
     candidateReport,
     candidateNotice,
+    analysisRunning,
   ];
 }
