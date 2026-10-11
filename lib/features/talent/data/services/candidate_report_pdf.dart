@@ -70,20 +70,6 @@ class CandidateReportPdf {
             ),
             style: const pw.TextStyle(fontSize: 11, lineSpacing: 2),
           ),
-          pw.SizedBox(height: 12),
-          pw.Text(
-            l10n.affinityWithVacancy,
-            style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14),
-          ),
-          pw.Text(affinityLabel(candidate.vacancyAffinity)),
-          pw.Text(
-            affinityMockExplanation(
-              l10n,
-              candidate.vacancyAffinity,
-              forCompany: false,
-            ),
-            style: const pw.TextStyle(fontSize: 11, lineSpacing: 2),
-          ),
           pw.SizedBox(height: 8),
           pw.Text(
             l10n.affinityMockNote,

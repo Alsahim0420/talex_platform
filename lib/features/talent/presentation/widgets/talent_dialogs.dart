@@ -543,12 +543,6 @@ Future<void> showComparisonDialog(
                 ...candidates.map((item) => DataCell(AffinityBadge(item.companyAffinity))),
               ],
             ),
-            DataRow(
-              cells: [
-                DataCell(Text(context.l10n.affinityWithVacancy)),
-                ...candidates.map((item) => DataCell(AffinityBadge(item.vacancyAffinity))),
-              ],
-            ),
           ],
         ),
       ),

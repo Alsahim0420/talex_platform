@@ -134,16 +134,6 @@ class TalentCandidateResultView extends StatelessWidget {
                 forCompany: true,
               ),
             ),
-            const SizedBox(height: 12),
-            _AffinityCard(
-              title: l10n.affinityWithVacancy,
-              level: candidate.vacancyAffinity,
-              explanation: affinityMockExplanation(
-                l10n,
-                candidate.vacancyAffinity,
-                forCompany: false,
-              ),
-            ),
             const SizedBox(height: 8),
             Text(
               l10n.affinityMockNote,
