@@ -108,18 +108,6 @@ class AppLocalizationsEn extends AppLocalizations {
       '“TaleX transformed our selection process and helped our team make better decisions.”';
 
   @override
-  String get testimonialName => 'Gabriel Ramirez';
-
-  @override
-  String get testimonialRole => 'CEO, TaleX';
-
-  @override
-  String get testimonialNameSecondary => 'Pablo Melo';
-
-  @override
-  String get testimonialRoleSecondary => 'CTO, TaleX';
-
-  @override
   String welcomeUser(String name) {
     return 'Welcome, $name';
   }

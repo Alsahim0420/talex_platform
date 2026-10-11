@@ -145,8 +145,8 @@ function copy(locale, type, situation) {
 
       if (completed) {
         return en
-          ? `You finished the assessment${vacancy ? ` for ${vacancy}` : ''}${company ? ` at ${company}` : ''}. The company will contact you later about the results.`
-          : `Finalizaste la evaluación${vacancy ? ` de ${vacancy}` : ''}${company ? ` en ${company}` : ''} con éxito. La empresa se comunicará contigo después con los resultados.`;
+          ? `You finished the assessment${vacancy ? ` for ${vacancy}` : ''}${company ? ` at ${company}` : ''}.`
+          : `Finalizaste la evaluación${vacancy ? ` de ${vacancy}` : ''}${company ? ` en ${company}` : ''} con éxito.`;
       }
 
       if (invite) {
@@ -192,19 +192,25 @@ function copy(locale, type, situation) {
           : 'Por ahora no necesitas hacer nada más en TaleX.')
         : invite
           ? (en
-            ? 'Use the button below to open your invitation. You do not need a PIN.'
-            : 'Usa el botón de abajo para abrir tu invitación. No necesitas ningún PIN.')
+            ? 'Use the button below to open your invitation.'
+            : 'Usa el botón de abajo para abrir tu invitación.')
           : (en
             ? 'You can also create the account with Google and then enter this PIN.'
             : 'También puedes crear la cuenta con Google y luego ingresar este PIN.'),
 
-    headline: headline(locale, resolveSituation(type, situation)),
+    headline: respondent || completed
+      ? ''
+      : headline(locale, resolveSituation(type, situation)),
 
-    cta: invite
-      ? (en ? 'Start assessment' : 'Comenzar evaluación')
-      : (en ? 'Open TaleX' : 'Abrir TaleX'),
+    cta: completed
+      ? ''
+      : invite
+        ? (en ? 'Start assessment' : 'Comenzar evaluación')
+        : (en ? 'Open TaleX' : 'Abrir TaleX'),
 
-    footer: recovery
+    footer: completed
+      ? ''
+      : recovery
       ? (en
         ? 'TaleX sent this message because someone requested a password reset for this email.'
         : 'TaleX envió este mensaje porque alguien pidió restablecer la contraseña de este correo.')
@@ -250,8 +256,6 @@ function copy(locale, type, situation) {
 
 const brandFiles = [
   {key: 'logo', file: 't_fondo_claro-2.png'},
-  {key: 'firma', file: 'firma.png'},
-  {key: 'marca', file: 'marca.png'},
 ];
 
 const brandHashes = Object.fromEntries(
@@ -269,8 +273,6 @@ function brandImageUrls() {
   const base = `https://us-central1-${project}.cloudfunctions.net/mailBrand`;
   return {
     logo: `${base}?k=${brandHashes.logo}`,
-    firma: `${base}?k=${brandHashes.firma}`,
-    marca: `${base}?k=${brandHashes.marca}`,
   };
 }
 
@@ -309,8 +311,6 @@ function html({
   const t = copy(locale, type, situation);
 
   const logo = images.logo;
-  const firma = images.firma;
-  const marca = images.marca;
 
   const pinBlock = pin
     ? `
@@ -364,9 +364,9 @@ function html({
                       TaleX
                     </div>
 
-                    <div style="margin-top:6px;font-size:13px;line-height:1.4;color:#ffffff;">
+                    ${t.headline ? `<div style="margin-top:6px;font-size:13px;line-height:1.4;color:#ffffff;">
                       ${t.headline}
-                    </div>
+                    </div>` : ''}
                   </td>
 
                 </tr>
@@ -402,64 +402,21 @@ function html({
                 ${t.next}
               </p>
 
-              <a
+              ${t.cta ? `<a
                 href="${appUrl}"
                 style="display:inline-block;background:#1D7BD6;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;"
               >
                 ${t.cta}
-              </a>
+              </a>` : ''}
 
             </td>
           </tr>
 
-          <tr>
+          ${t.footer ? `<tr>
             <td style="padding:0 20px 16px;font-size:12px;line-height:1.5;color:#76777C;">
               ${t.footer}
             </td>
-          </tr>
-
-          <tr>
-            <td style="background:#ffffff;">
-
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-
-                <tr>
-                  <td align="center" style="background:#ffffff;padding:8px 16px 16px;">
-                    <img
-                      src="${firma}"
-                      alt=""
-                      width="170"
-                      style="display:block;width:170px;max-width:170px;height:auto;border:0;margin:0 auto;background:transparent;"
-                    />
-                  </td>
-                </tr>
-
-                <tr>
-                  <td style="height:3px;line-height:3px;font-size:0;">
-                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td style="height:3px;width:50%;background:#2470BD;line-height:3px;font-size:0;">&nbsp;</td>
-                        <td style="height:3px;width:50%;background:#5D892C;line-height:3px;font-size:0;">&nbsp;</td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td style="background:#05060A;padding:0;">
-                    <img
-                      src="${marca}"
-                      alt=""
-                      width="560"
-                      style="display:block;width:100%;max-width:560px;height:auto;border:0;"
-                    />
-                  </td>
-                </tr>
-
-              </table>
-
-            </td>
-          </tr>
+          </tr>` : ''}
 
         </table>
 

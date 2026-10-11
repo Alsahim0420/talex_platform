@@ -451,21 +451,6 @@ class TalentCandidatesView extends StatelessWidget {
                                   AffinityBadge(item.companyAffinity),
                                 ],
                               ),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    l10n.affinityVacancy,
-                                    style: const TextStyle(
-                                      fontSize: 11,
-                                      color: AppColors.muted,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  AffinityBadge(item.vacancyAffinity),
-                                ],
-                              ),
                             ],
                           ),
                         ],
@@ -509,7 +494,7 @@ class TalentReportsView extends StatelessWidget {
                 return AdminEntityCard(
                   title: name,
                   subtitle:
-                      '${item.vacancyName} · ${l10n.affinityCompany} ${affinityWord(context, item.companyAffinity)} · ${l10n.affinityVacancy} ${affinityWord(context, item.vacancyAffinity)}',
+                      '${item.vacancyName} · ${l10n.affinityCompany} ${affinityWord(context, item.companyAffinity)}',
                   trailing: l10n.evaluationCompleted,
                   onTap: () => context.read<TalentBloc>().add(
                     TalentCandidateOpened(item.id),

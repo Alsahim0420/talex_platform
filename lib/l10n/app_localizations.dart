@@ -290,30 +290,6 @@ abstract class AppLocalizations {
   /// **'“TaleX transformó nuestro proceso de selección y ayudó a nuestro equipo a tomar mejores decisiones.”'**
   String get testimonial;
 
-  /// No description provided for @testimonialName.
-  ///
-  /// In es, this message translates to:
-  /// **'Gabriel Ramirez'**
-  String get testimonialName;
-
-  /// No description provided for @testimonialRole.
-  ///
-  /// In es, this message translates to:
-  /// **'CEO, TaleX'**
-  String get testimonialRole;
-
-  /// No description provided for @testimonialNameSecondary.
-  ///
-  /// In es, this message translates to:
-  /// **'Pablo Melo'**
-  String get testimonialNameSecondary;
-
-  /// No description provided for @testimonialRoleSecondary.
-  ///
-  /// In es, this message translates to:
-  /// **'CTO, TaleX'**
-  String get testimonialRoleSecondary;
-
   /// No description provided for @welcomeUser.
   ///
   /// In es, this message translates to:
