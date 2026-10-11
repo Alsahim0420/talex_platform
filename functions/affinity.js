@@ -4,7 +4,8 @@ const {onDocumentWritten} = require('firebase-functions/v2/firestore');
 const {defineSecret, defineString} = require('firebase-functions/params');
 
 const geminiApiKey = defineSecret('GEMINI_API_KEY');
-const geminiModel = defineString('GEMINI_MODEL', {default: 'gemini-2.0-flash'});
+const DEFAULT_MODEL = 'gemini-2.5-flash';
+const geminiModel = defineString('GEMINI_MODEL', {default: DEFAULT_MODEL});
 
 const PROMPT_VERSION = 'affinity-v2';
 const MIN_ANSWERED_RATIO = 0.7;
@@ -324,12 +325,20 @@ async function callGemini(prompt, apiKey, model) {
         signal: controller.signal,
       });
       if (response.status === 429 || response.status >= 500) {
-        lastError = new AnalysisError('gemini_unavailable', `http_${response.status}`);
+        const reason = await response.text().catch(() => '');
+        lastError = new AnalysisError(
+          'gemini_unavailable',
+          `http_${response.status} ${reason.slice(0, 300)}`,
+        );
         await new Promise((resolve) => setTimeout(resolve, 1500 * (attempt + 1)));
         continue;
       }
       if (!response.ok) {
-        throw new AnalysisError('gemini_rejected', `http_${response.status}`);
+        const reason = await response.text().catch(() => '');
+        throw new AnalysisError(
+          'gemini_rejected',
+          `http_${response.status} ${reason.slice(0, 300)}`,
+        );
       }
       const payload = await response.json();
       const candidate = payload.candidates && payload.candidates[0];
@@ -429,10 +438,10 @@ async function runAnalysis(candidateId, {force = false, trigger = 'completion'} 
       }, 'unknown');
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || '';
+    const apiKey = (process.env.GEMINI_API_KEY || '').trim();
     if (!apiKey) throw new AnalysisError('gemini_not_configured');
 
-    const model = process.env.GEMINI_MODEL || geminiModel.value() || 'gemini-2.0-flash';
+    const model = (process.env.GEMINI_MODEL || geminiModel.value() || DEFAULT_MODEL).trim();
     const result = await callGemini(
       buildPrompt({company, vacancy, responses, profile}),
       apiKey,
