@@ -1391,36 +1391,55 @@ class AppLocalizationsEs extends AppLocalizations {
   String get affinityVacancy => 'Vacante';
 
   @override
-  String get affinityCompanyHighHint =>
-      'Hay alta correspondencia con la cultura y la forma de trabajar descritas por la empresa. Texto de maqueta: más adelante aquí irá la lectura real de las dimensiones evaluadas.';
-
-  @override
-  String get affinityCompanyMediumHint =>
-      'Hay correspondencia parcial con el ADN de la empresa. Texto de maqueta: luego se detallará qué dimensiones coinciden y cuáles no.';
-
-  @override
-  String get affinityCompanyLowHint =>
-      'Hay menor correspondencia con la cultura descrita por la empresa. Texto de maqueta: la ficha real explicará en qué se distancia.';
-
-  @override
-  String get affinityVacancyHighHint =>
-      'El perfil de esta persona se acerca a lo que la vacante busca. Texto de maqueta: luego se mostrarán las características del rol con mayor coincidencia.';
-
-  @override
-  String get affinityVacancyMediumHint =>
-      'Hay coincidencia intermedia con el perfil de la vacante. Texto de maqueta: la ficha real indicará qué aspectos del rol calzan mejor.';
-
-  @override
-  String get affinityVacancyLowHint =>
-      'Hay menor correspondencia con el perfil buscado para esta vacante. Texto de maqueta: no significa un juicio sobre la persona, solo respecto a este rol.';
-
-  @override
   String get affinityUnknownHint =>
       'Todavía no hay evaluación completa, por eso la afinidad no está clasificada.';
 
   @override
   String get affinityMockNote =>
-      'Esta explicación es orientativa. La lectura definitiva se construirá con la metodología de TaleX.';
+      'Análisis generado con IA a partir de las respuestas y del ADN de la empresa. Es información de apoyo: TaleX no toma decisiones de contratación ni descarta personas. La decisión final corresponde a tu equipo.';
+
+  @override
+  String get affinityAnalysisNone =>
+      'Esta evaluación todavía no tiene análisis de afinidad.';
+
+  @override
+  String get affinityAnalysisPending =>
+      'Estamos analizando las respuestas junto con el ADN de la empresa. Puede tardar unos segundos.';
+
+  @override
+  String get affinityAnalysisFailed =>
+      'No pudimos completar el análisis de afinidad en este momento. Puedes intentarlo de nuevo.';
+
+  @override
+  String get affinityAnalysisMissingDna =>
+      'Para analizar la afinidad, completa el ADN de la empresa (valores, cultura o características que buscan) y vuelve a analizar.';
+
+  @override
+  String get affinityAnalysisIncompleteAnswers =>
+      'La evaluación no tiene suficientes respuestas para analizar la afinidad.';
+
+  @override
+  String get affinityAnalyzeAction => 'Analizar afinidad';
+
+  @override
+  String get affinityReanalyzeAction => 'Volver a analizar';
+
+  @override
+  String get affinityAlignmentsTitle => 'Dónde hay afinidad';
+
+  @override
+  String get affinityDifferencesTitle => 'Aspectos con menos coincidencia';
+
+  @override
+  String get affinityTopicsTitle => 'Temas para conversar';
+
+  @override
+  String get affinityDataGapsTitle => 'Información que faltó';
+
+  @override
+  String affinityScoreValue(int score) {
+    return 'Puntaje $score/100';
+  }
 
   @override
   String get continueAction => 'Continuar';

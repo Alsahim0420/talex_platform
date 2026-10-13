@@ -2732,42 +2732,6 @@ abstract class AppLocalizations {
   /// **'Vacante'**
   String get affinityVacancy;
 
-  /// No description provided for @affinityCompanyHighHint.
-  ///
-  /// In es, this message translates to:
-  /// **'Hay alta correspondencia con la cultura y la forma de trabajar descritas por la empresa. Texto de maqueta: más adelante aquí irá la lectura real de las dimensiones evaluadas.'**
-  String get affinityCompanyHighHint;
-
-  /// No description provided for @affinityCompanyMediumHint.
-  ///
-  /// In es, this message translates to:
-  /// **'Hay correspondencia parcial con el ADN de la empresa. Texto de maqueta: luego se detallará qué dimensiones coinciden y cuáles no.'**
-  String get affinityCompanyMediumHint;
-
-  /// No description provided for @affinityCompanyLowHint.
-  ///
-  /// In es, this message translates to:
-  /// **'Hay menor correspondencia con la cultura descrita por la empresa. Texto de maqueta: la ficha real explicará en qué se distancia.'**
-  String get affinityCompanyLowHint;
-
-  /// No description provided for @affinityVacancyHighHint.
-  ///
-  /// In es, this message translates to:
-  /// **'El perfil de esta persona se acerca a lo que la vacante busca. Texto de maqueta: luego se mostrarán las características del rol con mayor coincidencia.'**
-  String get affinityVacancyHighHint;
-
-  /// No description provided for @affinityVacancyMediumHint.
-  ///
-  /// In es, this message translates to:
-  /// **'Hay coincidencia intermedia con el perfil de la vacante. Texto de maqueta: la ficha real indicará qué aspectos del rol calzan mejor.'**
-  String get affinityVacancyMediumHint;
-
-  /// No description provided for @affinityVacancyLowHint.
-  ///
-  /// In es, this message translates to:
-  /// **'Hay menor correspondencia con el perfil buscado para esta vacante. Texto de maqueta: no significa un juicio sobre la persona, solo respecto a este rol.'**
-  String get affinityVacancyLowHint;
-
   /// No description provided for @affinityUnknownHint.
   ///
   /// In es, this message translates to:
@@ -2777,8 +2741,80 @@ abstract class AppLocalizations {
   /// No description provided for @affinityMockNote.
   ///
   /// In es, this message translates to:
-  /// **'Esta explicación es orientativa. La lectura definitiva se construirá con la metodología de TaleX.'**
+  /// **'Análisis generado con IA a partir de las respuestas y del ADN de la empresa. Es información de apoyo: TaleX no toma decisiones de contratación ni descarta personas. La decisión final corresponde a tu equipo.'**
   String get affinityMockNote;
+
+  /// No description provided for @affinityAnalysisNone.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta evaluación todavía no tiene análisis de afinidad.'**
+  String get affinityAnalysisNone;
+
+  /// No description provided for @affinityAnalysisPending.
+  ///
+  /// In es, this message translates to:
+  /// **'Estamos analizando las respuestas junto con el ADN de la empresa. Puede tardar unos segundos.'**
+  String get affinityAnalysisPending;
+
+  /// No description provided for @affinityAnalysisFailed.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos completar el análisis de afinidad en este momento. Puedes intentarlo de nuevo.'**
+  String get affinityAnalysisFailed;
+
+  /// No description provided for @affinityAnalysisMissingDna.
+  ///
+  /// In es, this message translates to:
+  /// **'Para analizar la afinidad, completa el ADN de la empresa (valores, cultura o características que buscan) y vuelve a analizar.'**
+  String get affinityAnalysisMissingDna;
+
+  /// No description provided for @affinityAnalysisIncompleteAnswers.
+  ///
+  /// In es, this message translates to:
+  /// **'La evaluación no tiene suficientes respuestas para analizar la afinidad.'**
+  String get affinityAnalysisIncompleteAnswers;
+
+  /// No description provided for @affinityAnalyzeAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Analizar afinidad'**
+  String get affinityAnalyzeAction;
+
+  /// No description provided for @affinityReanalyzeAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a analizar'**
+  String get affinityReanalyzeAction;
+
+  /// No description provided for @affinityAlignmentsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Dónde hay afinidad'**
+  String get affinityAlignmentsTitle;
+
+  /// No description provided for @affinityDifferencesTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Aspectos con menos coincidencia'**
+  String get affinityDifferencesTitle;
+
+  /// No description provided for @affinityTopicsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Temas para conversar'**
+  String get affinityTopicsTitle;
+
+  /// No description provided for @affinityDataGapsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Información que faltó'**
+  String get affinityDataGapsTitle;
+
+  /// No description provided for @affinityScoreValue.
+  ///
+  /// In es, this message translates to:
+  /// **'Puntaje {score}/100'**
+  String affinityScoreValue(int score);
 
   /// No description provided for @continueAction.
   ///

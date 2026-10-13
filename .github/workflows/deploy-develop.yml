@@ -31,7 +31,7 @@ jobs:
         run: flutter test
 
       - name: Build web
-        run: flutter build web --release --base-href / --no-web-resources-cdn
+        run: flutter build web --release --base-href /
 
       - name: Upload to Colombia Hosting
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

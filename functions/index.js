@@ -187,9 +187,7 @@ function copy(locale, type, situation) {
         ? 'Then you will set a new password. If you did not request this, you can ignore this email.'
         : 'Después crearás una nueva contraseña. Si no pediste este cambio, ignora este mensaje.')
       : completed
-        ? (en
-          ? 'You do not need to do anything else in TaleX for now.'
-          : 'Por ahora no necesitas hacer nada más en TaleX.')
+        ? ''
         : invite
           ? (en
             ? 'Use the button below to open your invitation.'
@@ -398,9 +396,9 @@ function html({
 
               ${pinBlock}
 
-              <p style="margin:24px 0;font-size:15px;line-height:1.55;color:#45464A;">
+              ${t.next ? `<p style="margin:24px 0;font-size:15px;line-height:1.55;color:#45464A;">
                 ${t.next}
-              </p>
+              </p>` : ''}
 
               ${t.cta ? `<a
                 href="${appUrl}"
@@ -571,7 +569,7 @@ exports.sendInviteEmail = onCall(
           to,
           subject: t.subject(companyName, vacancyName),
           text: completed
-          ? `${t.hello(firstName)}\n${t.intro(companyName, vacancyName)}\n${t.next}`
+          ? `${t.hello(firstName)}\n${t.intro(companyName, vacancyName)}`
           : respondentInvite
             ? `${t.hello(firstName)}\n${t.intro(companyName, vacancyName)}\n${t.next}\n${respondentInviteUrl}`
             : `${t.hello(firstName)}\n${t.intro(companyName, vacancyName)}\n${t.pinLabel}: ${pin}\n${t.pinTtl}\n${t.next}\n${registerUrl}`,
@@ -1294,4 +1292,8 @@ exports.completePasswordReset = onCall(callablePublic, async (request) => {
   );
   return {ok: true};
 });
+
+const affinity = require('./affinity');
+exports.analyzeAffinityOnCompletion = affinity.analyzeAffinityOnCompletion;
+exports.analyzeCandidateAffinity = affinity.analyzeCandidateAffinity;
 

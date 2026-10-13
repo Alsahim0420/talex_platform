@@ -172,10 +172,25 @@ service cloud.firestore {
       allow create: if isSuperAdmin()
         || (isCompanyStaff() && request.resource.data.companyId == companyId());
       allow update: if isSuperAdmin()
-        || (isCompanyStaff() && resource.data.companyId == companyId())
-        || ownsCandidate(id);
+        || (isCompanyStaff()
+          && resource.data.companyId == companyId()
+          && !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['companyAffinity', 'affinityStatus']))
+        || (ownsCandidate(id)
+          && !request.resource.data.diff(resource.data).affectedKeys()
+            .hasAny(['affinityStatus', 'companyId', 'email'])
+          && (!request.resource.data.diff(resource.data).affectedKeys()
+              .hasAny(['companyAffinity'])
+            || request.resource.data.companyAffinity == 'unknown'));
       allow delete: if isSuperAdmin()
         || (isCompanyStaff() && resource.data.companyId == companyId());
+    }
+
+    match /affinity_analyses/{id} {
+      allow get: if isSuperAdmin() || staffOwnsCandidate(id);
+      allow list: if isSuperAdmin()
+        || (isCompanyStaff() && resource.data.companyId == companyId());
+      allow write: if false;
     }
 
     match /evaluations/{id} {

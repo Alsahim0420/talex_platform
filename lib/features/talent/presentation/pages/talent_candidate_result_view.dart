@@ -125,15 +125,7 @@ class TalentCandidateResultView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            _AffinityCard(
-              title: l10n.affinityWithCompany,
-              level: candidate.companyAffinity,
-              explanation: affinityMockExplanation(
-                l10n,
-                candidate.companyAffinity,
-                forCompany: true,
-              ),
-            ),
+            _AffinityCard(report: report),
             const SizedBox(height: 8),
             Text(
               l10n.affinityMockNote,
@@ -187,33 +179,182 @@ class TalentCandidateResultView extends StatelessWidget {
 }
 
 class _AffinityCard extends StatelessWidget {
-  const _AffinityCard({
-    required this.title,
-    required this.level,
-    required this.explanation,
-  });
-  final String title;
-  final AffinityLevel level;
-  final String explanation;
+  const _AffinityCard({required this.report});
+  final CandidateReport report;
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final candidate = report.candidate;
+    final analysis = report.analysis;
+    final running = context.select<TalentBloc, bool>(
+      (bloc) => bloc.state.analysisRunning,
+    );
+    final pending = running || analysis.isPending;
+    final level = analysis.hasResult ? analysis.level : candidate.companyAffinity;
     return AdminPanel(
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
+            Text(
+              l10n.affinityWithCompany,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
             const SizedBox(height: 8),
             AffinityBadge(level),
-            const SizedBox(height: 8),
+            if (analysis.hasResult && analysis.score != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                l10n.affinityScoreValue(analysis.score!),
+                style: const TextStyle(color: AppColors.muted, fontSize: 12),
+              ),
+            ],
+            const SizedBox(height: 10),
+            if (pending) ...[
+              const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+              const SizedBox(height: 10),
+            ],
             Text(
-              explanation,
+              pending
+                  ? l10n.affinityAnalysisPending
+                  : affinityAnalysisMessage(
+                      l10n,
+                      analysis,
+                      evaluationCompleted: candidate.evaluationCompleted,
+                    ),
               textAlign: TextAlign.center,
               style: const TextStyle(color: AppColors.subtitle, height: 1.4),
             ),
+            if (analysis.hasResult && !pending) ...[
+              _InsightSection(
+                title: l10n.affinityAlignmentsTitle,
+                icon: Icons.check_circle_outline,
+                color: AppColors.positive,
+                insights: analysis.alignments,
+              ),
+              _InsightSection(
+                title: l10n.affinityDifferencesTitle,
+                icon: Icons.compare_arrows,
+                color: AppColors.primaryButton,
+                insights: analysis.differences,
+              ),
+              _TextSection(
+                title: l10n.affinityTopicsTitle,
+                items: analysis.conversationTopics,
+              ),
+              _TextSection(
+                title: l10n.affinityDataGapsTitle,
+                items: analysis.dataGaps,
+              ),
+            ],
+            if (candidate.evaluationCompleted && !pending) ...[
+              const SizedBox(height: 14),
+              TextButton.icon(
+                onPressed: () => context.read<TalentBloc>().add(
+                  TalentAffinityAnalysisRequested(candidate.id),
+                ),
+                icon: const Icon(Icons.auto_awesome_outlined, size: 18),
+                label: Text(
+                  analysis.status == AffinityAnalysisStatus.none
+                      ? l10n.affinityAnalyzeAction
+                      : l10n.affinityReanalyzeAction,
+                ),
+              ),
+            ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _InsightSection extends StatelessWidget {
+  const _InsightSection({
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.insights,
+  });
+  final String title;
+  final IconData icon;
+  final Color color;
+  final List<AffinityInsight> insights;
+
+  @override
+  Widget build(BuildContext context) {
+    if (insights.isEmpty) return const SizedBox.shrink();
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(top: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 8),
+          for (final item in insights)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(icon, size: 18, color: color),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${item.aspect}. ',
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          TextSpan(text: item.evidence),
+                        ],
+                      ),
+                      style: const TextStyle(
+                        color: AppColors.subtitle,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TextSection extends StatelessWidget {
+  const _TextSection({required this.title, required this.items});
+  final String title;
+  final List<String> items;
+
+  @override
+  Widget build(BuildContext context) {
+    if (items.isEmpty) return const SizedBox.shrink();
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(top: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 8),
+          for (final item in items)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Text(
+                '• $item',
+                style: const TextStyle(color: AppColors.subtitle, height: 1.4),
+              ),
+            ),
+        ],
       ),
     );
   }

@@ -52,11 +52,17 @@ abstract interface class TalentRepository {
     required String questionId,
     required int value,
   });
-  Future<Either<Failure, Unit>> completeEvaluation(
+  Future<Either<Failure, TalentCandidate>> completeEvaluation(
     String candidateId, {
     String locale = 'es',
   });
   Future<Either<Failure, CandidateReport>> loadCandidateReport(String candidateId);
+  Future<Either<Failure, AffinityAnalysis>> loadAffinityAnalysis(
+    String candidateId,
+  );
+  Future<Either<Failure, AffinityAnalysis>> requestAffinityAnalysis(
+    String candidateId,
+  );
   Future<Either<Failure, Unit>> saveAssessmentKind({
     required String candidateId,
     required AssessmentKind kind,
