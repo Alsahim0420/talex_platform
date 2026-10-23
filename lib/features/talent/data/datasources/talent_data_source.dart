@@ -60,6 +60,7 @@ abstract interface class TalentDataSource {
     required int value,
   });
   Future<TalentCandidate> completeEvaluation(String candidateId);
+  Future<void> requestSurveyResult(String candidateId);
   Future<CandidateReport> loadCandidateReport(String candidateId);
   Future<AffinityAnalysis> loadAffinityAnalysis(String candidateId);
   Future<AffinityAnalysis> requestAffinityAnalysis(String candidateId);
@@ -404,6 +405,7 @@ final class FirebaseTalentDataSource implements TalentDataSource {
         orElse: () => AffinityLevel.unknown,
       ),
       evaluationCompleted: data['evaluationCompleted'] == true,
+      resultRequested: data['resultRequested'] == true,
       assessmentKind: _assessmentKind(data['assessmentKind']),
       affinityAnalyzed: data['affinityStatus'] is String,
       updatedAt: _date(data['updatedAt']),
@@ -759,8 +761,7 @@ final class FirebaseTalentDataSource implements TalentDataSource {
       'candidateId': data['candidateId'],
       'documentNumber': data['documentNumber'],
       'mustChangePassword': false,
-      'mustReviewCompanyDna':
-          role == UserRole.companyAdmin || role == UserRole.companyLead,
+      'mustReviewCompanyDna': false,
       'activationPinHash': PinHasher.hash(secret.trim(), _email),
       'displayName': [
         data['firstName'],
@@ -1013,9 +1014,39 @@ final class FirebaseTalentDataSource implements TalentDataSource {
           vacancyAffinity: vacancyLevel,
           evaluationCompleted: true,
           assessmentKind: candidate.assessmentKind,
+          resultRequested: candidate.resultRequested,
           updatedAt: DateTime.now(),
         );
       });
+
+  @override
+  Future<void> requestSurveyResult(String candidateId) => _guard(() async {
+    final candidateSnap = await _candidates.doc(candidateId).get();
+    final data = candidateSnap.data() ?? const <String, dynamic>{};
+    final companyId = data['companyId'] as String?;
+    String? companyName;
+    if (companyId != null && companyId.isNotEmpty) {
+      final company = await _firestore.collection('companies').doc(companyId).get();
+      companyName = company.data()?['name'] as String?;
+    }
+    final batch = _firestore.batch()
+      ..set(_candidates.doc(candidateId), {
+        'resultRequested': true,
+        'resultRequestedAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true))
+      ..set(_firestore.collection('survey_result_requests').doc(candidateId), {
+        'candidateId': candidateId,
+        'companyId': companyId,
+        'companyName': companyName,
+        'displayName': data['displayName'] ?? data['email'],
+        'email': data['email'],
+        'vacancyName': data['vacancyName'],
+        'status': 'pending',
+        'requestedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    await batch.commit();
+  });
 
   @override
   Future<CandidateReport> loadCandidateReport(String candidateId) =>
@@ -1114,6 +1145,7 @@ final class FirebaseTalentDataSource implements TalentDataSource {
       alignments: insights(data['alignments']),
       differences: insights(data['differences']),
       conversationTopics: _stringList(data['conversationTopics']),
+      guidance: (data['guidance'] as String?)?.trim() ?? '',
       dataGaps: _stringList(data['dataGaps']),
       errorCode: data['error'] as String?,
       analyzedAt: _optionalDate(data['analyzedAt']),

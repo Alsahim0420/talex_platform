@@ -83,7 +83,8 @@ class CandidateReportPdf {
             ..._insights(l10n.affinityAlignmentsTitle, analysis.alignments),
             ..._insights(l10n.affinityDifferencesTitle, analysis.differences),
             ..._items(l10n.affinityTopicsTitle, analysis.conversationTopics),
-            ..._items(l10n.affinityDataGapsTitle, analysis.dataGaps),
+            if (analysis.guidance.trim().isNotEmpty)
+              ..._items(l10n.affinityGuidanceTitle, [analysis.guidance.trim()]),
           ],
           pw.SizedBox(height: 8),
           pw.Text(

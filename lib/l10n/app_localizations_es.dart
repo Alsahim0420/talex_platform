@@ -1155,23 +1155,23 @@ class AppLocalizationsEs extends AppLocalizations {
   String get teamRole => 'Rol en la empresa';
 
   @override
-  String get teamRoleCompanyAdmin => 'Administración de empresa';
+  String get teamRoleCompanyAdmin => 'CEO';
 
   @override
-  String get teamRoleCompanyLead => 'Dirección';
+  String get teamRoleCompanyLead => 'Administrador';
 
   @override
-  String get teamRolePeopleOps => 'Personas';
+  String get teamRolePeopleOps => 'Recursos humanos';
 
   @override
   String get teamRoleRecruiter => 'Reclutamiento';
 
   @override
-  String get teamRoleHiringManager => 'Liderazgo de área';
+  String get teamRoleHiringManager => 'Líder técnico';
 
   @override
   String get teamRoleHint =>
-      'Dirección y administración pueden completar el ADN e invitar al resto del equipo. Reclutamiento y liderazgo de área gestionan vacantes y candidatos.';
+      'CEO y administrador pueden invitar al resto del equipo. Recursos humanos, reclutamiento y líder técnico trabajan vacantes y candidatos.';
 
   @override
   String get vacanciesSubtitle =>
@@ -1396,7 +1396,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get affinityMockNote =>
-      'Análisis generado con IA a partir de las respuestas y del ADN de la empresa. Es información de apoyo: TaleX no toma decisiones de contratación ni descarta personas. La decisión final corresponde a tu equipo.';
+      'Análisis generado con IA a partir de la encuesta, que es la misma para todas las empresas. Es información de apoyo: TaleX no toma decisiones de contratación ni descarta personas. La decisión final corresponde a tu equipo.';
 
   @override
   String get affinityAnalysisNone =>
@@ -1404,7 +1404,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get affinityAnalysisPending =>
-      'Estamos analizando las respuestas junto con el ADN de la empresa. Puede tardar unos segundos.';
+      'Estamos analizando las respuestas de la encuesta. Puede tardar unos segundos.';
 
   @override
   String get affinityAnalysisFailed =>
@@ -1412,7 +1412,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get affinityAnalysisMissingDna =>
-      'Para analizar la afinidad, completa el ADN de la empresa (valores, cultura o características que buscan) y vuelve a analizar.';
+      'Todavía no hay información suficiente de la encuesta para completar el análisis.';
 
   @override
   String get affinityAnalysisIncompleteAnswers =>
@@ -1428,10 +1428,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get affinityAlignmentsTitle => 'Dónde hay afinidad';
 
   @override
-  String get affinityDifferencesTitle => 'Aspectos con menos coincidencia';
+  String get affinityDifferencesTitle =>
+      'Aspectos que podrían generar dificultades';
 
   @override
-  String get affinityTopicsTitle => 'Temas para conversar';
+  String get affinityTopicsTitle => 'Temas para conversar en la entrevista';
+
+  @override
+  String get affinityGuidanceTitle => 'Orientación para Recursos Humanos';
 
   @override
   String get affinityDataGapsTitle => 'Información que faltó';
@@ -1443,6 +1447,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get continueAction => 'Continuar';
+
+  @override
+  String get respondentWelcomeTitle => 'Quiero conocerte bien';
+
+  @override
+  String get respondentWelcomeBody =>
+      'Hola. Soy TaleXito. Esta encuesta es la misma para todas las empresas. Yo recibo tus respuestas para conocer mejor cómo te gusta trabajar. El resultado no lo determino yo: una persona especializada te lo contará más adelante.';
+
+  @override
+  String get respondentWelcomeAction => 'Listo';
 
   @override
   String respondentHello(String name) {
@@ -1659,7 +1673,21 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get assessmentFinishedTitle => 'Muy bien, acabaste';
+  String get assessmentFinishedTitle => 'TaleXito ya recibió tus respuestas';
+
+  @override
+  String get assessmentFinishedBody =>
+      'TaleXito se encarga de recibir la información. No determina el resultado. Una persona especializada te lo dirá más adelante.';
+
+  @override
+  String get surveyResultRequest => 'Quiero conocer mis resultados';
+
+  @override
+  String get surveyResultRequested =>
+      'Gracias por hacernos saber eso. El resultado se demora un poco. Una persona especializada se encarga de eso.';
+
+  @override
+  String get companyProfileSubtitle => 'Datos generales de la empresa.';
 
   @override
   String get downloadPdf => 'Descargar informe PDF';

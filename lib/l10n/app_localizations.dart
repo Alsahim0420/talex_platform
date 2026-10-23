@@ -2285,19 +2285,19 @@ abstract class AppLocalizations {
   /// No description provided for @teamRoleCompanyAdmin.
   ///
   /// In es, this message translates to:
-  /// **'Administración de empresa'**
+  /// **'CEO'**
   String get teamRoleCompanyAdmin;
 
   /// No description provided for @teamRoleCompanyLead.
   ///
   /// In es, this message translates to:
-  /// **'Dirección'**
+  /// **'Administrador'**
   String get teamRoleCompanyLead;
 
   /// No description provided for @teamRolePeopleOps.
   ///
   /// In es, this message translates to:
-  /// **'Personas'**
+  /// **'Recursos humanos'**
   String get teamRolePeopleOps;
 
   /// No description provided for @teamRoleRecruiter.
@@ -2309,13 +2309,13 @@ abstract class AppLocalizations {
   /// No description provided for @teamRoleHiringManager.
   ///
   /// In es, this message translates to:
-  /// **'Liderazgo de área'**
+  /// **'Líder técnico'**
   String get teamRoleHiringManager;
 
   /// No description provided for @teamRoleHint.
   ///
   /// In es, this message translates to:
-  /// **'Dirección y administración pueden completar el ADN e invitar al resto del equipo. Reclutamiento y liderazgo de área gestionan vacantes y candidatos.'**
+  /// **'CEO y administrador pueden invitar al resto del equipo. Recursos humanos, reclutamiento y líder técnico trabajan vacantes y candidatos.'**
   String get teamRoleHint;
 
   /// No description provided for @vacanciesSubtitle.
@@ -2741,7 +2741,7 @@ abstract class AppLocalizations {
   /// No description provided for @affinityMockNote.
   ///
   /// In es, this message translates to:
-  /// **'Análisis generado con IA a partir de las respuestas y del ADN de la empresa. Es información de apoyo: TaleX no toma decisiones de contratación ni descarta personas. La decisión final corresponde a tu equipo.'**
+  /// **'Análisis generado con IA a partir de la encuesta, que es la misma para todas las empresas. Es información de apoyo: TaleX no toma decisiones de contratación ni descarta personas. La decisión final corresponde a tu equipo.'**
   String get affinityMockNote;
 
   /// No description provided for @affinityAnalysisNone.
@@ -2753,7 +2753,7 @@ abstract class AppLocalizations {
   /// No description provided for @affinityAnalysisPending.
   ///
   /// In es, this message translates to:
-  /// **'Estamos analizando las respuestas junto con el ADN de la empresa. Puede tardar unos segundos.'**
+  /// **'Estamos analizando las respuestas de la encuesta. Puede tardar unos segundos.'**
   String get affinityAnalysisPending;
 
   /// No description provided for @affinityAnalysisFailed.
@@ -2765,7 +2765,7 @@ abstract class AppLocalizations {
   /// No description provided for @affinityAnalysisMissingDna.
   ///
   /// In es, this message translates to:
-  /// **'Para analizar la afinidad, completa el ADN de la empresa (valores, cultura o características que buscan) y vuelve a analizar.'**
+  /// **'Todavía no hay información suficiente de la encuesta para completar el análisis.'**
   String get affinityAnalysisMissingDna;
 
   /// No description provided for @affinityAnalysisIncompleteAnswers.
@@ -2795,14 +2795,20 @@ abstract class AppLocalizations {
   /// No description provided for @affinityDifferencesTitle.
   ///
   /// In es, this message translates to:
-  /// **'Aspectos con menos coincidencia'**
+  /// **'Aspectos que podrían generar dificultades'**
   String get affinityDifferencesTitle;
 
   /// No description provided for @affinityTopicsTitle.
   ///
   /// In es, this message translates to:
-  /// **'Temas para conversar'**
+  /// **'Temas para conversar en la entrevista'**
   String get affinityTopicsTitle;
+
+  /// No description provided for @affinityGuidanceTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Orientación para Recursos Humanos'**
+  String get affinityGuidanceTitle;
 
   /// No description provided for @affinityDataGapsTitle.
   ///
@@ -2821,6 +2827,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Continuar'**
   String get continueAction;
+
+  /// No description provided for @respondentWelcomeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Quiero conocerte bien'**
+  String get respondentWelcomeTitle;
+
+  /// No description provided for @respondentWelcomeBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola. Soy TaleXito. Esta encuesta es la misma para todas las empresas. Yo recibo tus respuestas para conocer mejor cómo te gusta trabajar. El resultado no lo determino yo: una persona especializada te lo contará más adelante.'**
+  String get respondentWelcomeBody;
+
+  /// No description provided for @respondentWelcomeAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Listo'**
+  String get respondentWelcomeAction;
 
   /// No description provided for @respondentHello.
   ///
@@ -3215,8 +3239,32 @@ abstract class AppLocalizations {
   /// No description provided for @assessmentFinishedTitle.
   ///
   /// In es, this message translates to:
-  /// **'Muy bien, acabaste'**
+  /// **'TaleXito ya recibió tus respuestas'**
   String get assessmentFinishedTitle;
+
+  /// No description provided for @assessmentFinishedBody.
+  ///
+  /// In es, this message translates to:
+  /// **'TaleXito se encarga de recibir la información. No determina el resultado. Una persona especializada te lo dirá más adelante.'**
+  String get assessmentFinishedBody;
+
+  /// No description provided for @surveyResultRequest.
+  ///
+  /// In es, this message translates to:
+  /// **'Quiero conocer mis resultados'**
+  String get surveyResultRequest;
+
+  /// No description provided for @surveyResultRequested.
+  ///
+  /// In es, this message translates to:
+  /// **'Gracias por hacernos saber eso. El resultado se demora un poco. Una persona especializada se encarga de eso.'**
+  String get surveyResultRequested;
+
+  /// No description provided for @companyProfileSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos generales de la empresa.'**
+  String get companyProfileSubtitle;
 
   /// No description provided for @downloadPdf.
   ///

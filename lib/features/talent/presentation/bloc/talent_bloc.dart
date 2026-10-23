@@ -24,6 +24,7 @@ class TalentBloc extends Bloc<TalentEvent, TalentState> {
     on<TalentRespondentSessionLoaded>(_onRespondentSession);
     on<TalentAnswerSaved>(_onAnswer);
     on<TalentEvaluationCompleted>(_onComplete);
+    on<TalentSurveyResultRequested>(_onSurveyResultRequested);
     on<TalentPasswordChanged>(_onPassword);
     on<TalentCompanyDnaConfirmed>(_onDnaConfirmed);
     on<TalentFilterChanged>(_onFilter);
@@ -107,7 +108,14 @@ class TalentBloc extends Bloc<TalentEvent, TalentState> {
     TalentSectionSelected event,
     Emitter<TalentState> emit,
   ) async {
-    emit(state.copyWith(section: event.section));
+    _analysisPoll?.cancel();
+    emit(
+      state.copyWith(
+        section: event.section,
+        clearCandidateReport: true,
+        analysisRunning: false,
+      ),
+    );
   }
 
   Future<void> _onSaveProfile(
@@ -257,6 +265,46 @@ class TalentBloc extends Bloc<TalentEvent, TalentState> {
     );
   }
 
+  Future<void> _onSurveyResultRequested(
+    TalentSurveyResultRequested event,
+    Emitter<TalentState> emit,
+  ) async {
+    final session = state.respondentSession;
+    if (session == null || session.candidate.resultRequested) return;
+    final result = await _repository.requestSurveyResult(event.candidateId);
+    result.fold((failure) => emit(state.copyWith(failure: failure)), (_) {
+      final current = state.respondentSession;
+      if (current == null) return;
+      final person = current.candidate;
+      emit(
+        state.copyWith(
+          failure: null,
+          respondentSession: RespondentSession(
+            candidate: TalentCandidate(
+              id: person.id,
+              companyId: person.companyId,
+              vacancyId: person.vacancyId,
+              vacancyName: person.vacancyName,
+              email: person.email,
+              documentNumber: person.documentNumber,
+              displayName: person.displayName,
+              processStatus: person.processStatus,
+              companyAffinity: person.companyAffinity,
+              vacancyAffinity: person.vacancyAffinity,
+              evaluationCompleted: person.evaluationCompleted,
+              resultRequested: true,
+              assessmentKind: person.assessmentKind,
+              affinityAnalyzed: person.affinityAnalyzed,
+              updatedAt: person.updatedAt,
+            ),
+            answers: current.answers,
+            company: current.company,
+          ),
+        ),
+      );
+    });
+  }
+
   Future<void> _onPassword(
     TalentPasswordChanged event,
     Emitter<TalentState> emit,
@@ -331,6 +379,7 @@ class TalentBloc extends Bloc<TalentEvent, TalentState> {
               companyAffinity: session.candidate.companyAffinity,
               vacancyAffinity: session.candidate.vacancyAffinity,
               evaluationCompleted: session.candidate.evaluationCompleted,
+              resultRequested: session.candidate.resultRequested,
               assessmentKind: event.kind,
               updatedAt: session.candidate.updatedAt,
             ),
@@ -355,8 +404,12 @@ class TalentBloc extends Bloc<TalentEvent, TalentState> {
       (failure) => emit(state.copyWith(failure: failure)),
       (report) {
         emit(state.copyWith(candidateReport: report, failure: null));
-        if (report.candidate.evaluationCompleted &&
-            report.analysis.status == AffinityAnalysisStatus.none) {
+        final status = report.analysis.status;
+        final needsAnalysis = report.candidate.evaluationCompleted &&
+            (status == AffinityAnalysisStatus.none ||
+                status == AffinityAnalysisStatus.failed ||
+                status == AffinityAnalysisStatus.insufficientData);
+        if (needsAnalysis) {
           add(TalentAffinityAnalysisRequested(report.candidate.id));
         } else {
           _pollAnalysis(report);

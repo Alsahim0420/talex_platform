@@ -247,24 +247,11 @@ class _AffinityCard extends StatelessWidget {
                 title: l10n.affinityTopicsTitle,
                 items: analysis.conversationTopics,
               ),
-              _TextSection(
-                title: l10n.affinityDataGapsTitle,
-                items: analysis.dataGaps,
-              ),
-            ],
-            if (candidate.evaluationCompleted && !pending) ...[
-              const SizedBox(height: 14),
-              TextButton.icon(
-                onPressed: () => context.read<TalentBloc>().add(
-                  TalentAffinityAnalysisRequested(candidate.id),
+              if (analysis.guidance.trim().isNotEmpty)
+                _TextSection(
+                  title: l10n.affinityGuidanceTitle,
+                  items: [analysis.guidance.trim()],
                 ),
-                icon: const Icon(Icons.auto_awesome_outlined, size: 18),
-                label: Text(
-                  analysis.status == AffinityAnalysisStatus.none
-                      ? l10n.affinityAnalyzeAction
-                      : l10n.affinityReanalyzeAction,
-                ),
-              ),
             ],
           ],
         ),

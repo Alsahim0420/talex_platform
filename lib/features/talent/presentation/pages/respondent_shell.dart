@@ -104,7 +104,7 @@ class _RespondentSurveyViewState extends State<RespondentSurveyView> {
         }
         final session = state.respondentSession!;
         if (session.candidate.evaluationCompleted) {
-          return const _FinishedView();
+          return _FinishedView(session: session);
         }
         if (!_started) {
           return _LandingView(
@@ -423,13 +423,45 @@ class _SegmentedScale extends StatelessWidget {
   }
 }
 
-class _LandingView extends StatelessWidget {
+class _LandingView extends StatefulWidget {
   const _LandingView({required this.session, required this.onStart});
   final RespondentSession session;
   final VoidCallback onStart;
 
   @override
+  State<_LandingView> createState() => _LandingViewState();
+}
+
+class _LandingViewState extends State<_LandingView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final l10n = context.l10n;
+      showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(l10n.respondentWelcomeTitle),
+          content: Text(l10n.respondentWelcomeBody),
+          actions: [
+            FilledButton(
+              onPressed: () => Navigator.pop(context),
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.primaryButton,
+              ),
+              child: Text(l10n.respondentWelcomeAction),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final session = widget.session;
+    final onStart = widget.onStart;
     final l10n = context.l10n;
     final name = session.candidate.displayName?.trim().isNotEmpty == true
         ? session.candidate.displayName!
@@ -557,11 +589,13 @@ class _LandingView extends StatelessWidget {
 }
 
 class _FinishedView extends StatelessWidget {
-  const _FinishedView();
+  const _FinishedView({required this.session});
+  final RespondentSession session;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final requested = session.candidate.resultRequested;
     return ContentWidth(
       maxWidth: 640,
       child: Padding(
@@ -578,6 +612,37 @@ class _FinishedView extends StatelessWidget {
                 color: AppColors.ink,
               ),
             ),
+            const SizedBox(height: 16),
+            Text(
+              l10n.assessmentFinishedBody,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                height: 1.45,
+                color: AppColors.subtitle,
+              ),
+            ),
+            const SizedBox(height: 24),
+            if (requested)
+              Text(
+                l10n.surveyResultRequested,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  height: 1.4,
+                  color: AppColors.ink,
+                ),
+              )
+            else
+              FilledButton(
+                onPressed: () => context.read<TalentBloc>().add(
+                  TalentSurveyResultRequested(session.candidate.id),
+                ),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.primaryButton,
+                  minimumSize: const Size.fromHeight(48),
+                ),
+                child: Text(l10n.surveyResultRequest),
+              ),
             const SizedBox(height: 28),
             Image.asset(AppAssets.talexMarca, fit: BoxFit.fitWidth),
           ],

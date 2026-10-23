@@ -14,7 +14,6 @@ import 'package:talex_platform/core/widgets/location_picker.dart';
 import 'package:talex_platform/core/widgets/logo_field.dart';
 import 'package:talex_platform/features/talent/domain/services/dna_catalog.dart';
 import 'package:talex_platform/features/talent/presentation/company_options.dart';
-import 'package:talex_platform/features/talent/presentation/widgets/company_dna_fields.dart';
 import 'package:talex_platform/features/talent/presentation/widgets/talent_dialogs.dart';
 import 'package:talex_platform/l10n/l10n.dart';
 
@@ -620,7 +619,7 @@ class _TalentProfileViewState extends State<TalentProfileView> {
         children: [
           AdminPageHeader(
             title: l10n.companyProfile,
-            subtitle: l10n.companyDna,
+            subtitle: l10n.companyProfileSubtitle,
           ),
           const SizedBox(height: 20),
           _field(l10n.companyName, _name),
@@ -647,18 +646,6 @@ class _TalentProfileViewState extends State<TalentProfileView> {
             onChanged: (value) => _logoUrl = value.url,
           ),
           _field(l10n.description, _description, lines: 3),
-          CompanyDnaFields(
-            values: _values,
-            culture: _culture,
-            standout: _standout,
-            catalog: widget.state.snapshot.dnaCatalog,
-            onValuesChanged: (value) => setState(() => _values = value),
-            onCultureChanged: (value) => setState(() => _culture = value),
-            onStandoutChanged: (value) => setState(() => _standout = value),
-            onDeleteCustom: (type, label) => context.read<TalentBloc>().add(
-              TalentDnaOptionDeleted(type: type, label: label),
-            ),
-          ),
           const SizedBox(height: 8),
           Align(
             alignment: Alignment.centerRight,

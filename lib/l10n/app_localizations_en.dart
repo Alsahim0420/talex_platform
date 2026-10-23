@@ -1153,23 +1153,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get teamRole => 'Role in the company';
 
   @override
-  String get teamRoleCompanyAdmin => 'Company administration';
+  String get teamRoleCompanyAdmin => 'CEO';
 
   @override
-  String get teamRoleCompanyLead => 'Leadership';
+  String get teamRoleCompanyLead => 'Administrator';
 
   @override
-  String get teamRolePeopleOps => 'People';
+  String get teamRolePeopleOps => 'Human resources';
 
   @override
   String get teamRoleRecruiter => 'Recruiting';
 
   @override
-  String get teamRoleHiringManager => 'Hiring manager';
+  String get teamRoleHiringManager => 'Technical lead';
 
   @override
   String get teamRoleHint =>
-      'Leadership and administration can complete the company DNA and invite the rest of the team. Recruiting and hiring managers work on vacancies and candidates.';
+      'The CEO and the administrator can invite the rest of the team. Human resources, recruiting, and the technical lead work on vacancies and candidates.';
 
   @override
   String get vacanciesSubtitle =>
@@ -1394,7 +1394,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get affinityMockNote =>
-      'AI-generated analysis based on the answers and the company DNA. It is supporting information: TaleX does not make hiring decisions or rule people out. The final decision belongs to your team.';
+      'AI-generated analysis based on the survey, which is the same for every company. It is supporting information: TaleX does not make hiring decisions or rule people out. The final decision belongs to your team.';
 
   @override
   String get affinityAnalysisNone =>
@@ -1402,7 +1402,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get affinityAnalysisPending =>
-      'We are analyzing the answers together with the company DNA. This may take a few seconds.';
+      'We are analyzing the survey answers. This may take a few seconds.';
 
   @override
   String get affinityAnalysisFailed =>
@@ -1410,7 +1410,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get affinityAnalysisMissingDna =>
-      'To analyze affinity, complete the company DNA (values, culture or sought characteristics) and analyze again.';
+      'There is not enough survey information yet to complete the analysis.';
 
   @override
   String get affinityAnalysisIncompleteAnswers =>
@@ -1426,10 +1426,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get affinityAlignmentsTitle => 'Where there is affinity';
 
   @override
-  String get affinityDifferencesTitle => 'Aspects with less alignment';
+  String get affinityDifferencesTitle =>
+      'Aspects that could make adaptation harder';
 
   @override
-  String get affinityTopicsTitle => 'Topics to talk about';
+  String get affinityTopicsTitle => 'Topics to discuss in the interview';
+
+  @override
+  String get affinityGuidanceTitle => 'Guidance for Human Resources';
 
   @override
   String get affinityDataGapsTitle => 'Missing information';
@@ -1441,6 +1445,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueAction => 'Continue';
+
+  @override
+  String get respondentWelcomeTitle => 'I want to get to know you';
+
+  @override
+  String get respondentWelcomeBody =>
+      'Hi. I am TaleXito. This survey is the same for every company. I receive your answers so we can understand how you like to work. I do not decide the result: a specialist will share it with you later.';
+
+  @override
+  String get respondentWelcomeAction => 'OK';
 
   @override
   String respondentHello(String name) {
@@ -1657,7 +1671,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get assessmentFinishedTitle => 'Well done, you finished';
+  String get assessmentFinishedTitle => 'TaleXito has your answers';
+
+  @override
+  String get assessmentFinishedBody =>
+      'TaleXito receives the information. It does not decide the result. A specialist will tell you later.';
+
+  @override
+  String get surveyResultRequest => 'I want to know my results';
+
+  @override
+  String get surveyResultRequested =>
+      'Thanks for letting us know. The result takes a little while. A specialist takes care of it.';
+
+  @override
+  String get companyProfileSubtitle => 'General company details.';
 
   @override
   String get downloadPdf => 'Download PDF report';
