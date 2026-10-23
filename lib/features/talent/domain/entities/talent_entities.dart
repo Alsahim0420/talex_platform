@@ -119,6 +119,7 @@ class TalentCandidate extends Equatable {
     this.companyAffinity = AffinityLevel.unknown,
     this.vacancyAffinity = AffinityLevel.unknown,
     this.evaluationCompleted = false,
+    this.resultRequested = false,
     this.assessmentKind,
     this.affinityAnalyzed = false,
   });
@@ -128,6 +129,7 @@ class TalentCandidate extends Equatable {
   final CandidateProcessStatus processStatus;
   final AffinityLevel companyAffinity, vacancyAffinity;
   final bool evaluationCompleted;
+  final bool resultRequested;
   final AssessmentKind? assessmentKind;
   final DateTime updatedAt;
   @override
@@ -141,6 +143,8 @@ class TalentCandidate extends Equatable {
     processStatus,
     companyAffinity,
     vacancyAffinity,
+    evaluationCompleted,
+    resultRequested,
   ];
 }
 
@@ -253,6 +257,7 @@ class AffinityAnalysis extends Equatable {
     this.alignments = const [],
     this.differences = const [],
     this.conversationTopics = const [],
+    this.guidance = '',
     this.dataGaps = const [],
     this.errorCode,
     this.analyzedAt,
@@ -263,6 +268,7 @@ class AffinityAnalysis extends Equatable {
   final String summary;
   final List<AffinityInsight> alignments, differences;
   final List<String> conversationTopics, dataGaps;
+  final String guidance;
   final String? errorCode;
   final DateTime? analyzedAt;
 
@@ -280,6 +286,7 @@ class AffinityAnalysis extends Equatable {
     alignments,
     differences,
     conversationTopics,
+    guidance,
     dataGaps,
     errorCode,
     analyzedAt,

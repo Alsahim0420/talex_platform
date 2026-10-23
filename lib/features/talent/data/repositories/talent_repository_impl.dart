@@ -185,6 +185,13 @@ final class TalentRepositoryImpl implements TalentRepository {
   });
 
   @override
+  Future<Either<Failure, Unit>> requestSurveyResult(String candidateId) =>
+      _guard(() async {
+        await _source.requestSurveyResult(candidateId);
+        return unit;
+      });
+
+  @override
   Future<Either<Failure, CandidateReport>> loadCandidateReport(
     String candidateId,
   ) => _guard(() => _source.loadCandidateReport(candidateId));

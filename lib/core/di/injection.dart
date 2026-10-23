@@ -13,6 +13,10 @@ import 'package:talex_platform/features/admin/data/datasources/assessment_questi
 import 'package:talex_platform/features/admin/data/repositories/admin_repository_impl.dart';
 import 'package:talex_platform/features/admin/domain/repositories/admin_repository.dart';
 import 'package:talex_platform/features/admin/presentation/bloc/admin_bloc.dart';
+import 'package:talex_platform/features/assistant/data/datasources/assistant_remote_data_source.dart';
+import 'package:talex_platform/features/assistant/data/repositories/assistant_repository_impl.dart';
+import 'package:talex_platform/features/assistant/domain/repositories/assistant_repository.dart';
+import 'package:talex_platform/features/assistant/presentation/bloc/assistant_bloc.dart';
 import 'package:talex_platform/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:talex_platform/features/auth/data/services/password_recovery_service.dart';
 import 'package:talex_platform/features/auth/data/repositories/auth_repository_impl.dart';
@@ -76,6 +80,7 @@ Future<void> configureDependencies() async {
   configureInvitationDependencies();
   configureAdminDependencies();
   configureTalentDependencies();
+  configureAssistantDependencies();
 }
 
 void configureAdminDependencies() {
@@ -85,9 +90,7 @@ void configureAdminDependencies() {
       () => FirebaseAdminDataSource(getIt(), getIt()),
     )
     ..registerLazySingleton(() => AssessmentQuestionDataSource(getIt()))
-    ..registerLazySingleton<AdminRepository>(
-      () => AdminRepositoryImpl(getIt()),
-    )
+    ..registerLazySingleton<AdminRepository>(() => AdminRepositoryImpl(getIt()))
     ..registerFactory(() => AdminBloc(repository: getIt()));
 }
 
@@ -101,6 +104,23 @@ void configureTalentDependencies() {
       () => TalentRepositoryImpl(getIt(), getIt()),
     )
     ..registerFactory(() => TalentBloc(repository: getIt()));
+}
+
+void configureAssistantDependencies() {
+  if (getIt.isRegistered<AssistantRepository>()) return;
+  getIt
+    ..registerLazySingleton<AssistantRemoteDataSource>(
+      () => CallableAssistantDataSource(getIt()),
+    )
+    ..registerLazySingleton<AssistantRepository>(
+      () => AssistantRepositoryImpl(
+        readAdminRepository: () => getIt.isRegistered<AdminRepository>()
+            ? getIt<AdminRepository>()
+            : null,
+        remote: getIt<AssistantRemoteDataSource>(),
+      ),
+    )
+    ..registerFactory(() => AssistantBloc(repository: getIt()));
 }
 
 void configureInvitationDependencies() {

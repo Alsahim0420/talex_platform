@@ -198,10 +198,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
         ].whereType<String>().join(' ').trim(),
         'updatedAt': FieldValue.serverTimestamp(),
       };
-      if (data?['mustReviewCompanyDna'] == null &&
-          (role == UserRole.companyAdmin || role == UserRole.companyLead)) {
-        linked['mustReviewCompanyDna'] = true;
-      }
+      linked['mustReviewCompanyDna'] = false;
       await userRef.set(linked, SetOptions(merge: true));
     } on FirebaseException {
       // Sin permiso se deja el perfil como está; el usuario puede registrarse con el PIN.

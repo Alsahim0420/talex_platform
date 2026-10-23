@@ -86,21 +86,55 @@ void main() {
     await bloc.close();
   });
 
-  test('retrying a failed analysis stores the result in the open report', () async {
+  test('opening a failed analysis loads a fresh report', () async {
     final repository = _FakeRepository()
       ..stored = const AffinityAnalysis(status: AffinityAnalysisStatus.failed);
     final bloc = TalentBloc(repository: repository);
     bloc.add(const TalentCandidateOpened('c1'));
     await _settle();
-    expect(bloc.state.candidateReport?.analysis.status, AffinityAnalysisStatus.failed);
-    expect(repository.analysisRequests, 0);
-
-    bloc.add(const TalentAffinityAnalysisRequested('c1'));
     await _settle();
     expect(repository.analysisRequests, 1);
     expect(bloc.state.analysisRunning, isFalse);
     expect(bloc.state.candidateReport?.analysis, _completed);
     expect(bloc.state.candidateReport?.candidate.companyAffinity, AffinityLevel.high);
+    await bloc.close();
+  });
+
+  test('choosing a section closes the candidate report', () async {
+    final repository = _FakeRepository()..stored = _completed;
+    final bloc = TalentBloc(repository: repository);
+    bloc.add(const TalentCandidateOpened('c1'));
+    await _settle();
+    expect(bloc.state.candidateReport, isNotNull);
+
+    bloc.add(const TalentSectionSelected(TalentSection.dashboard));
+    await _settle();
+    expect(bloc.state.section, TalentSection.dashboard);
+    expect(bloc.state.candidateReport, isNull);
+    await bloc.close();
+  });
+
+  test('opening an analysis blocked by missing data requests it again', () async {
+    final repository = _FakeRepository()
+      ..stored = const AffinityAnalysis(
+        status: AffinityAnalysisStatus.insufficientData,
+      );
+    final bloc = TalentBloc(repository: repository);
+    bloc.add(const TalentCandidateOpened('c1'));
+    await _settle();
+    await _settle();
+    expect(repository.analysisRequests, 1);
+    expect(bloc.state.candidateReport?.analysis, _completed);
+    await bloc.close();
+  });
+
+  test('opening a finished report shows it without requesting again', () async {
+    final repository = _FakeRepository()..stored = _completed;
+    final bloc = TalentBloc(repository: repository);
+    bloc.add(const TalentCandidateOpened('c1'));
+    await _settle();
+    expect(repository.analysisRequests, 0);
+    expect(bloc.state.candidateReport?.analysis, _completed);
     await bloc.close();
   });
 

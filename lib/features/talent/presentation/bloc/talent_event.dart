@@ -162,6 +162,13 @@ class TalentPasswordChanged extends TalentEvent {
   List<Object?> get props => [password];
 }
 
+class TalentSurveyResultRequested extends TalentEvent {
+  const TalentSurveyResultRequested(this.candidateId);
+  final String candidateId;
+  @override
+  List<Object?> get props => [candidateId];
+}
+
 class TalentCompanyDnaConfirmed extends TalentEvent {
   const TalentCompanyDnaConfirmed(this.profile);
   final CompanyProfile profile;

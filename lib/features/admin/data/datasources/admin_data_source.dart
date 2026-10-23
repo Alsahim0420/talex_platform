@@ -884,7 +884,47 @@ final class FirebaseAdminDataSource implements AdminDataSource {
   @override
   Future<List<AdminAlert>> getAlerts() async {
     final dashboard = await getDashboard();
-    return dashboard.alerts;
+    final requests = await _surveyResultAlerts();
+    return [...requests, ...dashboard.alerts];
+  }
+
+  Future<List<AdminAlert>> _surveyResultAlerts() async {
+    try {
+      final snapshot = await _firestore
+          .collection('survey_result_requests')
+          .orderBy('requestedAt', descending: true)
+          .limit(50)
+          .get();
+      return [
+        for (final doc in snapshot.docs)
+          if (doc.data()['status'] == 'pending' || doc.data()['status'] == null)
+            () {
+              final data = doc.data();
+              final person = '${data['displayName'] ?? data['email'] ?? doc.id}';
+              final company = data['companyName'] as String?;
+              final vacancy = data['vacancyName'] as String?;
+              final requestedAt = data['requestedAt'];
+              return AdminAlert(
+                id: 'result-${doc.id}',
+                type: AlertType.operational,
+                priority: AlertPriority.high,
+                title: person,
+                description:
+                    '$person quiere conocer el resultado de su encuesta'
+                    '${company == null ? '' : ' en $company'}'
+                    '${vacancy == null ? '' : ' · $vacancy'}.',
+                suggestedAction:
+                    'Una persona especializada debe revisar la encuesta y comunicar el resultado.',
+                createdAt: requestedAt is Timestamp
+                    ? requestedAt.toDate()
+                    : DateTime.now(),
+                entityName: company,
+              );
+            }(),
+      ];
+    } catch (_) {
+      return const [];
+    }
   }
 
   @override

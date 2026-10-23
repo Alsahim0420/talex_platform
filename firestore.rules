@@ -237,6 +237,15 @@ service cloud.firestore {
       allow write: if isSuperAdmin();
     }
 
+    match /survey_result_requests/{id} {
+      allow get: if isSuperAdmin() || ownsCandidate(id);
+      allow list: if isSuperAdmin();
+      allow create, update: if ownsCandidate(id)
+        && request.resource.data.candidateId == id
+        && request.resource.data.status == 'pending';
+      allow delete: if isSuperAdmin();
+    }
+
     match /admin_audit_logs/{id} {
       allow read, create: if isSuperAdmin();
       allow update, delete: if false;

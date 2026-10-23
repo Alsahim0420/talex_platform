@@ -56,6 +56,7 @@ abstract interface class TalentRepository {
     String candidateId, {
     String locale = 'es',
   });
+  Future<Either<Failure, Unit>> requestSurveyResult(String candidateId);
   Future<Either<Failure, CandidateReport>> loadCandidateReport(String candidateId);
   Future<Either<Failure, AffinityAnalysis>> loadAffinityAnalysis(
     String candidateId,

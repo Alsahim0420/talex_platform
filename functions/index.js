@@ -1297,3 +1297,6 @@ const affinity = require('./affinity');
 exports.analyzeAffinityOnCompletion = affinity.analyzeAffinityOnCompletion;
 exports.analyzeCandidateAffinity = affinity.analyzeCandidateAffinity;
 
+const assistant = require('./assistant');
+exports.askAssistant = assistant.askAssistant;
+
