@@ -4,8 +4,11 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:talex_platform/core/auth/user_role.dart';
 import 'package:talex_platform/core/error/exceptions.dart';
+import 'package:talex_platform/core/supabase/supabase_bootstrap.dart';
+import 'package:talex_platform/core/supabase/supabase_session.dart';
 import 'package:talex_platform/features/auth/data/datasources/google_popup_monitor.dart';
 import 'package:talex_platform/features/auth/data/models/auth_user_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide User;
 
 abstract interface class AuthRemoteDataSource {
   Future<AuthUserModel?> getCurrentUser();
@@ -108,17 +111,51 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
     } on FirebaseException {
       data = null;
     }
-    return AuthUserModel(
-      id: user.uid,
-      email: user.email ?? '',
-      displayName: (data?['displayName'] as String?) ?? user.displayName,
-      companyName: data?['companyName'] as String?,
-      role: UserRoleX.parse(data?['role']),
-      companyId: data?['companyId'] as String?,
-      documentNumber: data?['documentNumber'] as String?,
-      mustChangePassword: data?['mustChangePassword'] == true,
-      mustReviewCompanyDna: data?['mustReviewCompanyDna'] == true,
-    );
+    final supabase = await _hydrateFromSupabase(user, data);
+    return supabase ??
+        AuthUserModel(
+          id: user.uid,
+          email: user.email ?? '',
+          displayName: (data?['displayName'] as String?) ?? user.displayName,
+          companyName: data?['companyName'] as String?,
+          role: UserRoleX.parse(data?['role']),
+          companyId: data?['companyId'] as String?,
+          documentNumber: data?['documentNumber'] as String?,
+          mustChangePassword: data?['mustChangePassword'] == true,
+          mustReviewCompanyDna: data?['mustReviewCompanyDna'] == true,
+        );
+  }
+
+  Future<AuthUserModel?> _hydrateFromSupabase(
+    User user,
+    Map<String, dynamic>? firestore,
+  ) async {
+    if (!isSupabaseReady) return null;
+    try {
+      await SupabaseAccessToken.instance.refresh();
+      final session = await Supabase.instance.client.rpc(
+        'current_session_profile',
+      );
+      if (session is! Map) return null;
+      final payload = Map<String, dynamic>.from(session);
+      if (payload.isEmpty) return null;
+      return AuthUserModel(
+        id: user.uid,
+        email: user.email ?? '${payload['email'] ?? ''}',
+        displayName:
+            (payload['displayName'] as String?) ??
+            (firestore?['displayName'] as String?) ??
+            user.displayName,
+        companyName: payload['organizationName'] as String?,
+        role: UserRoleX.parse(payload['role']),
+        companyId: payload['organizationId'] as String?,
+        documentNumber: payload['documentNumber'] as String?,
+        mustChangePassword: payload['mustChangePassword'] == true,
+        mustReviewCompanyDna: payload['mustReviewCompanyDna'] == true,
+      );
+    } on Object {
+      return null;
+    }
   }
 
   Future<void> _maybeElevateSuperAdmin(
@@ -401,6 +438,7 @@ final class FirebaseAuthRemoteDataSource implements AuthRemoteDataSource {
 
   @override
   Future<void> signOut() => _handleFirebaseErrors(() async {
+    SupabaseAccessToken.instance.clear();
     await _firebaseAuth.signOut();
     if (!kIsWeb) await _googleSignIn.signOut();
   });
