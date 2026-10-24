@@ -188,7 +188,7 @@ class DashboardTopBar extends StatelessWidget {
                   vertical: 10,
                 ),
               ),
-              icon: const Icon(Icons.chat_bubble_outline, size: 18),
+              icon: const TaleXitoMark(size: 22),
               label: Text(assistantLabel ?? 'TaleXito'),
             ),
           ),

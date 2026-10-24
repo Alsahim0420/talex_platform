@@ -276,7 +276,7 @@ class _Header extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
         child: Row(
           children: [
-            const TalexLogo(width: 92, height: 28),
+            const TaleXitoMark(size: 32),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
