@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:talex_platform/core/widgets/talex_logo.dart';
 import 'package:talex_platform/features/assistant/domain/entities/assistant_message.dart';
 import 'package:talex_platform/features/assistant/presentation/assistant_style.dart';
 import 'package:talex_platform/features/assistant/presentation/assistant_text.dart';
@@ -106,7 +107,13 @@ class _AssistantMessageTileState extends State<AssistantMessageTile>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(copy.name, style: AssistantStyle.meta),
+          Row(
+            children: [
+              const TaleXitoMark(size: 18),
+              const SizedBox(width: 8),
+              Text(copy.name, style: AssistantStyle.meta),
+            ],
+          ),
           const SizedBox(height: 6),
           if (waiting)
             const AssistantTypingIndicator()
