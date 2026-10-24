@@ -8,8 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talex_platform/core/locale/locale_cubit.dart';
 import 'package:talex_platform/core/location/location_catalog.dart';
 import 'package:talex_platform/core/services/notification_service.dart';
+import 'package:talex_platform/core/supabase/supabase_bootstrap.dart';
 import 'package:talex_platform/features/admin/data/datasources/admin_data_source.dart';
 import 'package:talex_platform/features/admin/data/datasources/assessment_question_data_source.dart';
+import 'package:talex_platform/features/admin/data/datasources/supabase_admin_data_source.dart';
+import 'package:talex_platform/features/admin/data/datasources/supabase_assessment_question_data_source.dart';
 import 'package:talex_platform/features/admin/data/repositories/admin_repository_impl.dart';
 import 'package:talex_platform/features/admin/domain/repositories/admin_repository.dart';
 import 'package:talex_platform/features/admin/presentation/bloc/admin_bloc.dart';
@@ -28,6 +31,7 @@ import 'package:talex_platform/features/invitations/data/repositories/invitation
 import 'package:talex_platform/features/invitations/domain/repositories/invitation_repository.dart';
 import 'package:talex_platform/features/invitations/domain/usecases/invitation_usecases.dart';
 import 'package:talex_platform/features/invitations/presentation/bloc/invitation_bloc.dart';
+import 'package:talex_platform/features/talent/data/datasources/supabase_talent_data_source.dart';
 import 'package:talex_platform/features/talent/data/datasources/talent_data_source.dart';
 import 'package:talex_platform/features/talent/data/repositories/talent_repository_impl.dart';
 import 'package:talex_platform/features/talent/data/services/invite_email_service.dart';
@@ -87,9 +91,15 @@ void configureAdminDependencies() {
   if (getIt.isRegistered<AdminBloc>()) return;
   getIt
     ..registerLazySingleton<AdminDataSource>(
-      () => FirebaseAdminDataSource(getIt(), getIt()),
+      () => isSupabaseReady
+          ? SupabaseAdminDataSource(getIt())
+          : FirebaseAdminDataSource(getIt(), getIt()),
     )
-    ..registerLazySingleton(() => AssessmentQuestionDataSource(getIt()))
+    ..registerLazySingleton<AssessmentQuestionDataSource>(
+      () => isSupabaseReady
+          ? SupabaseAssessmentQuestionDataSource()
+          : FirebaseAssessmentQuestionDataSource(getIt()),
+    )
     ..registerLazySingleton<AdminRepository>(() => AdminRepositoryImpl(getIt()))
     ..registerFactory(() => AdminBloc(repository: getIt()));
 }
@@ -98,7 +108,9 @@ void configureTalentDependencies() {
   if (getIt.isRegistered<TalentBloc>()) return;
   getIt
     ..registerLazySingleton<TalentDataSource>(
-      () => FirebaseTalentDataSource(getIt(), getIt(), getIt(), getIt()),
+      () => isSupabaseReady
+          ? SupabaseTalentDataSource(getIt(), getIt(), getIt())
+          : FirebaseTalentDataSource(getIt(), getIt(), getIt(), getIt()),
     )
     ..registerLazySingleton<TalentRepository>(
       () => TalentRepositoryImpl(getIt(), getIt()),
